@@ -10,7 +10,7 @@ import {
   Image,
 } from "react-native";
 import { FontFamily, Border, Color, FontSize } from "../GlobalStyle";
-
+// home
 const HomeTab = () => {
   return (
     <SafeAreaView>
