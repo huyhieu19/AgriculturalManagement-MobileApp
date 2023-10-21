@@ -1,20 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import {Provider} from "react-redux";
+import {PersistGate} from "redux-persist/integration/react";
+import {Platform, UIManager} from "react-native";
+import AppNavigator from "./AppNavigator";
+import {reduxPersistor, store} from "./redux/store";
+import SplashScreen from "./screens/splash";
+import {sleep} from "./utils";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+if (Platform.OS === "android") {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+function App() {
+    return (
+        <Provider store={store}>
+            <PersistGate
+                onBeforeLift={async () => {
+                    await sleep(1000);
+                }}
+                persistor={reduxPersistor}
+                loading={
+                    <SplashScreen/>
+                }>
+                <AppNavigator/>
+            </PersistGate>
+        </Provider>
+    );
+}
+
+export default App;
