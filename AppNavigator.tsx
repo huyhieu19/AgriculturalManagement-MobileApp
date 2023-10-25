@@ -22,18 +22,18 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
-	const { authData } = useAuth();
+	const { authData, signOut } = useAuth();
 	const user = authData.user;
 
-	// React.useEffect(() => {
-	//     addOnUnAuthorizeListener(() => {
-	//         signOut();
-	//     });
-	// }, []);
-	//
-	// React.useEffect(() => {
-	//     setAccessToken(authData.token);
-	// }, [authData]);
+	React.useEffect(() => {
+		addOnUnAuthorizeListener(() => {
+			signOut();
+		});
+	}, []);
+
+	React.useEffect(() => {
+		setAccessToken(authData.token);
+	}, [authData]);
 
 	return (
 		<NavigationContainer ref={navigationRef}>

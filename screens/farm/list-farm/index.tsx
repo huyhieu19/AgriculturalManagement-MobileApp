@@ -1,5 +1,12 @@
 import React from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import {
+	Pressable,
+	RefreshControl,
+	SafeAreaView,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
 import { AppColors, AppStyles } from '../../../global';
 import { AntDesign } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getListFarm } from '../../../network/apis';
 import { ListFarmItem } from '../components/list-farm-item';
 import { Farm } from '../../../network/models';
+import { ActivityIndicator } from 'react-native-paper';
 
 type ScreenNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
@@ -16,13 +24,16 @@ type ScreenNavigationProp = NativeStackNavigationProp<
 const ListFarmScreen: React.FC = () => {
 	const navigation = useNavigation<ScreenNavigationProp>();
 	const [farms, setFarms] = React.useState<Farm[]>([]);
+	const [isLoading, setLoading] = React.useState<boolean>(false);
 	const fetchListFarm = React.useCallback(async () => {
 		try {
+			setLoading(true);
 			const res = await getListFarm();
 			setFarms(res.data.Data);
 		} catch (e) {
 			console.log(e);
 		} finally {
+			setLoading(false);
 		}
 	}, []);
 	React.useEffect(() => {
@@ -64,17 +75,38 @@ const ListFarmScreen: React.FC = () => {
 					Danh sách nông trại
 				</Text>
 			</View>
-			<ScrollView
-				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{
-					paddingHorizontal: 20,
-					paddingTop: 30,
-				}}
-			>
-				{farms &&
-					farms?.length > 0 &&
-					farms.map((item, index) => <ListFarmItem key={index} farm={item} />)}
-			</ScrollView>
+
+			{isLoading ? (
+				<View
+					style={{
+						flex: 1,
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
+					<ActivityIndicator size={'large'} color={AppColors.primaryColor} />
+				</View>
+			) : (
+				<>
+					<ScrollView
+						showsVerticalScrollIndicator={false}
+						refreshControl={
+							<RefreshControl
+								refreshing={isLoading}
+								onRefresh={fetchListFarm}
+							/>
+						}
+						contentContainerStyle={{
+							paddingHorizontal: 20,
+							paddingTop: 30,
+						}}
+					>
+						{farms &&
+							farms?.length > 0 &&
+							farms.map((item) => <ListFarmItem key={item?.id} farm={item} />)}
+					</ScrollView>
+				</>
+			)}
 		</SafeAreaView>
 	);
 };

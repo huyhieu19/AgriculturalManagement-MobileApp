@@ -2,7 +2,6 @@ import axios from 'axios';
 import { AppConfig } from './configs';
 import { Helper } from './helper';
 import * as LogInterceptor from './log';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const axiosInstance = axios.create({
 	baseURL: AppConfig.baseUrl,
@@ -13,11 +12,7 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-	async (config) => {
-		const accessToken = await AsyncStorage.getItem('access-token');
-		if (accessToken) {
-			config.headers.Authorization = `Bearer ${accessToken}`;
-		}
+	(config) => {
 		return LogInterceptor.requestLog(config);
 	},
 	function (error) {
@@ -28,7 +23,7 @@ axiosInstance.interceptors.request.use(
 
 function setAccessToken(accessToken?: string) {
 	axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${
-		accessToken || ''
+		accessToken ?? ''
 	}`;
 }
 
