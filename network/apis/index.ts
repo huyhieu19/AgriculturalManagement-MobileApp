@@ -1,11 +1,13 @@
-import {axiosInstance} from "../index";
-import {BaseResponse} from "../models/BaseResponse";
-import {LoginResponse} from "../models/LoginResponse";
+import { axiosInstance } from '../index';
+import { BaseResponse, Farm, LoginResponse } from '../models';
 
-export function login(loginPayload: { email: string, password: string }) {
-    return axiosInstance.post<BaseResponse<LoginResponse>>("/Authentication/login", loginPayload)
+export function login(loginPayload: { email: string; password: string }) {
+	return axiosInstance.post<BaseResponse<LoginResponse>>(
+		'/Authentication/login',
+		loginPayload
+	);
 }
 
 export function getListFarm() {
-    return axiosInstance.get<BaseResponse<any>>('/Farm/farms')
+	return axiosInstance.get<BaseResponse<Farm[]>>('/Farm/farms');
 }
