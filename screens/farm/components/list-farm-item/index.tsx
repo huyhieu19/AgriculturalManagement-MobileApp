@@ -1,10 +1,10 @@
-import React from 'react';
-import { AppColors } from '../../../../global';
-import { Image, Text, View } from 'react-native';
-import { Farm } from '../../../../network/models';
+import React from "react";
+import { AppColors } from "../../../../global";
+import { Image, Text, View } from "react-native";
+import { Farm } from "../../../../network/models";
 
 const fakeFarm =
-	'https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg';
+	"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
 
 interface ListFarmItemProps {
 	farm: Farm;
@@ -14,8 +14,8 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 	return (
 		<View
 			style={{
-				flexDirection: 'row',
-				alignItems: 'flex-start',
+				flexDirection: "row",
+				alignItems: "flex-start",
 				// marginHorizontal: 20,
 				paddingHorizontal: 20,
 				backgroundColor: AppColors.bgWhite,
@@ -46,18 +46,24 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 				<Text
 					style={{
 						fontSize: 18,
-						fontWeight: '700',
+						fontWeight: "700",
 						marginBottom: 8,
 					}}
 				>
 					{props.farm?.name}
 				</Text>
 				<CardInfor
-					property={'Diện tích'}
+					property={"Diện tích"}
 					value={props.farm?.area?.toString()}
 				/>
-				<CardInfor property={'Số lượng khu'} value={props.farm?.countZone} />
-				<CardInfor property={'Ngày tạo'} value={props?.farm?.createDate} />
+				<CardInfor
+					property={"Số lượng khu"}
+					value={props.farm?.countZone}
+				/>
+				<CardInfor
+					property={"Ngày tạo"}
+					value={props?.farm?.createDate}
+				/>
 			</View>
 		</View>
 	);
@@ -72,29 +78,29 @@ const CardInfor = (props: CardInforProps) => {
 	return (
 		<View
 			style={{
-				flexDirection: 'row',
+				flexDirection: "row",
 				flex: 1,
-				alignItems: 'center',
-				justifyContent: 'space-between',
+				alignItems: "center",
+				justifyContent: "space-between",
 			}}
 		>
 			<Text
 				style={{
 					color: AppColors.slate600,
 					fontSize: 16,
-					fontWeight: '400',
+					fontWeight: "400",
 					marginBottom: 5,
-					fontStyle: 'italic',
+					fontStyle: "italic",
 				}}
 			>
-				{props.property}:{' '}
+				{props.property}:{" "}
 			</Text>
 			<Text
 				style={{
-					color: 'black',
+					color: "black",
 					fontSize: 16,
-					fontWeight: '500',
-					fontStyle: 'normal',
+					fontWeight: "500",
+					fontStyle: "normal",
 				}}
 			>
 				{props.value}
