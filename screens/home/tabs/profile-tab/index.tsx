@@ -27,6 +27,8 @@ const ProfileTab: React.FC = () => {
 		signOut,
 		authData: { user, token },
 	} = useAuth();
+
+	console.log(user);
 	return (
 		<SafeAreaView
 			style={{
@@ -78,7 +80,7 @@ const ProfileTab: React.FC = () => {
 					</View>
 				</View>
 				<View style={{ marginTop: 50, paddingHorizontal: 20 }}>
-					<Text style={{ fontSize: 16 }}>Nguyen Huy Hieu</Text>
+					<Text style={{ fontSize: 16 }}>{user.userName}</Text>
 					<View
 						style={{
 							backgroundColor: "white",
@@ -99,25 +101,16 @@ const ProfileTab: React.FC = () => {
 								style={styles.imageIcon}
 								source={smartphoneIcon}
 							/>
-							<Text style={{ fontSize: 16 }}>0395311258</Text>
+							<Text style={{ fontSize: 16 }}>
+								{user.phoneNumber}
+							</Text>
 						</View>
 						<View style={styles.cardItem}>
 							<Image
 								style={styles.imageIcon}
 								source={gmailIcon}
 							/>
-							<Text style={{ fontSize: 16 }}>
-								levubaotrung0311@gmail.com
-							</Text>
-						</View>
-						<View style={styles.lastCardItem}>
-							<Image
-								style={styles.lastCardItem}
-								source={resumeIcon}
-							/>
-							<Text style={{ fontSize: 16 }}>
-								Thông tin chi tiết
-							</Text>
+							<Text style={{ fontSize: 16 }}>{user.email}</Text>
 						</View>
 					</View>
 					<View
@@ -146,6 +139,9 @@ const ProfileTab: React.FC = () => {
 						</TouchableOpacity>
 					</View>
 				</View>
+				<TouchableOpacity onPress={() => signOut()}>
+					<Text>Log out</Text>
+				</TouchableOpacity>
 			</ScrollView>
 		</SafeAreaView>
 	);

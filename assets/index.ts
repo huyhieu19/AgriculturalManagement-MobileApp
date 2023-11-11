@@ -6,6 +6,7 @@ import gmailIcon from "./gmail1.png";
 import resumeIcon from "./resume1.png";
 import smartphoneIcon from "./smartphone1.png";
 import mapIcon from "./map1.png";
+import greenhouseIcon from "./greenhouse1.png";
 
 export {
 	homeLeftIcon,
@@ -16,4 +17,5 @@ export {
 	resumeIcon,
 	smartphoneIcon,
 	mapIcon,
+	greenhouseIcon,
 };
