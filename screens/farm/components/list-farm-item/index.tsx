@@ -3,6 +3,7 @@ import { AppColors } from "../../../../global";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Farm } from "../../../../network/models";
 import { IFramDetails } from "../../../../types/farm.type";
+import { formatDateTime } from "../../../../utils";
 
 const fakeFarm =
 	"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
@@ -48,8 +49,7 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 					style={{
 						marginLeft: 12,
 						flex: 1,
-					}}
-				>
+					}}>
 					<Text
 						style={{
 							fontSize: 18,
@@ -60,7 +60,7 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 						{props.farm?.name}
 					</Text>
 					<CardInfor
-						property={"Diện tích"}
+						property={"Diện tích (m2)"}
 						value={props.farm?.area?.toString()!}
 					/>
 
@@ -70,8 +70,7 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 					/>
 					<CardInfor
 						property={"Ngày tạo"}
-						// value={props?.farm?.createdDate!}
-						value={""}
+						value={String(formatDateTime(props?.farm?.dateCreated))!}
 					/>
 				</View>
 			</View>
@@ -86,14 +85,12 @@ interface CardInforProps {
 
 const CardInfor = (props: CardInforProps) => {
 	return (
-		<View
-			style={{
+		<View style={{
 				flexDirection: "row",
 				flex: 1,
 				alignItems: "center",
 				justifyContent: "space-between",
-			}}
-		>
+			}}>
 			<Text
 				style={{
 					color: AppColors.slate600,

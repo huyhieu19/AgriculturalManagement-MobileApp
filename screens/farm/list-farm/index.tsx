@@ -14,9 +14,11 @@ import { RootStackParamList } from "../../../AppNavigator";
 import { useNavigation } from "@react-navigation/native";
 import { getListFarm } from "../../../network/apis";
 import { ListFarmItem } from "../components/list-farm-item";
+import { CreateFarmScreen } from "../components/add-new-farm"
 import { Farm } from "../../../network/models";
 import { ActivityIndicator } from "react-native-paper";
 import { IFramDetails } from "../../../types/farm.type";
+import { greenA200 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 type ScreenNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
@@ -42,6 +44,11 @@ const ListFarmScreen: React.FC = () => {
 	const hangeNavigateScreen = (item: IFramDetails) => {
 		navigation.navigate("FarmDetailsScreen", item);
 	};
+
+	const hangeNavigateScreenCreateFarm = () => {
+		navigation.navigate("CreateFarmScreen");
+	};
+
 	React.useEffect(() => {
 		fetchListFarm().then(() => {});
 	}, [fetchListFarm]);
@@ -53,33 +60,46 @@ const ListFarmScreen: React.FC = () => {
 					justifyContent: "center",
 					alignItems: "center",
 					width: "100%",
-					paddingVertical: 18,
+					paddingVertical: 12,
 					borderBottomWidth: 0.5,
-					borderBottomColor: AppColors.slate300,
+					paddingHorizontal: 20,
+					backgroundColor: AppColors.primaryColor,
 					position: "relative",
 				}}
 			>
 				<Pressable
 					style={{
 						position: "absolute",
-						left: 20,
-						top: 18,
+						left: 20
 					}}
 					onPress={() => {
 						navigation.goBack();
 					}}
 				>
-					<AntDesign name="left" size={27} color="black" />
+					<AntDesign name="left" size={24} color="white" />
 				</Pressable>
 				<Text
 					style={{
-						color: "black",
-						fontSize: 20,
-						fontWeight: "500",
+						color: "white",
+						fontSize: 18,
+						fontWeight: "500"
 					}}
 				>
 					Danh sách nông trại
 				</Text>
+				<Pressable
+					style={{
+						position: "absolute",
+						right: 20
+					}}
+					onPress={() => {
+						hangeNavigateScreenCreateFarm();
+						}
+					}
+				>
+
+					<AntDesign name="pluscircleo" size={24} color="white" />
+				</Pressable>
 			</View>
 
 			{isLoading ? (

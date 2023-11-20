@@ -7,7 +7,6 @@ type IZoneParams = {
 	timeToStartPlanting?: string;
 	dateCreateFarm?: string;
 	function?: string;
-	typeTreeId?: number;
 	farmId?: number;
 	countDeviceDriver?: number;
 	countInstrumentation?: number;

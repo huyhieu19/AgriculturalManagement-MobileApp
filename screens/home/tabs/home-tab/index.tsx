@@ -120,7 +120,7 @@ function HomeTab() {
 				}}
 			>
 				<Image source={homeLeftIcon} style={{ width: 30 }} />
-				<Text style={{ fontSize: 18, color: "white" }}>
+				<Text style={{ fontSize: 18, color: "white", fontWeight: "500" }}>
 					Agricultural Management
 				</Text>
 				<Ionicons

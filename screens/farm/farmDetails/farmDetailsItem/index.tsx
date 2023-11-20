@@ -60,8 +60,8 @@ export const ListZoneItem = (props: ListZonetemProps) => {
 					/>
 
 					<CardInfor
-						property={"Loại cây"}
-						value={props.zone?.typeTreeId!}
+						property={"Chức năng"}
+						value={props.zone?.function!}
 					/>
 					<CardInfor
 						property={"Ngày tạo"}

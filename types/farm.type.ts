@@ -1,7 +1,7 @@
 type IFramDetails = {
-	id?: number;
+	id: number;
 	name?: string;
-	createdDate?: string;
+	dateCreated?: string;
 	description?: string;
 	address?: string;
 	area?: number;

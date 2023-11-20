@@ -53,6 +53,10 @@ const FarmDetailsScreen = () => {
 	}, []);
 	console.log(zoneList);
 
+	function hangeNavigateScreenCreateZone(item: IFramDetails) {
+		navigation.navigate("AddNewZoneScreen", item);
+	}
+
 	return (
 		<SafeAreaView style={AppStyles.appContainer}>
 			<View
@@ -77,9 +81,21 @@ const FarmDetailsScreen = () => {
 				>
 					<AntDesign name="left" size={24} color="white" />
 				</Pressable>
-				<Text style={{ fontSize: 18, color: "white" }}>
+				<Text style={{ fontSize: 18, color: "white", fontWeight: "500"}}>
 					Khu trong nông trại
 				</Text>
+				<Pressable
+					style={{
+						position: "absolute",
+						right: 20
+					}}
+					onPress={() => {
+						hangeNavigateScreenCreateZone(farm);
+						}
+					}
+				>
+					<AntDesign name="pluscircleo" size={24} color="white" />
+				</Pressable>
 			</View>
 			<View>
 				<ListFarmItem farm={farm} isBorderRadius isBgPrimary />
