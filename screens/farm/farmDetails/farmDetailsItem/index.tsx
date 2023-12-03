@@ -64,10 +64,6 @@ export const ListZoneItem = (props: ListZonetemProps) => {
 						value={props.zone?.function!}
 					/>
 					<CardInfor
-						property={"Ngày tạo"}
-						value={formatDateTime(props?.zone?.dateCreateFarm!)}
-					/>
-					<CardInfor
 						property={"Số lượng thiết bị đo"}
 						value={props?.zone.countInstrumentation!}
 					/>
@@ -83,7 +79,7 @@ export const ListZoneItem = (props: ListZonetemProps) => {
 
 interface CardInforProps {
 	property: string;
-	value: string | number;
+	value: string | number | null;
 }
 
 const CardInfor = (props: CardInforProps) => {

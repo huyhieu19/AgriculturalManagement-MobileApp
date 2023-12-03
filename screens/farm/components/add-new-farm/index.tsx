@@ -1,20 +1,19 @@
-import { View, Text, Pressable, Alert, TextInput, StyleSheet } from 'react-native'
+import { View, Text, Pressable, Alert, TextInput,Button, StyleSheet } from 'react-native'
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { AppColors } from '../../../../global/styles/AppColors';
-import { Button} from 'antd';
 import { createFarm } from '../../../../network/apis';
 
 
 export const CreateFarmScreen = () => {
   const navigation = useNavigation<any>();
-  const [name, setName] = useState(String);
-  const [area, setArea] = useState(Number);
-  const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
-  const [note, setNote] = useState("");
+  const [name, setName] = useState('Nông trại');
+  const [area, setArea] = useState(1);
+  const [description, setDescription] = useState('Thông tin chi tiết');
+  const [address, setAddress] = useState('Ha Noi');
+  const [note, setNote] = useState('Chú ý');
 
   const handleAddNew = async () => {
     // Perform API request to add new item
@@ -73,8 +72,8 @@ export const CreateFarmScreen = () => {
       <View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
-          Tên nông trại
-        </Text>
+            Tên nông trại:
+          </Text>
         <TextInput
           style={styles.input}
           onChangeText={e => setName(e)}
@@ -83,8 +82,8 @@ export const CreateFarmScreen = () => {
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
-          Chi tiết
-        </Text>
+            Chi tiết:
+          </Text>
         <TextInput
           style={styles.input}
           onChangeText={e => setDescription(e)}
@@ -93,8 +92,8 @@ export const CreateFarmScreen = () => {
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
-          Diện tích (m2)
-        </Text>
+            Diện tích (m2):
+          </Text>
         <TextInput
           style={styles.input}
           onChangeText={e => setArea(Number(e))}
@@ -102,8 +101,8 @@ export const CreateFarmScreen = () => {
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
-          Địa chỉ
-        </Text>
+            Địa chỉ:
+          </Text>
         <TextInput
           style={styles.input}
           onChangeText={e => setAddress(e)}
@@ -112,24 +111,43 @@ export const CreateFarmScreen = () => {
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
-          Chú ý
-        </Text>
+            Chú ý:
+          </Text>
         <TextInput
           style={styles.input}
           onChangeText={e => setNote(e)}
           value={note}
          />
         </View>
-        <View style = {styles.buttonContainer}>
-          <Button style={{flex: 1,width: 120, marginRight: 10, color: 'white', backgroundColor: AppColors.primaryColor }} onClick={handleAddNew} title="Submit" >Lưu</Button>
-         <Button style={{flex: 1,width: 120, marginRight: 10,color: 'white', backgroundColor: 'red' }} onClick={GoBack} title="Cancel" >Hủy Bỏ</Button>
-         </View>
-       </View>
+        
+      </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.fixToText}>
+            <Button
+                title="Thêm mới"
+                color={AppColors.primaryColor}
+                onPress={() => handleAddNew()}
+            />
+            <Button
+                title="Quay lại"
+                color={"red"}
+                onPress={() => GoBack()}
+            />
+        </View>
+        </View>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  fixToText: {
+        flex: 1,
+        paddingLeft: 30,
+        paddingRight: 30,
+        marginHorizontal: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
   input: {
     height: 40,
     margin: 12,

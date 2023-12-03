@@ -1,23 +1,19 @@
-import React from "react";
-import { AppColors } from "../../../../global";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Farm } from "../../../../network/models";
-import { IFramDetails } from "../../../../types/farm.type";
+import React from 'react'
+import { IModule } from '../../../../types/module.type';
+import { AppColors } from '../../../../global';
 import { formatDateTime } from "../../../../utils";
 
-const fakeFarm =
-	"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
-
-interface ListFarmItemProps {
-	farm: IFramDetails;
+interface ModulesItemProps {
+	modules: IModule;
 	onPress?: () => void;
 	isBorderRadius?: boolean;
 	isBgPrimary?: boolean;
 }
 
-export const ListFarmItem = (props: ListFarmItemProps) => {
-	return (
-		<TouchableOpacity onPress={props.onPress}>
+const ModulesItem = (props: ModulesItemProps) => {
+  return (
+    <TouchableOpacity onPress={props.onPress}>
 			<View
 				style={{
 					flexDirection: "row",
@@ -37,7 +33,7 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 			>
 				<Image
 					source={{
-						uri: fakeFarm,
+						uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fnshopvn.com%2Fproduct%2Fmodule-thu-phat-wifi-esp8266-nodemcu-lua-cp2102%2F&psig=AOvVaw2c_wco9di3Jta18-rr3Bza&ust=1701712082009000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJDFwtLp84IDFQAAAAAdAAAAABAE",
 					}}
 					style={{
 						width: 100,
@@ -57,26 +53,21 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 							marginBottom: 8,
 						}}
 					>
-						{props.farm?.name}
-					</Text>
+						{props.modules?.name}
+                  </Text>
 					<CardInfor
-						property={"Diện tích (m2)"}
-						value={props.farm?.area?.toString()!}
+						property={"Loại module"}
+						value={props.modules?.name!}
 					/>
-
 					<CardInfor
-						property={"Số lượng khu"}
-						value={props.farm?.countZone!}
-					/>
-					{/* <CardInfor
 						property={"Ngày tạo"}
-						value={String(formatDateTime(props?.farm?.dateCreated!))}
-					/> */}
+						value={String(formatDateTime(props?.modules?.dateCreated!))}
+					/>
 				</View>
 			</View>
 		</TouchableOpacity>
-	);
-};
+  )
+}
 
 interface CardInforProps {
 	property: string;
@@ -86,10 +77,10 @@ interface CardInforProps {
 const CardInfor = (props: CardInforProps) => {
 	return (
 		<View style={{
-				flexDirection: "row",
+			flexDirection: "row",
 				flex: 1,
 				alignItems: "center",
-				justifyContent: "space-between",
+            justifyContent: "space-between",
 			}}>
 			<Text
 				style={{
@@ -105,9 +96,9 @@ const CardInfor = (props: CardInforProps) => {
 			<Text
 				style={{
 					color: "black",
-					fontSize: 16,
+					fontSize: 15,
 					fontWeight: "500",
-					fontStyle: "normal",
+                    fontStyle: "normal",
 				}}
 			>
 				{props.value}
@@ -115,3 +106,5 @@ const CardInfor = (props: CardInforProps) => {
 		</View>
 	);
 };
+
+export default ModulesItem

@@ -129,15 +129,15 @@ const ListFarmScreen: React.FC = () => {
 						paddingTop: 30,
 					}}
 				>
-					{farms &&
-						farms?.length > 0 &&
+					{farms != null &&
+						farms?.length > 0 ?
 						farms.map((item) => (
 							<ListFarmItem
 								key={item?.id}
 								farm={item}
 								onPress={() => hangeNavigateScreen(item)}
 							/>
-						))}
+						) ): <Text>Bạn chưa tạo nông trại nào</Text>}
 				</ScrollView>
 			)}
 		</SafeAreaView>

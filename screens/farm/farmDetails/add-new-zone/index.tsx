@@ -5,13 +5,13 @@ import {
   Alert,
   TextInput,
   StyleSheet,
+  Button
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
-import { Button } from "antd";
 import { createZone } from "../../../../network/apis";
 import { IFramDetails } from "../../../../types/farm.type";
 
@@ -87,8 +87,6 @@ export const AddNewZoneScreen = () => {
           Thêm mới khu trong nông trại
         </Text>
       </View>
-
-      <View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Id Nông trại</Text>
           <TextInput
@@ -98,7 +96,7 @@ export const AddNewZoneScreen = () => {
           />
         </View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Tên khu</Text>
+          <Text style={styles.Inputlabel}>Tên khu:</Text>
           <TextInput
             style={styles.input}
             onChangeText={(e) => setZoneName(e)}
@@ -106,7 +104,7 @@ export const AddNewZoneScreen = () => {
           />
         </View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Chi tiết</Text>
+          <Text style={styles.Inputlabel}>Chi tiết:</Text>
           <TextInput
             style={styles.input}
             onChangeText={(e) => setDescription(e)}
@@ -114,14 +112,14 @@ export const AddNewZoneScreen = () => {
           />
         </View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Diện tích (m2)</Text>
+          <Text style={styles.Inputlabel}>Diện tích (m2):</Text>
           <TextInput
             style={styles.input}
             onChangeText={(e) => setArea(Number(e))}
           />
         </View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Chức năng</Text>
+          <Text style={styles.Inputlabel}>Chức năng:</Text>
           <TextInput
             style={styles.input}
             onChangeText={(e) => setFunction1(e)}
@@ -129,7 +127,7 @@ export const AddNewZoneScreen = () => {
           />
         </View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Chú ý</Text>
+          <Text style={styles.Inputlabel}>Chú ý:</Text>
           <TextInput
             style={styles.input}
             onChangeText={(e) => setNote(e)}
@@ -137,38 +135,31 @@ export const AddNewZoneScreen = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            style={{
-              flex: 1,
-              width: 120,
-              marginRight: 10,
-              color: "white",
-              backgroundColor: AppColors.primaryColor,
-            }}
-            onClick={handleAddNew}
-            title="Submit"
-          >
-            Lưu
-          </Button>
-          <Button
-            style={{
-              flex: 1,
-              width: 120,
-              marginRight: 10,
-              color: "white",
-              backgroundColor: "red",
-            }}
-            onClick={GoBack}
-            title="Cancel"
-          >
-            Hủy Bỏ
-          </Button>
+          <View style={styles.fixToText}>
+              <Button
+                  title="Thêm mới"
+                  color={AppColors.primaryColor}
+                  onPress={() => handleAddNew()}
+              />
+              <Button
+                  title="Quay lại"
+                  color={"red"}
+                  onPress={() => GoBack()}
+              />
+          </View>
         </View>
-      </View>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
+  fixToText: {
+        flex: 1,
+        paddingLeft: 30,
+        paddingRight: 30,
+        marginHorizontal: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
   inputFarmId: {
     height: 40,
     margin: 12,

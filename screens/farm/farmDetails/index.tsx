@@ -128,7 +128,7 @@ const FarmDetailsScreen = () => {
 					}}
 				>
 					{zoneList &&
-						zoneList?.length > 0 &&
+						zoneList?.length > 0 ?
 						zoneList.map((item) => {
 							console.log("item", item);
 							return (
@@ -138,7 +138,7 @@ const FarmDetailsScreen = () => {
 									// onPress={() => hangeNavigateScreen(item)}
 								/>
 							);
-						})}
+						}) : <Text>Bạn chưa tạo khu nào</Text>}
 				</ScrollView>
 			)}
 		</SafeAreaView>

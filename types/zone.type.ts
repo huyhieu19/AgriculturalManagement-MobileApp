@@ -4,12 +4,12 @@ type IZoneParams = {
 	area?: number;
 	description?: string;
 	note?: string;
-	timeToStartPlanting?: string;
-	dateCreateFarm?: string;
+	timeToStartPlanting?: string | null;
+	dateCreateFarm?: string | null;
 	function?: string;
 	farmId?: number;
-	countDeviceDriver?: number;
-	countInstrumentation?: number;
+	countDeviceDriver?: number | null;
+	countInstrumentation?: number | null;
 };
 
 export { IZoneParams };

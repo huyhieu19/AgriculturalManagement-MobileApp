@@ -55,7 +55,9 @@ function HomeTab() {
 				/>
 			),
 			backgroundColor: "rgba(22,163,74,0.1)",
-			onPress: () => {},
+			onPress: () => {
+				navigation.navigate("ModulesScreen");
+			},
 		},
 		{
 			title: "Thông báo",
