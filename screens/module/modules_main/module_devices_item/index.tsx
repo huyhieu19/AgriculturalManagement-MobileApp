@@ -1,51 +1,41 @@
-import { View, Text, Pressable, ScrollView, RefreshControl, ActivityIndicator } from 'react-native'
+import { View, Text, SafeAreaView, Pressable, ActivityIndicator, ScrollView, RefreshControl } from 'react-native'
 import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppColors, AppStyles } from "../../../global";
-import { AntDesign } from "@expo/vector-icons";
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { getListModules } from '../../../network/apis';
-import { ModuleDisplay } from '../../../network/models/module/module';
-import { IModule } from '../../../types/module.type';
-import ModulesItem from './module_item';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../../AppNavigator';
+import { AppColors } from '../../../../global';
+import { AntDesign } from "@expo/vector-icons";
+import { IDeviceOnModule } from '../../../../types/device.type';
+import { getListDevicesOnModule } from '../../../../network/apis';
 
 type ScreenNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
 	"ModulesScreen"
 >;
 
-const ModulesScreen = () => {
-  	const navigation = useNavigation<ScreenNavigationProp>();
-	const [module, setModule] = React.useState<IModule[]>([]);
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+const ModuleDevicesScreen = () => {
+    const navigation = useNavigation<ScreenNavigationProp>();
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [devices, setDevices] = React.useState<IDeviceOnModule[]>([]);
+        const [id, setId] = React.useState<String>("97429d21-59e0-43ab-20e9-08dbeb8ab6a6");
+    
+    const fetchListDevicesOnModule = React.useCallback(async () => {
+    try {
+            setIsLoading(true);
+            const res = await getListDevicesOnModule({id : String});
+            console.log(res);
+            console.log("abc")
+            setDevices(res.data.Data as unknown as IDeviceOnModule[]);
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
-	const fetchListModule = React.useCallback(async () => {
-		try {
-				setIsLoading(true);
-				const res = await getListModules();
-				console.log(res);
-				console.log("abc")
-				setModule(res.data.Data as unknown as IModule[]);
-			} catch (e) {
-				console.log(e);
-			} finally {
-				setIsLoading(false);
-			}
-	}, []);
-
-	const hangeNavigateScreenAddModule = () => {
-		navigation.navigate("ModuleAddScreen");
-	};
-	const hangeNavigateToModuleDetailScreen = (item: any) => {
-		navigation.navigate("ModuleDevicesScreen");
-	}
-
-	React.useEffect(() => {
-		fetchListModule().then(() => {});
-	}, []);
- 
+    React.useEffect(() => {
+        fetchListDevicesOnModule().then(() => {});
+    }, []);
   return (
     <SafeAreaView>
       <View
@@ -78,9 +68,9 @@ const ModulesScreen = () => {
 						fontWeight: "500"
 					}}
 				>
-					Danh sách Module
+					Danh sách thiết bị trên module
 				</Text>
-				<Pressable
+				{/* <Pressable
 					style={{
 						position: "absolute",
 						right: 20
@@ -91,7 +81,7 @@ const ModulesScreen = () => {
 					}
 				>
 					<AntDesign name="pluscircleo" size={24} color="white" />
-				</Pressable>
+				</Pressable> */}
       </View>
       { isLoading ? (
 				<View
@@ -112,7 +102,7 @@ const ModulesScreen = () => {
 					refreshControl={
 						<RefreshControl
 							refreshing={isLoading}
-							onRefresh={fetchListModule}
+							onRefresh={fetchListDevicesOnModule}
 						/>
 					}
 					contentContainerStyle={{
@@ -120,7 +110,7 @@ const ModulesScreen = () => {
 						paddingTop: 30,
 					}}
 				>
-					{module != null &&
+					{/* {module != null &&
 						module?.length > 0 ?
 						module.map((item) => (
 							<ModulesItem
@@ -129,11 +119,11 @@ const ModulesScreen = () => {
 								onPress={() => hangeNavigateToModuleDetailScreen(item)}
 							/>
               
-						) ): <Text>Bạn chưa có sử dụng module nào</Text>}
+						) ): <Text>Bạn chưa có sử dụng module nào</Text>} */}
 				</ScrollView>
       )}
     </SafeAreaView>
   )
 }
 
-export default ModulesScreen;
+export default ModuleDevicesScreen

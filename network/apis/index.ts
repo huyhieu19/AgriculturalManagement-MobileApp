@@ -4,6 +4,7 @@ import { IZoneParams } from "../../types/zone.type";
 import { CreateZone } from "../models/Zone";
 import { ModuleDisplay } from "../models/module/module";
 import { IModule } from "../../types/module.type";
+import { IDeviceOnModule } from "../../types/device.type";
 
 export function login(loginPayload: { email: string; password: string }) {
 	return axiosInstance.post<BaseResponse<LoginResponse>>(
@@ -45,6 +46,12 @@ export function getListModules() {
 export function createModule(params: any) {
 	return axiosInstance.post<BaseResponse<IModule>>(
 		"/Module/add-module-to-user",
+		params
+	);
+}
+export function getListDevicesOnModule(params: any) {
+	return axiosInstance.post<BaseResponse<IDeviceOnModule>>(
+		"/Module/devices-on-module",
 		params
 	);
 }

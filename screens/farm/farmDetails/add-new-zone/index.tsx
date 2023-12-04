@@ -24,11 +24,11 @@ export const AddNewZoneScreen = () => {
   const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
   const navigation = useNavigation<any>();
   const farm = route?.params ?? [];
-  const [zoneName, setZoneName] = useState(String);
-  const [function1, setFunction1] = useState(String);
-  const [area, setArea] = useState(Number);
+  const [zoneName, setZoneName] = useState("Khu");
+  const [function1, setFunction1] = useState("Trồng");
+  const [area, setArea] = useState(0);
   const [description, setDescription] = useState("Đây là khu trong farm");
-  const [note, setNote] = useState("Chú ý: ");
+  const [note, setNote] = useState("Chú ý");
 
   const handleAddNew = async () => {
     // Perform API request to add new item
@@ -88,7 +88,7 @@ export const AddNewZoneScreen = () => {
         </Text>
       </View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Id Nông trại</Text>
+          <Text style={styles.Inputlabel}>Id Nông trại:</Text>
           <TextInput
             style={styles.inputFarmId}
             value= {farm.id.toString()}
@@ -116,6 +116,7 @@ export const AddNewZoneScreen = () => {
           <TextInput
             style={styles.input}
             onChangeText={(e) => setArea(Number(e))}
+            value = {String(area)}
           />
         </View>
         <View style={styles.Inputcontainer}>

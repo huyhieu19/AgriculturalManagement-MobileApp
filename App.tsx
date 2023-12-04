@@ -1,7 +1,7 @@
 import React from "react";
 import {Provider} from "react-redux";
 import {PersistGate} from "redux-persist/integration/react";
-import {Platform, UIManager} from "react-native";
+import {Platform, UIManager, StyleSheet} from "react-native";
 import AppNavigator from "./AppNavigator";
 import {reduxPersistor, store} from "./redux/store";
 import SplashScreen from "./screens/splash";
@@ -19,13 +19,14 @@ function App() {
         <Provider store={store}>
             <PersistGate
                 onBeforeLift={async () => {
-                    await sleep(1000);
+                    await sleep(0.5);
                 }}
                 persistor={reduxPersistor}
                 loading={
-                    <SplashScreen/>
+                    <SplashScreen />
                 }>
-                <AppNavigator/>
+                {/* Áp dụng style cho container của Android */}
+                <AppNavigator />
             </PersistGate>
         </Provider>
     );

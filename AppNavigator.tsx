@@ -16,6 +16,7 @@ import { CreateFarmScreen } from "./screens/farm/components/add-new-farm";
 import { AddNewZoneScreen } from "./screens/farm/farmDetails/add-new-zone";
 import ModulesScreen from "./screens/module/modules_main";
 import ModuleAddScreen from "./screens/module/module_add";
+import ModuleDevicesScreen from "./screens/module/modules_main/module_devices_item";
 
 export type RootStackParamList = {
 	HomeScreen: undefined;
@@ -27,6 +28,7 @@ export type RootStackParamList = {
 	AddNewZoneScreen: undefined;
 	ModulesScreen: undefined;
 	ModuleAddScreen: undefined;
+	ModuleDevicesScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -83,6 +85,10 @@ const AppNavigator: React.FC = () => {
 						<Stack.Screen
 							name={"ModuleAddScreen"}
 							component={ModuleAddScreen}
+						/>
+						<Stack.Screen
+							name={"ModuleDevicesScreen"}
+							component={ModuleDevicesScreen}
 						/>
 					</>
 				) : (

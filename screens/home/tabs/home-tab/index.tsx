@@ -6,6 +6,7 @@ import {
 	useWindowDimensions,
 	View,
 	Image,
+	StyleSheet
 } from "react-native";
 import * as React from "react";
 import { AppColors, AppStyles } from "../../../../global";
@@ -201,3 +202,11 @@ function HomeTab() {
 }
 
 export default HomeTab;
+
+// Thêm StyleSheet để quản lý kiểu CSS
+const styles = StyleSheet.create({
+    androidContainer: {
+        marginTop: 10, // Margin top 10px cho Android
+        flex: 1,
+    },
+});

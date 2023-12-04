@@ -10,7 +10,7 @@ import { createFarm } from '../../../../network/apis';
 export const CreateFarmScreen = () => {
   const navigation = useNavigation<any>();
   const [name, setName] = useState('Nông trại');
-  const [area, setArea] = useState(1);
+  const [area, setArea] = useState(0);
   const [description, setDescription] = useState('Thông tin chi tiết');
   const [address, setAddress] = useState('Ha Noi');
   const [note, setNote] = useState('Chú ý');
@@ -96,7 +96,8 @@ export const CreateFarmScreen = () => {
           </Text>
         <TextInput
           style={styles.input}
-          onChangeText={e => setArea(Number(e))}
+            onChangeText={e => setArea(Number(e))}
+            value={String(area)}
          />
         </View>
         <View style={styles.Inputcontainer}>
