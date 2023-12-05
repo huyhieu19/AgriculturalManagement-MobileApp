@@ -5,6 +5,6 @@ export const AppStyles = StyleSheet.create({
     appContainer: {
         flex: 1,
         backgroundColor: AppColors.bgSlate50,
-        marginTop: 25
+        marginTop: 27
     }
 })

@@ -19,7 +19,7 @@ import {
 	smartphoneIcon,
 	resumeIcon,
 } from "../../../../assets";
-import { AppColors } from "../../../../global";
+import { AppColors, AppStyles } from "../../../../global";
 import { Ionicons } from "@expo/vector-icons";
 
 const ProfileTab: React.FC = () => {
@@ -31,9 +31,9 @@ const ProfileTab: React.FC = () => {
 	console.log(user);
 	return (
 		<SafeAreaView
-			style={{
-				flex: 1,
-			}}
+			style={[
+				AppStyles.appContainer
+			]}
 		>
 			<View
 				style={{
@@ -139,8 +139,8 @@ const ProfileTab: React.FC = () => {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<TouchableOpacity onPress={() => signOut()}>
-					<Text>Log out</Text>
+				<TouchableOpacity style={styles.button} onPress={() => signOut()}>
+					<Text style={styles.text} >Log out</Text>
 				</TouchableOpacity>
 			</ScrollView>
 		</SafeAreaView>
@@ -148,6 +148,26 @@ const ProfileTab: React.FC = () => {
 };
 
 export const styles = StyleSheet.create({
+	button: {
+	marginTop: 30,
+	marginLeft: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+	backgroundColor: 'red',
+		maxWidth: 200,
+	
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
 	cardItem: {
 		display: "flex",
 		flexDirection: "row",
