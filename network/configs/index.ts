@@ -1,3 +1,3 @@
 export const AppConfig = {
-    baseUrl: "https://agriculturalmanagement.azurewebsites.net/api"
+    baseUrl: "https://agricultural-management.azurewebsites.net/api"
 }

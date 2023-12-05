@@ -1,38 +1,36 @@
-import React from "react";
-import {
-	Pressable,
-	RefreshControl,
-	SafeAreaView,
-	ScrollView,
-	Text,
-	View,
-} from "react-native";
+import { View, Text, Pressable, ScrollView, RefreshControl, ActivityIndicator } from 'react-native'
+import React from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppColors, AppStyles } from "../../../global";
 import { AntDesign } from "@expo/vector-icons";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../AppNavigator";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { getListFarm } from "../../../network/apis";
-import { ListFarmItem } from "../components/list-farm-item";
-import { Farm } from "../../../network/models";
-import { ActivityIndicator } from "react-native-paper";
-import { IFramDetails } from "../../../types/farm.type";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../AppNavigator';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { getListModules } from '../../../network/apis';
+import { IModule } from '../../../types/module.type';
+import ModulesItem from './module_item';
+
 
 type ScreenNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
-	"ListFarmScreen"
+	"ModulesScreen"
 >;
-const ListFarmScreen: React.FC = () => {
+
+const ModulesScreen = () => {
 	const navigation = useNavigation<ScreenNavigationProp>();
-	const [farms, setFarms] = React.useState<Farm[]>([]);
+	const [module, setModule] = React.useState<IModule[]>([]);
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
 	const isFocused = useIsFocused();
-	const fetchListFarm = React.useCallback(async () => {
+
+	console.log(isFocused)
+
+	const fetchListModule = React.useCallback(async () => {
 		try {
 			setIsLoading(true);
-			const res = await getListFarm();
+			const res = await getListModules();
 			console.log(res);
-			setFarms(res.data.Data);
+			console.log("abc")
+			setModule(res.data.Data as unknown as IModule[]);
 		} catch (e) {
 			console.log(e);
 		} finally {
@@ -40,22 +38,22 @@ const ListFarmScreen: React.FC = () => {
 		}
 	}, []);
 
-	const hangeNavigateScreen = (item: IFramDetails) => {
-		navigation.navigate("FarmDetailsScreen", item);
+	const hangeNavigateScreenAddModule = () => {
+		navigation.navigate("ModuleAddScreen");
 	};
 
-	const hangeNavigateScreenCreateFarm = () => {
-		navigation.navigate("CreateFarmScreen");
-	};
+	const hangeNavigateToModuleDetailScreen = (item: any) => {
+		navigation.navigate("ModuleDevicesScreen", item);
+	}
 
 	React.useEffect(() => {
 		if (isFocused) {
-			fetchListFarm().then(() => { });
+			fetchListModule().then(() => { });
 		}
 	}, [isFocused]);
 
 	return (
-		<SafeAreaView style={[AppStyles.appContainer, {}]}>
+		<SafeAreaView style={{flex: 1}}>
 			<View
 				style={{
 					justifyContent: "center",
@@ -86,7 +84,7 @@ const ListFarmScreen: React.FC = () => {
 						fontWeight: "500"
 					}}
 				>
-					Danh sách nông trại
+					Danh sách Module
 				</Text>
 				<Pressable
 					style={{
@@ -94,15 +92,13 @@ const ListFarmScreen: React.FC = () => {
 						right: 20
 					}}
 					onPress={() => {
-						hangeNavigateScreenCreateFarm();
+						hangeNavigateScreenAddModule();
 					}
 					}
 				>
-
 					<AntDesign name="pluscircleo" size={24} color="white" />
 				</Pressable>
 			</View>
-
 			{isLoading ? (
 				<View
 					style={{
@@ -122,7 +118,7 @@ const ListFarmScreen: React.FC = () => {
 					refreshControl={
 						<RefreshControl
 							refreshing={isLoading}
-							onRefresh={fetchListFarm}
+							onRefresh={fetchListModule}
 						/>
 					}
 					contentContainerStyle={{
@@ -130,19 +126,20 @@ const ListFarmScreen: React.FC = () => {
 						paddingTop: 30,
 					}}
 				>
-					{farms != null &&
-						farms?.length > 0 ?
-						farms.map((item) => (
-							<ListFarmItem
+					{module != null &&
+						module?.length > 0 ?
+						module.map((item) => (
+							<ModulesItem
 								key={item?.id}
-								farm={item}
-								onPress={() => hangeNavigateScreen(item)}
+								modules={item}
+								onPress={() => hangeNavigateToModuleDetailScreen(item)}
 							/>
-						)) : <Text>Bạn chưa tạo nông trại nào</Text>}
+
+						)) : <Text>Bạn chưa có sử dụng module nào</Text>}
 				</ScrollView>
 			)}
-		</SafeAreaView>
-	);
-};
+		</SafeAreaView >
+	)
+}
 
-export default ListFarmScreen;
+export default ModulesScreen;

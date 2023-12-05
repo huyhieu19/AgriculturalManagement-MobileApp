@@ -7,7 +7,7 @@ const SplashScreen: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
     }}>
-        <Text>Splash Screen</Text>
+        <Text>Quản lý nông trại thông minh</Text>
     </View>
 }
 

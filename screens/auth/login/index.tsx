@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
 	SafeAreaView,
 	View,
@@ -8,28 +8,29 @@ import {
 	Text,
 	useWindowDimensions,
 	ActivityIndicator,
-} from 'react-native';
-import { AppColors, AppStyles } from '../../../global';
-import { Feather } from '@expo/vector-icons';
-import { useAuth } from '../../../hooks/useAuth';
-import { Helper } from '../../../network/helper';
-import { useNavigation } from '@react-navigation/native';
-import { login } from '../../../network/apis';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native";
+import { AppColors, AppStyles } from "../../../global";
+import { Feather } from "@expo/vector-icons";
+import { useAuth } from "../../../hooks/useAuth";
+import { Helper } from "../../../network/helper";
+import { useNavigation } from "@react-navigation/native";
+import { login } from "../../../network/apis";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen: React.FC = () => {
 	const { width: screenWidth } = useWindowDimensions();
-	const [email, setEmail] = React.useState<string>('ok@gmail.com');
-	const [password, setPassword] = React.useState<string>('12345678');
-	const [isPasswordHidden, setIsPasswordHidden] = React.useState<boolean>(true);
+	const [email, setEmail] = React.useState<string>("ok@gmail.com");
+	const [password, setPassword] = React.useState<string>("12345678");
+	const [isPasswordHidden, setIsPasswordHidden] =
+		React.useState<boolean>(true);
 	const [isBusy, setIsBusy] = React.useState<boolean>(false);
-	const [loginError, setLoginError] = React.useState<string>('');
+	const [loginError, setLoginError] = React.useState<string>("");
 
 	const { signIn } = useAuth();
 	const navigation = useNavigation();
 
 	const showPasswordIconName = React.useMemo(() => {
-		return isPasswordHidden ? 'eye' : 'eye-off';
+		return isPasswordHidden ? "eye" : "eye-off";
 	}, [isPasswordHidden]);
 
 	const loginHandler = async () => {
@@ -40,10 +41,9 @@ const LoginScreen: React.FC = () => {
 				password: password,
 			};
 			const res = await login(loginPayload);
-			console.log(res.data);
 			if (Helper.isSuccess(res)) {
 				await AsyncStorage.setItem(
-					'access-token',
+					"access-token",
 					res.data.Data.tokenModel.accessToken
 				);
 				signIn({
@@ -52,7 +52,7 @@ const LoginScreen: React.FC = () => {
 				});
 			}
 		} catch (e) {
-			setLoginError('Error occurs. Please retry');
+			setLoginError("Error occurs. Please retry");
 			console.log(e);
 		} finally {
 			setIsBusy(false);
@@ -64,23 +64,23 @@ const LoginScreen: React.FC = () => {
 			style={[
 				AppStyles.appContainer,
 				{
-					alignItems: 'center',
-					justifyContent: 'center',
+					alignItems: "center",
+					justifyContent: "center",
 				},
 			]}
 		>
 			<View
 				style={{
 					flex: 1,
-					alignItems: 'center',
-					justifyContent: 'center',
+					alignItems: "center",
+					justifyContent: "center",
 					paddingHorizontal: 20,
 				}}
 			>
 				<View style={styles.textFieldContainer}>
 					<Feather name="mail" size={24} color={AppColors.slate300} />
 					<TextInput
-						placeholder={'Email'}
+						placeholder={"Email"}
 						style={styles.textField}
 						value={email}
 						onChangeText={(newValue) => setEmail(newValue)}
@@ -90,12 +90,14 @@ const LoginScreen: React.FC = () => {
 					<Feather name="lock" size={24} color={AppColors.slate300} />
 					<TextInput
 						secureTextEntry={isPasswordHidden}
-						placeholder={'Mật khẩu'}
+						placeholder={"Mật khẩu"}
 						style={styles.textField}
 						value={password}
 						onChangeText={(newValue) => setPassword(newValue)}
 					/>
-					<Pressable onPress={() => setIsPasswordHidden(!isPasswordHidden)}>
+					<Pressable
+						onPress={() => setIsPasswordHidden(!isPasswordHidden)}
+					>
 						<Feather
 							name={showPasswordIconName}
 							size={24}
@@ -114,10 +116,10 @@ const LoginScreen: React.FC = () => {
 								paddingVertical: 14,
 								borderRadius: 10,
 								backgroundColor: AppColors.primaryColor,
-								justifyContent: 'center',
-								alignItems: 'center',
+								justifyContent: "center",
+								alignItems: "center",
 								width: screenWidth - 40,
-								position: 'relative',
+								position: "relative",
 							},
 							{
 								// opacity: isBusy ? 0.6 : 1
@@ -125,13 +127,16 @@ const LoginScreen: React.FC = () => {
 						]}
 					>
 						{isBusy ? (
-							<ActivityIndicator size={'small'} color={AppColors.bgWhite} />
+							<ActivityIndicator
+								size={"small"}
+								color={AppColors.bgWhite}
+							/>
 						) : (
 							<Text
 								style={{
 									color: AppColors.bgWhite,
 									fontSize: 18,
-									fontWeight: '600',
+									fontWeight: "600",
 								}}
 							>
 								Đăng nhập
@@ -148,9 +153,9 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
 	textFieldContainer: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
 		backgroundColor: AppColors.bgWhite,
 		borderWidth: 0.5,
 		borderColor: AppColors.slate300,

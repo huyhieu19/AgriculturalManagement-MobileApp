@@ -9,3 +9,7 @@ export interface Farm {
 	userId: string;
 	countZone: any;
 }
+
+export interface CreateFarm{
+	isSuccess: boolean
+}

@@ -3,32 +3,28 @@ import { AppColors } from "../../../../global";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Farm } from "../../../../network/models";
 import { IFramDetails } from "../../../../types/farm.type";
+import { IZoneParams } from "../../../../types/zone.type";
 import { formatDateTime } from "../../../../utils";
+import { greenhouseIcon } from "../../../../assets";
 
-const fakeFarm =
-	"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
-
-interface ListFarmItemProps {
-	farm: IFramDetails;
+interface ListZonetemProps {
+	zone: IZoneParams;
 	onPress?: () => void;
-	isBorderRadius?: boolean;
-	isBgPrimary?: boolean;
 }
 
-export const ListFarmItem = (props: ListFarmItemProps) => {
+export const ListZoneItem = (props: ListZonetemProps) => {
 	return (
 		<TouchableOpacity onPress={props.onPress}>
 			<View
 				style={{
 					flexDirection: "row",
-					alignItems: "flex-start",
+					alignItems: "center",
+
 					// marginHorizontal: 20,
 					paddingHorizontal: 20,
-					backgroundColor: props?.isBgPrimary
-						? "#C7E8C7"
-						: AppColors.bgWhite,
+					backgroundColor: AppColors.bgWhite,
 					paddingVertical: 16,
-					borderRadius: props?.isBorderRadius ? 0 : 15,
+					borderRadius: 15,
 					borderWidth: 0.5,
 					borderColor: AppColors.slate200,
 					elevation: 1,
@@ -36,12 +32,10 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 				}}
 			>
 				<Image
-					source={{
-						uri: fakeFarm,
-					}}
+					source={greenhouseIcon}
 					style={{
-						width: 100,
-						height: 100,
+						width: 80,
+						height: 80,
 						borderRadius: 5,
 					}}
 				/>
@@ -49,7 +43,8 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 					style={{
 						marginLeft: 12,
 						flex: 1,
-					}}>
+					}}
+				>
 					<Text
 						style={{
 							fontSize: 18,
@@ -57,21 +52,25 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 							marginBottom: 8,
 						}}
 					>
-						{props.farm?.name}
+						{props.zone?.zoneName}
 					</Text>
 					<CardInfor
-						property={"Diện tích (m2)"}
-						value={props.farm?.area?.toString()!}
+						property={"Diện tích"}
+						value={props.zone?.area?.toString()!}
 					/>
 
 					<CardInfor
-						property={"Số lượng khu"}
-						value={props.farm?.countZone!}
+						property={"Chức năng"}
+						value={props.zone?.function!}
 					/>
-					{/* <CardInfor
-						property={"Ngày tạo"}
-						value={String(formatDateTime(props?.farm?.dateCreated!))}
-					/> */}
+					<CardInfor
+						property={"Số lượng thiết bị đo"}
+						value={props?.zone.countInstrumentation!}
+					/>
+					<CardInfor
+						property={"Số lượng khiển"}
+						value={props?.zone.countDeviceDriver!}
+					/>
 				</View>
 			</View>
 		</TouchableOpacity>
@@ -80,17 +79,19 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
 
 interface CardInforProps {
 	property: string;
-	value: string | number;
+	value: string | number | null;
 }
 
 const CardInfor = (props: CardInforProps) => {
 	return (
-		<View style={{
+		<View
+			style={{
 				flexDirection: "row",
 				flex: 1,
 				alignItems: "center",
-				justifyContent: "space-between",
-			}}>
+				gap: 10,
+			}}
+		>
 			<Text
 				style={{
 					color: AppColors.slate600,
