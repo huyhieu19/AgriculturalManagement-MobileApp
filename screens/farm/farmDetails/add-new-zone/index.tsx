@@ -16,7 +16,7 @@ import { createZone } from "../../../../network/apis";
 import { IFramDetails } from "../../../../types/farm.type";
 
 type ParamList = {
-	FarmDetailsScreen: IFramDetails;
+  FarmDetailsScreen: IFramDetails;
 };
 
 
@@ -30,6 +30,10 @@ export const AddNewZoneScreen = () => {
   const [description, setDescription] = useState("Đây là khu trong farm");
   const [note, setNote] = useState("Chú ý");
 
+  const goBack = () => {
+    navigation.goBack();
+  }
+
   const handleAddNew = async () => {
     // Perform API request to add new item
     try {
@@ -39,26 +43,24 @@ export const AddNewZoneScreen = () => {
         area: area,
         description: description,
         note: note,
-        function : function1
+        function: function1
       });
       if (res.data.Data.isSuccess) {
         Alert.alert("Thành công", "Thành công thêm khu mới", [
-          { text: "OK"},
+          { text: "OK" },
         ]);
+        goBack();
       } else {
         Alert.alert("Lỗi thêm mới", `Thêm mới khu không thành công`, [
-          { text: "OK"},
+          { text: "OK" },
         ]);
       }
     } catch (error) {
       Alert.alert("Lỗi thêm mới", `${error}`, [
-        { text: "OK"},
+        { text: "OK" },
       ]);
+      goBack();
     }
-  };
-
-  const GoBack = () => {
-    navigation.navigate("ListFarmScreen");
   };
 
   return (
@@ -79,19 +81,20 @@ export const AddNewZoneScreen = () => {
             position: "absolute",
             left: 20,
           }}
-          onPress={GoBack}
+          onPress={goBack}
         >
           <AntDesign name="left" size={24} color="white" />
         </Pressable>
         <Text style={{ fontSize: 18, color: "white" }}>
           Thêm mới khu trong nông trại
         </Text>
-      </View>
+      </View >
+      <View style={styles.Inputcontainer1}>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Id Nông trại:</Text>
           <TextInput
             style={styles.inputFarmId}
-            value= {farm.id.toString()}
+            value={farm.id.toString()}
             editable={false}
           />
         </View>
@@ -116,7 +119,7 @@ export const AddNewZoneScreen = () => {
           <TextInput
             style={styles.input}
             onChangeText={(e) => setArea(Number(e))}
-            value = {String(area)}
+            value={String(area)}
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -137,30 +140,34 @@ export const AddNewZoneScreen = () => {
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.fixToText}>
-              <Button
-                  title="Thêm mới"
-                  color={AppColors.primaryColor}
-                  onPress={() => handleAddNew()}
-              />
-              <Button
-                  title="Quay lại"
-                  color={"red"}
-                  onPress={() => GoBack()}
-              />
+            <Button
+              title="Thêm mới"
+              color={AppColors.primaryColor}
+              onPress={() => handleAddNew()}
+            />
+            <Button
+              title="Quay lại"
+              color={"red"}
+              onPress={() => goBack()}
+            />
           </View>
         </View>
+      </View>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
+  Inputcontainer1: {
+    marginTop: 100
+  },
   fixToText: {
-        flex: 1,
-        paddingLeft: 30,
-        paddingRight: 30,
-        marginHorizontal: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
+    flex: 1,
+    paddingLeft: 30,
+    paddingRight: 30,
+    marginHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   inputFarmId: {
     height: 40,
     margin: 12,
@@ -180,15 +187,17 @@ const styles = StyleSheet.create({
   Inputcontainer: {
     flexDirection: 'row', // Set flexDirection to 'row'
     alignItems: 'center', // Align items vertically in the center
-
     marginBottom: 10,
   },
   Inputlabel: {
     minWidth: '25%', // Fixed width for labels
     marginRight: 5, // Add some margin between the label and input
+    marginLeft: 5,
+    fontWeight: "500",
   },
   buttonContainer: {
     flexDirection: 'row', // Set flexDirection to 'row'
     alignItems: 'center', // Align items vertically in the center
+    marginTop: 50
   }
 });

@@ -1,8 +1,10 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import React from 'react'
-import { IModule } from '../../../../types/module.type';
 import { AppColors } from '../../../../global';
 import { formatDateTime } from "../../../../utils";
+import { IModule } from "../../../../types/module.type";
+import { closeIcon, esp8266 } from "../../../../assets";
+import { removeModuleFromUser } from "../../../../network/apis";
 
 interface ModulesItemProps {
 	modules: IModule;
@@ -12,8 +14,31 @@ interface ModulesItemProps {
 }
 
 const ModulesItem = (props: ModulesItemProps) => {
-  return (
-    <TouchableOpacity onPress={props.onPress}>
+
+	const RemoveModule = async () => {
+		Alert.alert('Xóa Module', 'Bạn có chắc chắn muốn xóa?', [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('Cancel Pressed'),
+				style: 'cancel',
+			},
+			{
+				text: 'OK', onPress: async () => {
+					try {
+						const res = await removeModuleFromUser(props.modules.id);
+						console.log(res);
+						console.log("Xoa thanh cong")
+					} catch (e) {
+						console.log(e);
+					}
+				}
+			},
+		]);
+
+	};
+
+	return (
+		<TouchableOpacity onPress={props.onPress}>
 			<View
 				style={{
 					flexDirection: "row",
@@ -32,12 +57,10 @@ const ModulesItem = (props: ModulesItemProps) => {
 				}}
 			>
 				<Image
-					source={{
-						uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fnshopvn.com%2Fproduct%2Fmodule-thu-phat-wifi-esp8266-nodemcu-lua-cp2102%2F&psig=AOvVaw2c_wco9di3Jta18-rr3Bza&ust=1701712082009000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJDFwtLp84IDFQAAAAAdAAAAABAE",
-					}}
+					source={esp8266}
 					style={{
-						width: 100,
-						height: 100,
+						width: 70,
+						height: 70,
 						borderRadius: 5,
 					}}
 				/>
@@ -54,9 +77,9 @@ const ModulesItem = (props: ModulesItemProps) => {
 						}}
 					>
 						{props.modules?.name}
-                  </Text>
+					</Text>
 					<CardInfor
-						property={"Loại module"}
+						property={"Thiết bị"}
 						value={props.modules?.name!}
 					/>
 					<CardInfor
@@ -64,9 +87,18 @@ const ModulesItem = (props: ModulesItemProps) => {
 						value={String(formatDateTime(props?.modules?.dateCreated!))}
 					/>
 				</View>
+				<Pressable onPress={() => RemoveModule()}>
+					<Image source={closeIcon}
+						style={{
+							width: 15,
+							height: 15,
+							right: -12,
+							top: -7
+						}} />
+				</Pressable>
 			</View>
-		</TouchableOpacity>
-  )
+		</TouchableOpacity >
+	)
 }
 
 interface CardInforProps {
@@ -78,10 +110,10 @@ const CardInfor = (props: CardInforProps) => {
 	return (
 		<View style={{
 			flexDirection: "row",
-				flex: 1,
-				alignItems: "center",
-            justifyContent: "space-between",
-			}}>
+			flex: 1,
+			alignItems: "center",
+			justifyContent: "space-between",
+		}}>
 			<Text
 				style={{
 					color: AppColors.slate600,
@@ -98,7 +130,8 @@ const CardInfor = (props: CardInforProps) => {
 					color: "black",
 					fontSize: 15,
 					fontWeight: "500",
-                    fontStyle: "normal",
+					fontStyle: "normal",
+					maxWidth: "60%"
 				}}
 			>
 				{props.value}

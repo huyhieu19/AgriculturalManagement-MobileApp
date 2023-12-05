@@ -2,9 +2,10 @@ import { axiosInstance } from "../index";
 import { BaseResponse, CreateFarm, Farm, LoginResponse } from "../models";
 import { IZoneParams } from "../../types/zone.type";
 import { CreateZone } from "../models/Zone";
-import { ModuleDisplay } from "../models/module/module";
+import { ICreateModuleParams } from "../models/module/module";
 import { IModule } from "../../types/module.type";
 import { IDeviceOnModule } from "../../types/device.type";
+
 
 export function login(loginPayload: { email: string; password: string }) {
 	return axiosInstance.post<BaseResponse<LoginResponse>>(
@@ -37,21 +38,24 @@ export function createZone(params: any) {
 	);
 }
 
-//
+// Module
 export function getListModules() {
 	return axiosInstance.post<BaseResponse<IModule>>(
 		"/Module/get-modules"
 	);
 }
-export function createModule(params: any) {
-	return axiosInstance.post<BaseResponse<IModule>>(
-		"/Module/add-module-to-user",
-		params
+export function createModule(moduleId: string) {
+	return axiosInstance.post<BaseResponse<boolean | string>>(
+		`/Module/add-module-to-user?moduleId=${moduleId}`
 	);
 }
-export function getListDevicesOnModule(params: any) {
+export function getListDevicesOnModule() {
 	return axiosInstance.post<BaseResponse<IDeviceOnModule>>(
-		"/Module/devices-on-module",
-		params
+		"/Module/get-modules"
+	);
+}
+export function removeModuleFromUser(moduleId: string) {
+	return axiosInstance.post<BaseResponse<boolean | string>>(
+		`/Module/remove-module-from-user?moduleId=${moduleId}`
 	);
 }

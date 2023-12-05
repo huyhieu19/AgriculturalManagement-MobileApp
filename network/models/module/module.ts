@@ -1,4 +1,4 @@
-export interface ModuleDisplay{
+export interface ModuleDisplay {
     id: string;
     name: string;
     moduleType: number;
@@ -9,4 +9,7 @@ export interface ModuleDisplay{
     clientId?: string | null;
     userName?: string | null;
     password?: string | null;
+}
+export interface ICreateModuleParams {
+    moduleId: string
 }

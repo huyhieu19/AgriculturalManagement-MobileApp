@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, TextInput,Button, StyleSheet } from 'react-native'
+import { View, Text, Pressable, Alert, TextInput, Button, StyleSheet } from 'react-native'
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,6 +15,10 @@ export const CreateFarmScreen = () => {
   const [address, setAddress] = useState('Ha Noi');
   const [note, setNote] = useState('Chú ý');
 
+  const GoBack = () => {
+    navigation.navigate("ListFarmScreen");
+  }
+
   const handleAddNew = async () => {
     // Perform API request to add new item
     try {
@@ -27,128 +31,131 @@ export const CreateFarmScreen = () => {
       });
       if (res.data.Data.isSuccess) {
         Alert.alert('Thành công', 'Thành công thêm farm mới', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')}]);
+          { text: 'OK', onPress: () => console.log('OK Pressed') }]);
+        GoBack();
       } else {
         Alert.alert('Lỗi thêm mới', `Thêm mới farm không thành công`, [
-          { text: 'OK', onPress: () => console.log('OK Pressed')}]);
+          { text: 'OK', onPress: () => console.log('OK Pressed') }]);
       }
     } catch (error) {
       Alert.alert('Lỗi thêm mới', `${error}`, [
         { text: 'OK', onPress: () => console.log('OK Pressed') }]);
+      GoBack();
     };
   };
 
-  const GoBack = () => {
-    navigation.navigate("ListFarmScreen");
-  }
+
 
   return (
     <SafeAreaView>
       <View
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					alignItems: "center",
-					paddingHorizontal: 20,
-					backgroundColor: AppColors.primaryColor,
-					paddingVertical: 12,
-					justifyContent: "center",
-				}}
-			>
-				<Pressable
-					style={{
-						position: "absolute",
-						left: 20,
-					}}
-					onPress={GoBack}
-				>
-					<AntDesign name="left" size={24} color="white" />
-				</Pressable>
-				<Text style={{ fontSize: 18, color: "white" }}>
-					Thêm mới nông trại
-				</Text>
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          paddingHorizontal: 20,
+          backgroundColor: AppColors.primaryColor,
+          paddingVertical: 12,
+          justifyContent: "center",
+        }}
+      >
+        <Pressable
+          style={{
+            position: "absolute",
+            left: 20,
+          }}
+          onPress={GoBack}
+        >
+          <AntDesign name="left" size={24} color="white" />
+        </Pressable>
+        <Text style={{ fontSize: 18, color: "white" }}>
+          Thêm mới nông trại
+        </Text>
       </View>
 
-      <View>
+      <View style={styles.Inputcontainer1}>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
             Tên nông trại:
           </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={e => setName(e)}
-          value={name}
-         />
+          <TextInput
+            style={styles.input}
+            onChangeText={e => setName(e)}
+            value={name}
+          />
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
             Chi tiết:
           </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={e => setDescription(e)}
-          value={description}
-         />
+          <TextInput
+            style={styles.input}
+            onChangeText={e => setDescription(e)}
+            value={description}
+          />
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
             Diện tích (m2):
           </Text>
-        <TextInput
-          style={styles.input}
+          <TextInput
+            style={styles.input}
             onChangeText={e => setArea(Number(e))}
             value={String(area)}
-         />
+          />
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
             Địa chỉ:
           </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={e => setAddress(e)}
-          value={address}
-         />
+          <TextInput
+            style={styles.input}
+            onChangeText={e => setAddress(e)}
+            value={address}
+          />
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
             Chú ý:
           </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={e => setNote(e)}
-          value={note}
-         />
+          <TextInput
+            style={styles.input}
+            onChangeText={e => setNote(e)}
+            value={note}
+          />
         </View>
-        
+
       </View>
       <View style={styles.buttonContainer}>
         <View style={styles.fixToText}>
-            <Button
-                title="Thêm mới"
-                color={AppColors.primaryColor}
-                onPress={() => handleAddNew()}
-            />
-            <Button
-                title="Quay lại"
-                color={"red"}
-                onPress={() => GoBack()}
-            />
+          <Button
+            title="Thêm mới"
+            color={AppColors.primaryColor}
+            onPress={() => handleAddNew()}
+          />
+          <Button
+            title="Quay lại"
+            color={"red"}
+            onPress={() => GoBack()}
+          />
         </View>
-        </View>
+      </View>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  Inputcontainer1: {
+    marginTop: 100,
+  },
   fixToText: {
-        flex: 1,
-        paddingLeft: 30,
-        paddingRight: 30,
-        marginHorizontal: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
+    flex: 1,
+    paddingLeft: 30,
+    paddingRight: 30,
+    marginHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   input: {
     height: 40,
     margin: 12,
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
   Inputcontainer: {
     flexDirection: 'row', // Set flexDirection to 'row'
     alignItems: 'center', // Align items vertically in the center
-
+    fontWeight: "500",
     marginBottom: 10,
   },
   Inputlabel: {
@@ -169,5 +176,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row', // Set flexDirection to 'row'
     alignItems: 'center', // Align items vertically in the center
+    marginTop: 50
   }
 });

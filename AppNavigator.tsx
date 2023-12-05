@@ -17,6 +17,7 @@ import { AddNewZoneScreen } from "./screens/farm/farmDetails/add-new-zone";
 import ModulesScreen from "./screens/module/modules_main";
 import ModuleAddScreen from "./screens/module/module_add";
 import ModuleDevicesScreen from "./screens/module/modules_main/module_devices_item";
+import { IModule } from "./types/module.type";
 
 export type RootStackParamList = {
 	HomeScreen: undefined;
@@ -28,7 +29,7 @@ export type RootStackParamList = {
 	AddNewZoneScreen: undefined;
 	ModulesScreen: undefined;
 	ModuleAddScreen: undefined;
-	ModuleDevicesScreen: undefined;
+	ModuleDevicesScreen: IModule;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

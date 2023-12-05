@@ -5,11 +5,11 @@ import { AppColors, AppStyles } from "../../../global";
 import { AntDesign } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../AppNavigator';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getListModules } from '../../../network/apis';
-import { ModuleDisplay } from '../../../network/models/module/module';
 import { IModule } from '../../../types/module.type';
 import ModulesItem from './module_item';
+
 
 type ScreenNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
@@ -17,38 +17,44 @@ type ScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const ModulesScreen = () => {
-  	const navigation = useNavigation<ScreenNavigationProp>();
+	const navigation = useNavigation<ScreenNavigationProp>();
 	const [module, setModule] = React.useState<IModule[]>([]);
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const isFocused = useIsFocused();
+
+	console.log(isFocused)
 
 	const fetchListModule = React.useCallback(async () => {
 		try {
-				setIsLoading(true);
-				const res = await getListModules();
-				console.log(res);
-				console.log("abc")
-				setModule(res.data.Data as unknown as IModule[]);
-			} catch (e) {
-				console.log(e);
-			} finally {
-				setIsLoading(false);
-			}
+			setIsLoading(true);
+			const res = await getListModules();
+			console.log(res);
+			console.log("abc")
+			setModule(res.data.Data as unknown as IModule[]);
+		} catch (e) {
+			console.log(e);
+		} finally {
+			setIsLoading(false);
+		}
 	}, []);
 
 	const hangeNavigateScreenAddModule = () => {
 		navigation.navigate("ModuleAddScreen");
 	};
+
 	const hangeNavigateToModuleDetailScreen = (item: any) => {
-		navigation.navigate("ModuleDevicesScreen");
+		navigation.navigate("ModuleDevicesScreen", item);
 	}
 
 	React.useEffect(() => {
-		fetchListModule().then(() => {});
-	}, []);
- 
-  return (
-    <SafeAreaView>
-      <View
+		if (isFocused) {
+			fetchListModule().then(() => { });
+		}
+	}, [isFocused]);
+
+	return (
+		<SafeAreaView style={{flex: 1}}>
+			<View
 				style={{
 					justifyContent: "center",
 					alignItems: "center",
@@ -86,14 +92,14 @@ const ModulesScreen = () => {
 						right: 20
 					}}
 					onPress={() => {
-						  hangeNavigateScreenAddModule();
-						}
+						hangeNavigateScreenAddModule();
+					}
 					}
 				>
 					<AntDesign name="pluscircleo" size={24} color="white" />
 				</Pressable>
-      </View>
-      { isLoading ? (
+			</View>
+			{isLoading ? (
 				<View
 					style={{
 						flex: 1,
@@ -128,12 +134,12 @@ const ModulesScreen = () => {
 								modules={item}
 								onPress={() => hangeNavigateToModuleDetailScreen(item)}
 							/>
-              
-						) ): <Text>Bạn chưa có sử dụng module nào</Text>}
+
+						)) : <Text>Bạn chưa có sử dụng module nào</Text>}
 				</ScrollView>
-      )}
-    </SafeAreaView>
-  )
+			)}
+		</SafeAreaView >
+	)
 }
 
 export default ModulesScreen;

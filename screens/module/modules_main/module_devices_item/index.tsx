@@ -1,44 +1,35 @@
 import { View, Text, SafeAreaView, Pressable, ActivityIndicator, ScrollView, RefreshControl } from 'react-native'
 import React from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../../AppNavigator';
 import { AppColors } from '../../../../global';
 import { AntDesign } from "@expo/vector-icons";
-import { IDeviceOnModule } from '../../../../types/device.type';
-import { getListDevicesOnModule } from '../../../../network/apis';
+import DevicesOnModulesItem from './device_item';
+import { IModule } from '../../../../types/module.type';
+
 
 type ScreenNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
 	"ModulesScreen"
 >;
 
-const ModuleDevicesScreen = () => {
-    const navigation = useNavigation<ScreenNavigationProp>();
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [devices, setDevices] = React.useState<IDeviceOnModule[]>([]);
-        const [id, setId] = React.useState<String>("97429d21-59e0-43ab-20e9-08dbeb8ab6a6");
-    
-    const fetchListDevicesOnModule = React.useCallback(async () => {
-    try {
-            setIsLoading(true);
-            const res = await getListDevicesOnModule({id : String});
-            console.log(res);
-            console.log("abc")
-            setDevices(res.data.Data as unknown as IDeviceOnModule[]);
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
+type ModulesItemProps = {
+	modules: IModule;
+}
 
-    React.useEffect(() => {
-        fetchListDevicesOnModule().then(() => {});
-    }, []);
-  return (
-    <SafeAreaView>
-      <View
+const ModuleDevicesScreen = () => {
+	const navigation = useNavigation<ScreenNavigationProp>();
+	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+	const route = useRoute<RouteProp<ModulesItemProps, 'modules'>>()
+
+	return (
+		<SafeAreaView style={{
+			flex: 1,
+			marginTop: 25
+		}}>
+			<View
 				style={{
 					justifyContent: "center",
 					alignItems: "center",
@@ -70,20 +61,9 @@ const ModuleDevicesScreen = () => {
 				>
 					Danh sách thiết bị trên module
 				</Text>
-				{/* <Pressable
-					style={{
-						position: "absolute",
-						right: 20
-					}}
-					onPress={() => {
-						  hangeNavigateScreenAddModule();
-						}
-					}
-				>
-					<AntDesign name="pluscircleo" size={24} color="white" />
-				</Pressable> */}
-      </View>
-      { isLoading ? (
+
+			</View>
+			{isLoading ? (
 				<View
 					style={{
 						flex: 1,
@@ -102,7 +82,7 @@ const ModuleDevicesScreen = () => {
 					refreshControl={
 						<RefreshControl
 							refreshing={isLoading}
-							onRefresh={fetchListDevicesOnModule}
+						//onRefresh={fetchListDevicesOnModule}
 						/>
 					}
 					contentContainerStyle={{
@@ -110,20 +90,18 @@ const ModuleDevicesScreen = () => {
 						paddingTop: 30,
 					}}
 				>
-					{/* {module != null &&
-						module?.length > 0 ?
-						module.map((item) => (
-							<ModulesItem
+					{route.params.devices != null &&
+						route.params.devices?.length > 0 ?
+						route.params.devices.map((item) => (
+							<DevicesOnModulesItem
 								key={item?.id}
-								modules={item}
-								onPress={() => hangeNavigateToModuleDetailScreen(item)}
+								device={item}
 							/>
-              
-						) ): <Text>Bạn chưa có sử dụng module nào</Text>} */}
+						)) : <Text>Device on module is empty</Text>}
 				</ScrollView>
-      )}
-    </SafeAreaView>
-  )
+			)}
+		</SafeAreaView>
+	)
 }
 
 export default ModuleDevicesScreen

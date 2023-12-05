@@ -11,14 +11,12 @@ import { AppColors, AppStyles } from "../../../global";
 import { AntDesign } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../AppNavigator";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { getListFarm } from "../../../network/apis";
 import { ListFarmItem } from "../components/list-farm-item";
-import { CreateFarmScreen } from "../components/add-new-farm"
 import { Farm } from "../../../network/models";
 import { ActivityIndicator } from "react-native-paper";
 import { IFramDetails } from "../../../types/farm.type";
-import { greenA200 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 type ScreenNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
@@ -28,6 +26,7 @@ const ListFarmScreen: React.FC = () => {
 	const navigation = useNavigation<ScreenNavigationProp>();
 	const [farms, setFarms] = React.useState<Farm[]>([]);
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const isFocused = useIsFocused();
 	const fetchListFarm = React.useCallback(async () => {
 		try {
 			setIsLoading(true);
@@ -50,8 +49,10 @@ const ListFarmScreen: React.FC = () => {
 	};
 
 	React.useEffect(() => {
-		fetchListFarm().then(() => {});
-	}, [fetchListFarm]);
+		if (isFocused) {
+			fetchListFarm().then(() => { });
+		}
+	}, [isFocused]);
 
 	return (
 		<SafeAreaView style={[AppStyles.appContainer, {}]}>
@@ -94,7 +95,7 @@ const ListFarmScreen: React.FC = () => {
 					}}
 					onPress={() => {
 						hangeNavigateScreenCreateFarm();
-						}
+					}
 					}
 				>
 
@@ -137,7 +138,7 @@ const ListFarmScreen: React.FC = () => {
 								farm={item}
 								onPress={() => hangeNavigateScreen(item)}
 							/>
-						) ): <Text>Bạn chưa tạo nông trại nào</Text>}
+						)) : <Text>Bạn chưa tạo nông trại nào</Text>}
 				</ScrollView>
 			)}
 		</SafeAreaView>

@@ -1,3 +1,5 @@
+import { IDeviceOnModule } from "./device.type";
+
 type IModule = {
     id: string;
     name: string;
@@ -9,5 +11,6 @@ type IModule = {
     clientId?: string | null;
     userName?: string | null;
     password?: string | null;
+    devices?: IDeviceOnModule[];
 }
 export { IModule };

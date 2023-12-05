@@ -19,7 +19,7 @@ function App() {
         <Provider store={store}>
             <PersistGate
                 onBeforeLift={async () => {
-                    await sleep(0.5);
+                    await sleep(0.1);
                 }}
                 persistor={reduxPersistor}
                 loading={

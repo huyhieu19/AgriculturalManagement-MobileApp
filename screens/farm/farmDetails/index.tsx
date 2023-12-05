@@ -1,11 +1,10 @@
 //import liraries
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	View,
 	Text,
 	StyleSheet,
 	SafeAreaView,
-	Image,
 	Pressable,
 	ActivityIndicator,
 	ScrollView,
@@ -15,7 +14,7 @@ import {
 	useRoute,
 	RouteProp,
 	useNavigation,
-	ParamListBase,
+	useIsFocused
 } from "@react-navigation/native";
 import { IFramDetails } from "../../../types/farm.type";
 import { AppColors, AppStyles } from "../../../global";
@@ -35,7 +34,7 @@ const FarmDetailsScreen = () => {
 	const farm = route?.params ?? [];
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [zoneList, setZoneList] = useState<IZoneParams[]>([]);
-
+	const isForcused = useIsFocused();
 	const fetchListZone = React.useCallback(async () => {
 		try {
 			setIsLoading(true);
@@ -49,9 +48,10 @@ const FarmDetailsScreen = () => {
 	}, []);
 
 	React.useEffect(() => {
-		fetchListZone().then(() => {});
-	}, []);
-	console.log(zoneList);
+		if (isForcused) {
+			fetchListZone().then(() => { });
+		}
+	}, [isForcused]);
 
 	function hangeNavigateScreenCreateZone(item: IFramDetails) {
 		navigation.navigate("AddNewZoneScreen", item);
@@ -81,7 +81,7 @@ const FarmDetailsScreen = () => {
 				>
 					<AntDesign name="left" size={24} color="white" />
 				</Pressable>
-				<Text style={{ fontSize: 18, color: "white", fontWeight: "500"}}>
+				<Text style={{ fontSize: 18, color: "white", fontWeight: "500" }}>
 					Khu trong nông trại
 				</Text>
 				<Pressable
@@ -91,7 +91,7 @@ const FarmDetailsScreen = () => {
 					}}
 					onPress={() => {
 						hangeNavigateScreenCreateZone(farm);
-						}
+					}
 					}
 				>
 					<AntDesign name="pluscircleo" size={24} color="white" />
@@ -135,7 +135,7 @@ const FarmDetailsScreen = () => {
 								<ListZoneItem
 									key={item?.id}
 									zone={item}
-									// onPress={() => hangeNavigateScreen(item)}
+								// onPress={() => hangeNavigateScreen(item)}
 								/>
 							);
 						}) : <Text>Bạn chưa tạo khu nào</Text>}
@@ -144,9 +144,6 @@ const FarmDetailsScreen = () => {
 		</SafeAreaView>
 	);
 };
-
-// define your styles
-const styles = StyleSheet.create({});
 
 //make this component available to the app
 export default FarmDetailsScreen;
