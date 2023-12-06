@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import {
 	View,
 	Text,
-	StyleSheet,
 	SafeAreaView,
 	Pressable,
 	ActivityIndicator,
 	ScrollView,
 	RefreshControl,
+	Alert,
 } from "react-native";
 import {
 	useRoute,
@@ -31,17 +31,24 @@ type ParamList = {
 const FarmDetailsScreen = () => {
 	const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
 	const navigation = useNavigation<any>();
-	const farm = route?.params ?? [];
+	const farmProps = route?.params ?? [];
+	const isForcused = useIsFocused();
+
+	const [farmState, setFarmState] = useState<IFramDetails>(farmProps)
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [zoneList, setZoneList] = useState<IZoneParams[]>([]);
-	const isForcused = useIsFocused();
+
 	const fetchListZone = React.useCallback(async () => {
 		try {
 			setIsLoading(true);
-			const res = await getListZone({ farmId: Number(farm?.id!) });
+			const res = await getListZone({ farmId: Number(farmProps?.id!) });
 			setZoneList(res.data.Data as IZoneParams[]);
 		} catch (e) {
-			console.log(e);
+			Alert.alert("Lỗi", `Lỗi lấy dữ liệu khu trong nông trại`, [
+				{ text: "OK" },
+			]);
+			navigation.navigate("ListFarmScreen");
+			console.log("Error on zone screen" + e);
 		} finally {
 			setIsLoading(false);
 		}
@@ -55,6 +62,10 @@ const FarmDetailsScreen = () => {
 
 	function hangeNavigateScreenCreateZone(item: IFramDetails) {
 		navigation.navigate("AddNewZoneScreen", item);
+	}
+
+	const hangeNavigateScreenDeviceOnZone = (item: IZoneParams) => {
+		navigation.navigate("DeviceOnZoneScreen", item)
 	}
 
 	return (
@@ -90,7 +101,7 @@ const FarmDetailsScreen = () => {
 						right: 20
 					}}
 					onPress={() => {
-						hangeNavigateScreenCreateZone(farm);
+						hangeNavigateScreenCreateZone(farmState);
 					}
 					}
 				>
@@ -98,7 +109,7 @@ const FarmDetailsScreen = () => {
 				</Pressable>
 			</View>
 			<View>
-				<ListFarmItem farm={farm} isBorderRadius isBgPrimary />
+				<ListFarmItem farm={farmState} isBorderRadius isBgPrimary />
 			</View>
 			{isLoading ? (
 				<View
@@ -135,7 +146,7 @@ const FarmDetailsScreen = () => {
 								<ListZoneItem
 									key={item?.id}
 									zone={item}
-								// onPress={() => hangeNavigateScreen(item)}
+									onPress={() => hangeNavigateScreenDeviceOnZone(item)}
 								/>
 							);
 						}) : <Text>Bạn chưa tạo khu nào</Text>}

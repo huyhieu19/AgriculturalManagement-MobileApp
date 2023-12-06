@@ -1,15 +1,14 @@
 import React from "react";
 import { AppColors } from "../../../../global";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Farm } from "../../../../network/models";
-import { IFramDetails } from "../../../../types/farm.type";
 import { IZoneParams } from "../../../../types/zone.type";
-import { formatDateTime } from "../../../../utils";
 import { greenhouseIcon } from "../../../../assets";
 
 interface ListZonetemProps {
 	zone: IZoneParams;
 	onPress?: () => void;
+	isBorderRadius?: boolean;
+	isBgPrimary?: boolean;
 }
 
 export const ListZoneItem = (props: ListZonetemProps) => {
@@ -19,12 +18,13 @@ export const ListZoneItem = (props: ListZonetemProps) => {
 				style={{
 					flexDirection: "row",
 					alignItems: "center",
-
 					// marginHorizontal: 20,
 					paddingHorizontal: 20,
-					backgroundColor: AppColors.bgWhite,
+					backgroundColor: props?.isBgPrimary
+						? "#C7E8C7"
+						: AppColors.bgWhite,
 					paddingVertical: 16,
-					borderRadius: 15,
+					borderRadius: props?.isBorderRadius ? 0 : 15,
 					borderWidth: 0.5,
 					borderColor: AppColors.slate200,
 					elevation: 1,
@@ -109,6 +109,7 @@ const CardInfor = (props: CardInforProps) => {
 					fontSize: 16,
 					fontWeight: "500",
 					fontStyle: "normal",
+					marginBottom: 5,
 				}}
 			>
 				{props.value}

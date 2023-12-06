@@ -1,9 +1,7 @@
 import React from "react";
 import { AppColors } from "../../../../global";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Farm } from "../../../../network/models";
 import { IFramDetails } from "../../../../types/farm.type";
-import { formatDateTime } from "../../../../utils";
 
 const fakeFarm =
 	"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
@@ -108,6 +106,7 @@ const CardInfor = (props: CardInforProps) => {
 					fontSize: 16,
 					fontWeight: "500",
 					fontStyle: "normal",
+					marginBottom: 5,
 				}}
 			>
 				{props.value}

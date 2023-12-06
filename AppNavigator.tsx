@@ -1,8 +1,7 @@
 import React from "react";
 import {
 	createNavigationContainerRef,
-	NavigationContainer,
-	NavigationContainerRef,
+	NavigationContainer
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "./hooks/useAuth";
@@ -18,6 +17,8 @@ import ModulesScreen from "./screens/module/modules_main";
 import ModuleAddScreen from "./screens/module/module_add";
 import ModuleDevicesScreen from "./screens/module/modules_main/module_devices_item";
 import { IModule } from "./types/module.type";
+import DeviceControlScreen from "./screens/farm/devices/deviceControl";
+import DeviceOnZoneScreen from "./screens/farm/devices";
 
 export type RootStackParamList = {
 	HomeScreen: undefined;
@@ -30,6 +31,9 @@ export type RootStackParamList = {
 	ModulesScreen: undefined;
 	ModuleAddScreen: undefined;
 	ModuleDevicesScreen: IModule;
+	DeviceControlScreen: undefined;
+	DeviceInstrumentationScreen: undefined;
+	DeviceOnZoneScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -62,6 +66,8 @@ const AppNavigator: React.FC = () => {
 							name={"HomeScreen"}
 							component={HomeScreen}
 						/>
+						{/* Farm */}
+
 						<Stack.Screen
 							name={"ListFarmScreen"}
 							component={ListFarmScreen}
@@ -79,6 +85,27 @@ const AppNavigator: React.FC = () => {
 							name={"AddNewZoneScreen"}
 							component={AddNewZoneScreen}
 						/>
+						{/* device on Zone */}
+
+						<Stack.Screen
+							name={"DeviceOnZoneScreen"}
+							component={DeviceOnZoneScreen}
+						/>
+						<Stack.Screen
+							name={"DeviceControlScreen"}
+							component={DeviceControlScreen}
+						/>
+							{/* <Stack.Screen
+								name={"DeviceInstrumentationScreen"}
+								component={DeviceInstrumentationScreen}
+							/> */}
+
+
+
+						{/* ---------------- */}
+
+						{/* Module */}
+
 						<Stack.Screen
 							name={"ModulesScreen"}
 							component={ModulesScreen}
@@ -91,6 +118,15 @@ const AppNavigator: React.FC = () => {
 							name={"ModuleDevicesScreen"}
 							component={ModuleDevicesScreen}
 						/>
+						{/* ---------------- */}
+
+						{/* Setting */}
+
+						{/* ---------------- */}
+
+						{/* Statistic */}
+
+						{/* ---------------- */}
 					</>
 				) : (
 					<>

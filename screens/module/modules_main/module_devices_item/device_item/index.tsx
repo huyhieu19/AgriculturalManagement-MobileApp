@@ -50,13 +50,12 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
                             marginBottom: 8,
                         }}
                     >
-                        {props.device?.nameRef}
+                        {props.device?.name}
                     </Text>
                     <CardInfor
                         property={"Gate"}
                         value={props.device?.gate?.toString()!}
                     />
-
                     <CardInfor
                         property={"Hoat động"}
                         value={props.device?.isAction ? "Mở" : "Đóng"}
@@ -66,7 +65,11 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
                         value={props?.device.isAuto ? "Tự động" : "Thủ công"}
                     />
                     <CardInfor
-                        property={"Loại:"}
+                        property={"Sử dụng"}
+                        value={props?.device.isUsed ? "Có" : "Không"}
+                    />
+                    <CardInfor
+                        property={"Loại"}
                         value={props?.device.deviceType == "R" ? "Thiết bị đo" : "Thiết bị điều khiển"}
                     />
                 </View>
@@ -107,6 +110,7 @@ const CardInfor = (props: CardInforProps) => {
                     fontSize: 16,
                     fontWeight: "500",
                     fontStyle: "normal",
+                    marginBottom: 5,
                 }}
             >
                 {props.value}

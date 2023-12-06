@@ -2,9 +2,8 @@ import { axiosInstance } from "../index";
 import { BaseResponse, CreateFarm, Farm, LoginResponse } from "../models";
 import { IZoneParams } from "../../types/zone.type";
 import { CreateZone } from "../models/Zone";
-import { ICreateModuleParams } from "../models/module/module";
 import { IModule } from "../../types/module.type";
-import { IDeviceOnModule } from "../../types/device.type";
+import { IDeviceOnModule, IDeviceOnZone } from "../../types/device.type";
 
 
 export function login(loginPayload: { email: string; password: string }) {
@@ -35,6 +34,22 @@ export function createZone(params: any) {
 	return axiosInstance.post<BaseResponse<CreateZone>>(
 		"/Zone/zone",
 		params
+	);
+}
+
+export function getDevicesOnZone(zoneId: number) {
+	return axiosInstance.post<BaseResponse<IDeviceOnZone[]>>(
+		`/Zone/devices-on-zone?zoneId=${zoneId}`
+	);
+}
+export function getInstrumentationOnZone(zoneId: number) {
+	return axiosInstance.post<BaseResponse<IDeviceOnZone[]>>(
+		`/Zone/device-instrumentation-used?zoneId=${zoneId}`
+	);
+}
+export function getControlOnZone(zoneId: number) {
+	return axiosInstance.post<BaseResponse<IDeviceOnZone[]>>(
+		`/Zone/device-control-used?zoneId=${zoneId}`
 	);
 }
 

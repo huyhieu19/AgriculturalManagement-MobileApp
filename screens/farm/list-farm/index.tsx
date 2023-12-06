@@ -1,5 +1,6 @@
 import React from "react";
 import {
+	Alert,
 	Pressable,
 	RefreshControl,
 	SafeAreaView,
@@ -31,10 +32,13 @@ const ListFarmScreen: React.FC = () => {
 		try {
 			setIsLoading(true);
 			const res = await getListFarm();
-			console.log(res);
 			setFarms(res.data.Data);
 		} catch (e) {
-			console.log(e);
+			Alert.alert("Lỗi", `Lỗi lấy dữ liệu nông trại`, [
+				{ text: "OK" },
+			]);
+			navigation.navigate("HomeScreen");
+			console.log("Error on farm screen" + e);
 		} finally {
 			setIsLoading(false);
 		}
