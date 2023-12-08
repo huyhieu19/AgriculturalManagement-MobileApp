@@ -89,7 +89,7 @@ export const AddNewZoneScreen = () => {
           Thêm mới khu trong nông trại
         </Text>
       </View >
-      <View style={styles.Inputcontainer1}>
+      <View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Id Nông trại:</Text>
           <TextInput
@@ -157,9 +157,6 @@ export const AddNewZoneScreen = () => {
   );
 };
 const styles = StyleSheet.create({
-  Inputcontainer1: {
-    marginTop: 100
-  },
   fixToText: {
     flex: 1,
     paddingLeft: 30,
@@ -167,6 +164,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    borderRadius: 10
   },
   inputFarmId: {
     height: 40,

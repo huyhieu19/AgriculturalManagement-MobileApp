@@ -29,6 +29,7 @@ export const ListZoneItem = (props: ListZonetemProps) => {
 					borderColor: AppColors.slate200,
 					elevation: 1,
 					marginBottom: 20,
+					height: 200
 				}}
 			>
 				<Image
@@ -64,11 +65,11 @@ export const ListZoneItem = (props: ListZonetemProps) => {
 						value={props.zone?.function!}
 					/>
 					<CardInfor
-						property={"Số lượng thiết bị đo"}
+						property={"SL thiết bị đo"}
 						value={props?.zone.countInstrumentation!}
 					/>
 					<CardInfor
-						property={"Số lượng khiển"}
+						property={"SL thiết bị điều khiển"}
 						value={props?.zone.countDeviceDriver!}
 					/>
 				</View>

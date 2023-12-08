@@ -1,7 +1,7 @@
 import React from "react";
 import {
-	createNavigationContainerRef,
-	NavigationContainer
+  createNavigationContainerRef,
+  NavigationContainer,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "./hooks/useAuth";
@@ -19,126 +19,126 @@ import ModuleDevicesScreen from "./screens/module/modules_main/module_devices_it
 import { IModule } from "./types/module.type";
 import DeviceControlScreen from "./screens/farm/devices/deviceControl";
 import DeviceOnZoneScreen from "./screens/farm/devices";
+import DeviceInstrumentationScreen from "./screens/farm/devices/deviceInstrumentation";
+import { EditDeviceScreen } from "./screens/module/modules_main/edit_device_item";
+import { IZoneParams } from "./types/zone.type";
+import DeviceAddScreen from "./screens/farm/devices/addDeviceToZone";
 
 export type RootStackParamList = {
-	HomeScreen: undefined;
-	LoginScreen: undefined;
-	RegisterScreen: undefined;
-	ListFarmScreen: undefined;
-	FarmDetailsScreen: IFramDetails;
-	CreateFarmScreen: undefined;
-	AddNewZoneScreen: undefined;
-	ModulesScreen: undefined;
-	ModuleAddScreen: undefined;
-	ModuleDevicesScreen: IModule;
-	DeviceControlScreen: undefined;
-	DeviceInstrumentationScreen: undefined;
-	DeviceOnZoneScreen: undefined;
+  HomeScreen: undefined;
+  LoginScreen: undefined;
+  RegisterScreen: undefined;
+  ListFarmScreen: undefined;
+  FarmDetailsScreen: IFramDetails;
+  CreateFarmScreen: undefined;
+  AddNewZoneScreen: undefined;
+  ModulesScreen: undefined;
+  ModuleAddScreen: undefined;
+  ModuleDevicesScreen: IModule;
+  DeviceControlScreen: undefined;
+  DeviceInstrumentationScreen: undefined;
+  DeviceOnZoneScreen: undefined;
+  DeviceAddScreen: IZoneParams;
+  EditDeviceScreen: any;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
-	const { authData, signOut } = useAuth();
-	const user = authData.user;
+  const { authData, signOut } = useAuth();
+  const user = authData.user;
 
-	React.useEffect(() => {
-		addOnUnAuthorizeListener(() => {
-			signOut();
-		});
-	}, []);
+  React.useEffect(() => {
+    addOnUnAuthorizeListener(() => {
+      signOut();
+    });
+  }, []);
 
-	React.useEffect(() => {
-		setAccessToken(authData.token);
-	}, [authData]);
+  React.useEffect(() => {
+    setAccessToken(authData.token);
+  }, [authData]);
 
-	return (
-		<NavigationContainer ref={navigationRef}>
-			<Stack.Navigator
-				screenOptions={{
-					headerShown: false,
-				}}
-			>
-				{user ? (
-					<>
-						<Stack.Screen
-							name={"HomeScreen"}
-							component={HomeScreen}
-						/>
-						{/* Farm */}
+  return (
+    <NavigationContainer ref={navigationRef}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        {user ? (
+          <>
+            <Stack.Screen name={"HomeScreen"} component={HomeScreen} />
+            {/* Farm */}
 
-						<Stack.Screen
-							name={"ListFarmScreen"}
-							component={ListFarmScreen}
-						/>
-						<Stack.Screen
-							name={"FarmDetailsScreen"}
-							component={FarmDetailsScreen}
-						/>
-						<Stack.Screen
-							name={"CreateFarmScreen"}
-							component={CreateFarmScreen}
-						/>
+            <Stack.Screen name={"ListFarmScreen"} component={ListFarmScreen} />
+            <Stack.Screen
+              name={"FarmDetailsScreen"}
+              component={FarmDetailsScreen}
+            />
+            <Stack.Screen
+              name={"CreateFarmScreen"}
+              component={CreateFarmScreen}
+            />
 
-						<Stack.Screen
-							name={"AddNewZoneScreen"}
-							component={AddNewZoneScreen}
-						/>
-						{/* device on Zone */}
+            <Stack.Screen
+              name={"AddNewZoneScreen"}
+              component={AddNewZoneScreen}
+            />
+            {/* device on Zone */}
 
-						<Stack.Screen
-							name={"DeviceOnZoneScreen"}
-							component={DeviceOnZoneScreen}
-						/>
-						<Stack.Screen
-							name={"DeviceControlScreen"}
-							component={DeviceControlScreen}
-						/>
-							{/* <Stack.Screen
-								name={"DeviceInstrumentationScreen"}
-								component={DeviceInstrumentationScreen}
-							/> */}
+            <Stack.Screen
+              name={"DeviceOnZoneScreen"}
+              component={DeviceOnZoneScreen}
+            />
+            <Stack.Screen
+              name={"DeviceControlScreen"}
+              component={DeviceControlScreen}
+            />
+            <Stack.Screen
+              name={"DeviceInstrumentationScreen"}
+              component={DeviceInstrumentationScreen}
+            />
+            <Stack.Screen
+              name={"EditDeviceScreen"}
+              component={EditDeviceScreen}
+            />
+            <Stack.Screen
+              name={"DeviceAddScreen"}
+              component={DeviceAddScreen}
+            />
 
+            {/* ---------------- */}
 
+            {/* Module */}
 
-						{/* ---------------- */}
+            <Stack.Screen name={"ModulesScreen"} component={ModulesScreen} />
+            <Stack.Screen
+              name={"ModuleAddScreen"}
+              component={ModuleAddScreen}
+            />
+            <Stack.Screen
+              name={"ModuleDevicesScreen"}
+              component={ModuleDevicesScreen}
+            />
+            {/* ---------------- */}
 
-						{/* Module */}
+            {/* Setting */}
 
-						<Stack.Screen
-							name={"ModulesScreen"}
-							component={ModulesScreen}
-						/>
-						<Stack.Screen
-							name={"ModuleAddScreen"}
-							component={ModuleAddScreen}
-						/>
-						<Stack.Screen
-							name={"ModuleDevicesScreen"}
-							component={ModuleDevicesScreen}
-						/>
-						{/* ---------------- */}
+            {/* ---------------- */}
 
-						{/* Setting */}
+            {/* Statistic */}
 
-						{/* ---------------- */}
-
-						{/* Statistic */}
-
-						{/* ---------------- */}
-					</>
-				) : (
-					<>
-						<Stack.Screen
-							name={"LoginScreen"}
-							component={LoginScreen}
-						/>
-					</>
-				)}
-			</Stack.Navigator>
-		</NavigationContainer>
-	);
+            {/* ---------------- */}
+          </>
+        ) : (
+          <>
+            <Stack.Screen name={"LoginScreen"} component={LoginScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 };
 
 export default AppNavigator;

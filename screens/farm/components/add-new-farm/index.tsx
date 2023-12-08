@@ -73,7 +73,7 @@ export const CreateFarmScreen = () => {
         </Text>
       </View>
 
-      <View style={styles.Inputcontainer1}>
+      <View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>
             Tên nông trại:
@@ -132,6 +132,7 @@ export const CreateFarmScreen = () => {
             title="Thêm mới"
             color={AppColors.primaryColor}
             onPress={() => handleAddNew()}
+
           />
           <Button
             title="Quay lại"
@@ -145,9 +146,6 @@ export const CreateFarmScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  Inputcontainer1: {
-    marginTop: 100,
-  },
   fixToText: {
     flex: 1,
     paddingLeft: 30,

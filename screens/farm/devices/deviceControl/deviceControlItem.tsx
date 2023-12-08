@@ -1,34 +1,23 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import React, { useState } from 'react';
-import { IDeviceOnModule } from '../../../../../types/device.type';
-import { AppColors } from '../../../../../global';
-import { deviceIot } from "../../../../../assets";
-import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../../AppNavigator';
-import { Row } from 'antd';
+import { IDeviceOnModule } from '../../../../types/device.type';
+import { AppColors } from '../../../../global';
+import { offDevcie, onDevcie } from '../../../../assets';
+
+
 
 type DevicesProps = {
     device: IDeviceOnModule;
     onPress?: () => void;
 };
 
-type ScreenNavigationProp = NativeStackNavigationProp<
-	RootStackParamList,
-	"ModuleDevicesScreen"
->;
+const DevicesControlItem = (props: DevicesProps) => {
 
-const DevicesOnModulesItem = (props: DevicesProps) => {
+    const [isOn, setIsOn] = useState<boolean>(props.device.isAction);
 
-    const navigation = useNavigation<ScreenNavigationProp>();
-    
-    const [deviceSt, setDeviceSt] = useState<IDeviceOnModule>(props.device);
-
-    const goToEditDevice = () => {
-        navigation.navigate("EditDeviceScreen", deviceSt)
+    const pressOnOff = () => {
+        setIsOn(isOn => !isOn);
     }
-
     return (
         <TouchableOpacity onPress={props.onPress}>
             <View
@@ -46,34 +35,31 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
                     marginBottom: 20,
                 }}
             >
-                <Image
-                    source={deviceIot}
-                    style={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: 5,
-                    }}
-                />
+                <TouchableOpacity onPress={pressOnOff}>
+                    <Image
+                        source={isOn ? onDevcie : offDevcie}
+                        style={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: 5,
+                        }}
+                    />
+                </TouchableOpacity>
                 <View
                     style={{
                         marginLeft: 12,
                         flex: 1,
                     }}
                 >
-                    <View style = {{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <Text
+                    <Text
                         style={{
                             fontSize: 18,
                             fontWeight: "700",
                             marginBottom: 8,
                         }}
-                        >
-                            {props.device?.name}
-                        </Text>
-                        <TouchableOpacity onPress={goToEditDevice} style = {{right: 0}}>
-                            <AntDesign name="edit" size={24} color="black" />
-                        </TouchableOpacity>
-                    </View>
+                    >
+                        {props.device?.name}
+                    </Text>
                     <CardInfor
                         property={"Gate"}
                         value={props.device?.gate?.toString()!}
@@ -106,7 +92,6 @@ interface CardInforProps {
 }
 
 const CardInfor = (props: CardInforProps) => {
-    
     return (
         <View
             style={{
@@ -143,4 +128,4 @@ const CardInfor = (props: CardInforProps) => {
 };
 
 
-export default DevicesOnModulesItem
+export default DevicesControlItem

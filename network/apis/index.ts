@@ -53,15 +53,29 @@ export function getControlOnZone(zoneId: number) {
 	);
 }
 
+// thêm device vào zone
+export function AddDeviceToZone(deviceId: string, zoneId: number) {
+	return axiosInstance.post<BaseResponse<IDeviceOnZone[]>>(
+		`/Zone/add-used-device?deviceId=${deviceId}&zoneId=${zoneId}`
+	);
+}
+
 // Module
 export function getListModules() {
 	return axiosInstance.post<BaseResponse<IModule>>(
 		"/Module/get-modules"
 	);
 }
-export function createModule(moduleId: string) {
+export function getListModulesDeviceUsed() {
+	return axiosInstance.post<BaseResponse<IModule>>(
+		"/Module/get-modules-devices-used"
+	);
+}
+export function createModule(params: any) {
 	return axiosInstance.post<BaseResponse<boolean | string>>(
-		`/Module/add-module-to-user?moduleId=${moduleId}`
+		'/Module/add-module-to-user',
+
+		params
 	);
 }
 export function getListDevicesOnModule() {
@@ -70,7 +84,10 @@ export function getListDevicesOnModule() {
 	);
 }
 export function removeModuleFromUser(moduleId: string) {
-	return axiosInstance.post<BaseResponse<boolean | string>>(
+	return axiosInstance.post<BaseResponse<boolean | undefined | string>>(
 		`/Module/remove-module-from-user?moduleId=${moduleId}`
 	);
+}
+export function editDevice(param: any) {
+	return axiosInstance.post<BaseResponse<boolean | undefined>>("/Module/edit-devices", param);
 }

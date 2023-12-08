@@ -76,10 +76,10 @@ const ModulesItem = (props: ModulesItemProps) => {
 							marginBottom: 8,
 						}}
 					>
-						{props.modules?.name}
+						{props.modules?.nameRef}
 					</Text>
 					<CardInfor
-						property={"Thiết bị"}
+						property={"Loại"}
 						value={props.modules?.name!}
 					/>
 					<CardInfor
@@ -87,7 +87,7 @@ const ModulesItem = (props: ModulesItemProps) => {
 						value={String(formatDateTime(props?.modules?.dateCreated!))}
 					/>
 				</View>
-				<Pressable onPress={() => RemoveModule()}>
+				<Pressable onPress={() => RemoveModule()}> 
 					<Image source={closeIcon}
 						style={{
 							width: 15,

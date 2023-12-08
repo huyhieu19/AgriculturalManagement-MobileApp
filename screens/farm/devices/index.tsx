@@ -5,7 +5,7 @@ import DeviceControlScreen from "./deviceControl";
 import AllDevicesOnZoneScreen from "./deviceOnZone";
 import { IZoneParams } from "../../../types/zone.type";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import screandasd from "../../../Mqtt/test";
+import DeviceInstrumentationScreen from "./deviceInstrumentation";
 type ParamList = {
     zone: IZoneParams;
 };
@@ -39,7 +39,8 @@ export default function DeviceOnZoneScreen() {
                     ),
                 }}
                 name="Thiết bị đo"
-                component={screandasd}
+                component={DeviceInstrumentationScreen}
+                initialParams={routeParams}
             />
             <Tab.Screen
                 options={{

@@ -13,15 +13,15 @@ type ParamList = {
     ZoneValue: IZoneParams;
 };
 
-
 const AllDevicesOnZoneScreen = () => {
     const route = useRoute<RouteProp<ParamList, "ZoneValue">>();
     const zone = route?.params ?? [];
     const navigation = useNavigation<any>();
     const isFocused = useIsFocused();
+    const [zoneState, SetZoneState] = useState<IZoneParams>(zone);
 
     const [devices, setDevices] = useState<IDeviceOnZone[]>([])
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
 
     const getDevices = React.useCallback(async () => {
@@ -36,7 +36,7 @@ const AllDevicesOnZoneScreen = () => {
             navigation.navigate("HomeScreen");
             console.log("Error on farm screen" + e);
         } finally {
-            //setIsLoading(false);
+            setIsLoading(false);
         }
     }, []);
     React.useEffect(() => {
@@ -44,6 +44,11 @@ const AllDevicesOnZoneScreen = () => {
             getDevices().then(() => { });
         }
     }, [isFocused]);
+
+    const goToAddDeviceScreen = () => {
+        navigation.navigate("DeviceAddScreen", zoneState);
+    }
+
     return (
         <SafeAreaView style={AppStyles.appContainer}>
             <View
@@ -71,47 +76,59 @@ const AllDevicesOnZoneScreen = () => {
                 <Text style={{ fontSize: 18, color: "white", fontWeight: "500" }}>
                     Tất cả thiết bị
                 </Text>
+                <Pressable
+					style={{
+						position: "absolute",
+						right: 20
+					}}
+					onPress={() => {
+						goToAddDeviceScreen();
+					}}
+				>
+					<AntDesign name="pluscircleo" size={24} color="white" />
+				</Pressable>
             </View>
             <View>
                 <ListZoneItem zone={zone} isBorderRadius isBgPrimary />
             </View>
-{isLoading ? (
-				<View
-					style={{
-						flex: 1,
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				>
-					<ActivityIndicator
-						size={"large"}
-						color={AppColors.primaryColor}
-					/>
-				</View>
-			) : (
-				<ScrollView
-					showsVerticalScrollIndicator={false}
-					refreshControl={
-						<RefreshControl
-							refreshing={isLoading}
-						//onRefresh={fetchListDevicesOnModule}
-						/>
-					}
-					contentContainerStyle={{
-						paddingHorizontal: 20,
-						paddingTop: 30,
-					}}
-				>
-					{devices != null &&
-						devices?.length > 0 ?
-						devices.map((item) => (
-							<DevicesOnModulesItem
-								key={item?.id}
-								device={item}
-							/>
-						)) : <Text>Device on Zone is empty</Text>}
-				</ScrollView>
-			)}
+            {isLoading ? (
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <ActivityIndicator
+                        size={"large"}
+                        color={AppColors.primaryColor}
+                    />
+                </View>
+            ) : (
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isLoading}
+                        //onRefresh={fetchListDevicesOnModule}
+                        />
+                    }
+                    contentContainerStyle={{
+                        paddingHorizontal: 20,
+                        paddingTop: 30,
+                    }}
+                >
+                    {devices != null &&
+                        devices?.length > 0 ?
+                        devices.map((item) => (
+                            <DevicesOnModulesItem
+                                key={item?.id}
+                                device={item}
+                            />
+                        )) : <Text>Không có thiết bị trong khu này</Text>
+                    }
+                </ScrollView>
+            )}
 
         </SafeAreaView>
     )

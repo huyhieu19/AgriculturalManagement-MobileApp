@@ -1,7 +1,7 @@
 import React from "react";
 import {Provider} from "react-redux";
 import {PersistGate} from "redux-persist/integration/react";
-import {Platform, UIManager, StyleSheet} from "react-native";
+import {Platform, UIManager} from "react-native";
 import AppNavigator from "./AppNavigator";
 import {reduxPersistor, store} from "./redux/store";
 import SplashScreen from "./screens/splash";
