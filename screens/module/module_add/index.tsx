@@ -1,12 +1,21 @@
-import { View, Text, Pressable, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AppColors } from '../../../global';
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { AppColors } from "../../../global";
 import { AntDesign } from "@expo/vector-icons";
-import { RootStackParamList } from '../../../AppNavigator';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
-import { createModule } from '../../../network/apis';
+import { RootStackParamList } from "../../../AppNavigator";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { createModule } from "../../../network/apis";
 
 type ScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -26,25 +35,29 @@ const ModuleAddScreen = () => {
         const res = await createModule({ moduleId, nameRef });
         if (res.data.ErrorMessage == null || res.data.Data != null) {
           setIsLoading(false);
-          Alert.alert('Lỗi thêm mới', `Thêm mới module thành công`, [
-            { text: 'OK', onPress: () => console.log('OK Pressed') }]);
+          Alert.alert("Lỗi thêm mới", `Thêm mới module thành công`, [
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
           navigation.goBack();
         } else {
           setIsLoading(false);
-          Alert.alert('Lỗi thêm mới', `Thêm mới module không thành công`, [
-            { text: 'OK', onPress: () => console.log('OK Pressed') }]);
+          Alert.alert("Lỗi thêm mới", `Thêm mới module không thành công`, [
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
         }
       } catch (e) {
         console.log(e);
         setIsLoading(false);
-        Alert.alert('Lỗi thêm mới', `Thêm mới module không thành công`, [
-          { text: 'OK', onPress: () => console.log('OK Pressed') }]);
+        Alert.alert("Lỗi thêm mới", `Thêm mới module không thành công`, [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
       } finally {
-        navigation.navigate("ModulesScreen")
+        navigation.navigate("ModulesScreen");
       }
     } else {
-      Alert.alert('Lỗi thêm mới', `Mã số cần đủ 36 ký tự`, [
-        { text: 'OK', onPress: () => console.log('OK Pressed') }]);
+      Alert.alert("Lỗi thêm mới", `Mã số cần đủ 36 ký tự`, [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
     }
   };
   return (
@@ -59,46 +72,41 @@ const ModuleAddScreen = () => {
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
           position: "relative",
-        }}>
+        }}
+      >
         <Pressable
           style={{
             position: "absolute",
-            left: 20
+            left: 20,
           }}
           onPress={() => {
             navigation.navigate("ModulesScreen");
-          }}>
+          }}
+        >
           <AntDesign name="left" size={24} color="white" />
         </Pressable>
         <Text
           style={{
             color: "white",
             fontSize: 18,
-            fontWeight: "500"
-          }}>
+            fontWeight: "500",
+          }}
+        >
           Thêm mới Module
         </Text>
       </View>
-      <View>
-        <View style={styles.Inputcontainer}>
-          <Text style={{ fontSize: 20, fontWeight: "600" }}>
-            Mã module:
-          </Text>
-        </View>
+      <View style={styles.container}>
+        <Text style={styles.label}>Mã module:</Text>
         <TextInput
-          style={styles.input}
-          onChangeText={e => setModuleId(e)}
+          style={styles.dropdown}
+          onChangeText={(e) => setModuleId(e)}
         />
       </View>
-      <View>
-        <View style={styles.Inputcontainer}>
-          <Text style={{ fontSize: 20, fontWeight: "600" }}>
-            Tên module:
-          </Text>
-        </View>
+      <View style={styles.container}>
+        <Text style={styles.label}>Tên module:</Text>
         <TextInput
-          style={styles.input}
-          onChangeText={e => setNameRef(e)}
+          style={styles.dropdown}
+          onChangeText={(e) => setNameRef(e)}
         />
       </View>
       {isLoading ? (
@@ -109,10 +117,7 @@ const ModuleAddScreen = () => {
             alignItems: "center",
           }}
         >
-          <ActivityIndicator
-            size={"large"}
-            color={AppColors.primaryColor}
-          />
+          <ActivityIndicator size={"large"} color={AppColors.primaryColor} />
         </View>
       ) : (
         <View style={styles.buttonContainer}>
@@ -126,47 +131,60 @@ const ModuleAddScreen = () => {
               title="Quay lại"
               color={"red"}
               onPress={() => {
-                navigation.goBack()
+                navigation.goBack();
               }}
             />
           </View>
         </View>
       )}
     </SafeAreaView>
-  )
-}
+  );
+};
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  dropdown: {
+    width: "73%",
+    marginRight: 27,
+    marginTop: 20,
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  label: {
+    width: "23%",
+    marginTop: 20,
+    marginLeft: 5,
+  },
   fixToText: {
     flex: 1,
     paddingLeft: 30,
     paddingRight: 30,
     marginHorizontal: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 10
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderRadius: 10,
   },
   input: {
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    minWidth: "65%"
-  },
-  Inputcontainer: {
-    flexDirection: 'row', // Set flexDirection to 'row'
-    alignItems: 'center', // Align items vertically in the center
-    fontSize: "40px",
-    marginBottom: 10,
+    minWidth: "65%",
   },
   Inputlabel: {
-    minWidth: '25%', // Fixed width for labels
-    marginRight: 15
+    minWidth: "25%", // Fixed width for labels
+    marginRight: 15,
   },
   buttonContainer: {
-    flexDirection: 'row', // Set flexDirection to 'row'
-    alignItems: 'center', // Align items vertically in the center
-  }
+    flexDirection: "row", // Set flexDirection to 'row'
+    alignItems: "center", // Align items vertically in the center
+  },
 });
 
-
-export default ModuleAddScreen
+export default ModuleAddScreen;

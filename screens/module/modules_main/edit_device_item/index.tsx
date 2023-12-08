@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
-import { createFarm, editDevice } from "../../../../network/apis";
+import { editDevice } from "../../../../network/apis";
 import { IDeviceOnModule, IDeviceOnZone } from "../../../../types/device.type";
 import { RootStackParamList } from "../../../../AppNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -28,16 +28,16 @@ type ScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const dataAction = [
-  { label: "Mở", value: true },
-  { label: "Đóng", value: false },
+  { label: "Mở", value: "true" },
+  { label: "Đóng", value: "false" },
 ];
 const datUsed = [
-  { label: "Sử dụng", value: true },
-  { label: "Không sử dụng", value: false },
+  { label: "Sử dụng", value: "true" },
+  { label: "Không sử dụng", value: "false" },
 ];
 const dataAuto = [
-  { label: "Tự động", value: true },
-  { label: "Thủ công", value: false },
+  { label: "Tự động", value: "true" },
+  { label: "Thủ công", value: "false" },
 ];
 
 export const EditDeviceScreen = () => {
@@ -88,7 +88,7 @@ export const EditDeviceScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ marginTop: 25 }}>
+    <SafeAreaView>
       <View
         style={{
           display: "flex",
@@ -113,24 +113,24 @@ export const EditDeviceScreen = () => {
       </View>
 
       <View>
-        <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Tên thiết bị:</Text>
+        <View style={styles.container}>
+          <Text style={styles.label}>Tên thiết bị:</Text>
           <TextInput
-            style={styles.input}
+            style={styles.dropdown}
             onChangeText={(e) => setName(e)}
-            value={name}
-          />
-        </View>
-        <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Chi tiết:</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={(e) => setDescription(e)}
-            value={description}
+            value={name ?? ""}
           />
         </View>
         <View style={styles.container}>
-          <Text>Tự động:</Text>
+          <Text style={styles.label}>Chi tiết:</Text>
+          <TextInput
+            style={styles.dropdown}
+            onChangeText={(e) => setDescription(e)}
+            value={description ?? ""}
+          />
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.label}>Tự động:</Text>
           <Dropdown
             style={[styles.dropdown, isFocusAction && { borderColor: "blue" }]}
             placeholderStyle={styles.placeholderStyle}
@@ -142,13 +142,13 @@ export const EditDeviceScreen = () => {
             maxHeight={300}
             labelField="label"
             valueField="value"
+            value={isAuto ? "true" : "false"}
             placeholder={!isFocusAction ? "Select item" : "..."}
             searchPlaceholder="Search..."
-            //value={isAuto}
             onFocus={() => setFocusAction(true)}
             onBlur={() => setFocusAction(false)}
             onChange={(item) => {
-              setIsAuto(item.value);
+              setIsAuto(item.value === "true");
               setFocusAction(false);
             }}
             renderLeftIcon={() => (
@@ -162,7 +162,7 @@ export const EditDeviceScreen = () => {
           />
         </View>
         <View style={styles.container}>
-          <Text>Hoạt động: </Text>
+          <Text style={styles.label}>Hoạt động: </Text>
           <Dropdown
             style={[styles.dropdown, isFocusAuto && { borderColor: "blue" }]}
             placeholderStyle={styles.placeholderStyle}
@@ -176,11 +176,11 @@ export const EditDeviceScreen = () => {
             valueField="value"
             placeholder={!isFocusAuto ? "Select item" : "..."}
             searchPlaceholder="Search..."
-            //value={isAction}
+            value={isAction ? "true" : "false"}
             onFocus={() => setFocusAuto(true)}
             onBlur={() => setFocusAuto(false)}
             onChange={(item) => {
-              setIsAction(item.value);
+              setIsAction(item.value === "true");
               setFocusAuto(false);
             }}
             renderLeftIcon={() => (
@@ -194,7 +194,7 @@ export const EditDeviceScreen = () => {
           />
         </View>
         <View style={styles.container}>
-          <Text>Sử dụng: </Text>
+          <Text style={styles.label}>Sử dụng: </Text>
           <Dropdown
             style={[styles.dropdown, isFocusUsed && { borderColor: "blue" }]}
             placeholderStyle={styles.placeholderStyle}
@@ -208,11 +208,11 @@ export const EditDeviceScreen = () => {
             valueField="value"
             placeholder={!isFocusUsed ? "Select item" : "..."}
             searchPlaceholder="Search..."
-            //value={isAction}
+            value={isUsed ? "true" : "false"}
             onFocus={() => setFocusUsed(true)}
             onBlur={() => setFocusUsed(false)}
             onChange={(item) => {
-              setIsUsed(item.value);
+              setIsUsed(item.value == "true");
               setFocusUsed(false);
             }}
             renderLeftIcon={() => (
@@ -229,7 +229,7 @@ export const EditDeviceScreen = () => {
       <View style={styles.buttonContainer}>
         <View style={styles.fixToText}>
           <Button
-            title="Lưu"
+            title="Lưu thay đổi"
             color={AppColors.primaryColor}
             onPress={() => handleEditDevice()}
           />
@@ -242,33 +242,27 @@ export const EditDeviceScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    //backgroundColor: 'white',
-    flex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
     flexDirection: "row",
-    marginTop: 25,
+    alignItems: "center",
+    marginBottom: 10,
   },
   dropdown: {
     width: "65%",
     marginRight: 27,
+    marginTop: 20,
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
   },
+  label: {
+    width: "30%",
+    marginTop: 20,
+    marginLeft: 5,
+  },
   icon: {
     marginRight: 5,
-  },
-  label: {
-    position: "absolute",
-    //backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
   },
   placeholderStyle: {
     fontSize: 16,
@@ -298,12 +292,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     minWidth: "65%",
-  },
-  Inputcontainer: {
-    flexDirection: "row", // Set flexDirection to 'row'
-    alignItems: "center", // Align items vertically in the center
-    fontWeight: "500",
-    marginBottom: 10,
   },
   Inputlabel: {
     minWidth: "25%", // Fixed width for labels

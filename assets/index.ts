@@ -12,6 +12,8 @@ import deviceIot from "./device-iot.png"
 import closeIcon from "./close.png"
 import offDevcie from "./off-button.png"
 import onDevcie from "./on-button.png"
+import timerSetting from './timer_setting.png'
+import thresholdSetting from './threshold_setting.png'
 
 export {
 	homeLeftIcon,
@@ -27,5 +29,7 @@ export {
 	deviceIot,
 	closeIcon,
 	offDevcie,
-	onDevcie
+	onDevcie,
+	timerSetting,
+	thresholdSetting
 };

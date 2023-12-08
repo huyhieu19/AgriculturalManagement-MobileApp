@@ -23,23 +23,43 @@ import DeviceInstrumentationScreen from "./screens/farm/devices/deviceInstrument
 import { EditDeviceScreen } from "./screens/module/modules_main/edit_device_item";
 import { IZoneParams } from "./types/zone.type";
 import DeviceAddScreen from "./screens/farm/devices/addDeviceToZone";
+import SettingsScreen from "./screens/setting";
+import StatisticsScreen from "./screens/statistics";
+import SettingsTimerScreen from "./screens/setting/timer/display";
+import { EditFarmScreen } from "./screens/farm/components/edit_farm";
+import { EditZoneScreen } from "./screens/farm/farmDetails/edit_zone";
+import { EditModuleScreen } from "./screens/module/module_edit";
 
 export type RootStackParamList = {
+  // home
   HomeScreen: undefined;
   LoginScreen: undefined;
   RegisterScreen: undefined;
+  // farm
   ListFarmScreen: undefined;
-  FarmDetailsScreen: IFramDetails;
   CreateFarmScreen: undefined;
+  EditFarmScreen: IFramDetails;
+  // Zone
+  FarmDetailsScreen: IFramDetails;
   AddNewZoneScreen: undefined;
-  ModulesScreen: undefined;
-  ModuleAddScreen: undefined;
-  ModuleDevicesScreen: IModule;
   DeviceControlScreen: undefined;
   DeviceInstrumentationScreen: undefined;
   DeviceOnZoneScreen: undefined;
   DeviceAddScreen: IZoneParams;
   EditDeviceScreen: any;
+  EditZoneScreen: IZoneParams;
+
+  // module
+  ModulesScreen: undefined;
+  ModuleAddScreen: undefined;
+  EditModuleScreen: any;
+  ModuleDevicesScreen: IModule;
+
+  // cài đặt
+  SettingsScreen: undefined;
+  SettingsTimerScreen: undefined;
+  // Thống kê
+  StatisticsScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -76,6 +96,7 @@ const AppNavigator: React.FC = () => {
               name={"FarmDetailsScreen"}
               component={FarmDetailsScreen}
             />
+            <Stack.Screen name={"EditZoneScreen"} component={EditZoneScreen} />
             <Stack.Screen
               name={"CreateFarmScreen"}
               component={CreateFarmScreen}
@@ -85,8 +106,10 @@ const AppNavigator: React.FC = () => {
               name={"AddNewZoneScreen"}
               component={AddNewZoneScreen}
             />
-            {/* device on Zone */}
 
+            <Stack.Screen name={"EditFarmScreen"} component={EditFarmScreen} />
+
+            {/* device on Zone */}
             <Stack.Screen
               name={"DeviceOnZoneScreen"}
               component={DeviceOnZoneScreen}
@@ -118,17 +141,29 @@ const AppNavigator: React.FC = () => {
               component={ModuleAddScreen}
             />
             <Stack.Screen
+              name={"EditModuleScreen"}
+              component={EditModuleScreen}
+            />
+            <Stack.Screen
               name={"ModuleDevicesScreen"}
               component={ModuleDevicesScreen}
             />
             {/* ---------------- */}
 
             {/* Setting */}
+            <Stack.Screen name={"SettingsScreen"} component={SettingsScreen} />
+            <Stack.Screen
+              name={"SettingsTimerScreen"}
+              component={SettingsTimerScreen}
+            />
 
             {/* ---------------- */}
 
             {/* Statistic */}
-
+            <Stack.Screen
+              name={"StatisticsScreen"}
+              component={StatisticsScreen}
+            />
             {/* ---------------- */}
           </>
         ) : (

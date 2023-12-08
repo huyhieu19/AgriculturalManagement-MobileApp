@@ -12,48 +12,83 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
-import { createZone } from "../../../../network/apis";
+import {
+  createZone,
+  deleteFarm,
+  deleteZone,
+  editFarm,
+  editZone,
+} from "../../../../network/apis";
+import { IZoneParams, IZoneUpdateModel } from "../../../../types/zone.type";
 import { IFramDetails } from "../../../../types/farm.type";
 
 type ParamList = {
-  FarmDetailsScreen: IFramDetails;
+  Zone: IZoneParams;
+  Farm?: IFramDetails;
 };
 
-export const AddNewZoneScreen = () => {
-  const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
+export const EditZoneScreen = () => {
+  const routeZone = useRoute<RouteProp<ParamList, "Zone">>();
+  const routeFarm = useRoute<RouteProp<ParamList, "Farm">>();
   const navigation = useNavigation<any>();
-  const farm = route?.params ?? [];
-  const [zoneName, setZoneName] = useState("Khu");
-  const [function1, setFunction1] = useState("Trồng");
-  const [area, setArea] = useState(0);
-  const [description, setDescription] = useState("Đây là khu trong farm");
-  const [note, setNote] = useState("Ghi chú");
+
+  const [name, setName] = useState<string | undefined>(
+    routeZone.params?.zoneName!
+  );
+  const [note, setNote] = useState<string | undefined>(routeZone.params.note);
+  const [funct, setFunct] = useState<string | undefined>(
+    routeZone.params?.function!
+  );
+  const [area, setArea] = useState<number | undefined>(routeZone.params.area);
+  const [description, setDescription] = useState(routeZone.params.description);
 
   const goBack = () => {
     navigation.goBack();
   };
 
-  const handleAddNew = async () => {
-    // Perform API request to add new item
+  const handleEditZone = async () => {
     try {
-      const res = await createZone({
-        zoneName: zoneName,
-        farmId: farm.id,
-        area: area,
-        description: description,
-        note: note,
-        function: function1,
-      });
+      const paramsUpdate: IZoneUpdateModel = {
+        id: routeZone.params.id,
+        zoneName: name!,
+        area: area!,
+        description: description!,
+        note: note!,
+        timeToStartPlanting: routeZone.params.timeToStartPlanting!,
+        dateCreateFarm: routeZone.params.dateCreateFarm!,
+        function: routeZone.params.function!,
+        typeTreeId: null,
+        farmId: routeZone.params.farmId!,
+      };
+      const res = await editZone(paramsUpdate);
       if (res.data.Data.isSuccess) {
-        Alert.alert("Thành công", "Thành công thêm khu mới", [{ text: "OK" }]);
-        goBack();
-      } else {
-        Alert.alert("Lỗi thêm mới", `Thêm mới khu không thành công`, [
-          { text: "OK" },
+        Alert.alert("Thành công", "Thành công chỉnh sửa khu", [
+          {
+            text: "OK",
+          },
         ]);
+      } else {
+        Alert.alert("Lỗi", `Chỉnh sửa khu không thành công`, [{ text: "OK" }]);
       }
     } catch (error) {
-      Alert.alert("Lỗi thêm mới", `${error}`, [{ text: "OK" }]);
+      Alert.alert("Lỗi", `${error}`, [{ text: "OK" }]);
+    } finally {
+    }
+  };
+  const handleDeleteZone = async () => {
+    try {
+      const res = await deleteZone(
+        routeZone.params.id,
+        routeZone.params?.farmId!
+      );
+      if (res.data.Data.isSuccess) {
+        Alert.alert("Thành công", "Thành công xóa khu", [{ text: "OK" }]);
+      } else {
+        Alert.alert("Lỗi", `Xóa khu không thành công`, [{ text: "OK" }]);
+      }
+    } catch (error) {
+      Alert.alert("Lỗi", `${error}`, [{ text: "OK" }]);
+    } finally {
       goBack();
     }
   };
@@ -81,24 +116,17 @@ export const AddNewZoneScreen = () => {
           <AntDesign name="left" size={24} color="white" />
         </Pressable>
         <Text style={{ fontSize: 18, color: "white" }}>
-          Thêm mới khu trong nông trại
+          Chỉnh sửa khu trong nông trại
         </Text>
       </View>
+
       <View>
-        <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Nông trại:</Text>
-          <TextInput
-            style={styles.inputFarmId}
-            value={farm.name != null ? farm.name?.toString() : ""}
-            editable={false}
-          />
-        </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Tên khu:</Text>
           <TextInput
             style={styles.input}
-            onChangeText={(e) => setZoneName(e)}
-            value={zoneName}
+            onChangeText={(e) => setName(e)}
+            value={name != undefined || name != null ? name.toString() : ""}
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -106,7 +134,11 @@ export const AddNewZoneScreen = () => {
           <TextInput
             style={styles.input}
             onChangeText={(e) => setDescription(e)}
-            value={description}
+            value={
+              description != undefined || description != null
+                ? description.toString()
+                : ""
+            }
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -114,15 +146,15 @@ export const AddNewZoneScreen = () => {
           <TextInput
             style={styles.input}
             onChangeText={(e) => setArea(Number(e))}
-            value={String(area)}
+            value={area != undefined || area != null ? String(area) : ""}
           />
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Chức năng:</Text>
           <TextInput
             style={styles.input}
-            onChangeText={(e) => setFunction1(e)}
-            value={function1}
+            onChangeText={(e) => setFunct(e)}
+            value={funct != undefined || funct != null ? funct.toString() : ""}
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -130,17 +162,21 @@ export const AddNewZoneScreen = () => {
           <TextInput
             style={styles.input}
             onChangeText={(e) => setNote(e)}
-            value={note}
+            value={note != undefined || note != null ? note.toString() : ""}
           />
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.fixToText}>
             <Button
-              title="Thêm mới"
+              title="Lưu chỉnh sửa"
               color={AppColors.primaryColor}
-              onPress={() => handleAddNew()}
+              onPress={() => handleEditZone()}
             />
-            <Button title="Quay lại" color={"red"} onPress={() => goBack()} />
+            <Button
+              title="Xóa khu này"
+              color={"red"}
+              onPress={() => handleDeleteZone()}
+            />
           </View>
         </View>
       </View>
@@ -179,12 +215,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   inputFarmId: {
+    margin: 12,
     padding: 10,
     backgroundColor: "gray",
     color: "white",
     width: "70%",
     marginRight: 27,
-    marginTop: 20,
+    marginTop: 10,
     height: 50,
     borderColor: "gray",
     borderWidth: 0.5,
