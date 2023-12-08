@@ -5,7 +5,7 @@ import {
   Alert,
   TextInput,
   StyleSheet,
-  Button
+  Button,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -19,7 +19,6 @@ type ParamList = {
   FarmDetailsScreen: IFramDetails;
 };
 
-
 export const AddNewZoneScreen = () => {
   const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
   const navigation = useNavigation<any>();
@@ -28,11 +27,11 @@ export const AddNewZoneScreen = () => {
   const [function1, setFunction1] = useState("Trồng");
   const [area, setArea] = useState(0);
   const [description, setDescription] = useState("Đây là khu trong farm");
-  const [note, setNote] = useState("Chú ý");
+  const [note, setNote] = useState("Ghi chú");
 
   const goBack = () => {
     navigation.goBack();
-  }
+  };
 
   const handleAddNew = async () => {
     // Perform API request to add new item
@@ -43,12 +42,10 @@ export const AddNewZoneScreen = () => {
         area: area,
         description: description,
         note: note,
-        function: function1
+        function: function1,
       });
       if (res.data.Data.isSuccess) {
-        Alert.alert("Thành công", "Thành công thêm khu mới", [
-          { text: "OK" },
-        ]);
+        Alert.alert("Thành công", "Thành công thêm khu mới", [{ text: "OK" }]);
         goBack();
       } else {
         Alert.alert("Lỗi thêm mới", `Thêm mới khu không thành công`, [
@@ -56,9 +53,7 @@ export const AddNewZoneScreen = () => {
         ]);
       }
     } catch (error) {
-      Alert.alert("Lỗi thêm mới", `${error}`, [
-        { text: "OK" },
-      ]);
+      Alert.alert("Lỗi thêm mới", `${error}`, [{ text: "OK" }]);
       goBack();
     }
   };
@@ -88,13 +83,13 @@ export const AddNewZoneScreen = () => {
         <Text style={{ fontSize: 18, color: "white" }}>
           Thêm mới khu trong nông trại
         </Text>
-      </View >
-      <View style={styles.Inputcontainer1}>
+      </View>
+      <View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Id Nông trại:</Text>
+          <Text style={styles.Inputlabel}>Nông trại:</Text>
           <TextInput
             style={styles.inputFarmId}
-            value={farm.id.toString()}
+            value={farm.name != null ? farm.name?.toString() : ""}
             editable={false}
           />
         </View>
@@ -131,7 +126,7 @@ export const AddNewZoneScreen = () => {
           />
         </View>
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Chú ý:</Text>
+          <Text style={styles.Inputlabel}>Ghi chú:</Text>
           <TextInput
             style={styles.input}
             onChangeText={(e) => setNote(e)}
@@ -145,11 +140,7 @@ export const AddNewZoneScreen = () => {
               color={AppColors.primaryColor}
               onPress={() => handleAddNew()}
             />
-            <Button
-              title="Quay lại"
-              color={"red"}
-              onPress={() => goBack()}
-            />
+            <Button title="Quay lại" color={"red"} onPress={() => goBack()} />
           </View>
         </View>
       </View>
@@ -157,47 +148,52 @@ export const AddNewZoneScreen = () => {
   );
 };
 const styles = StyleSheet.create({
-  Inputcontainer1: {
-    marginTop: 100
+  Inputcontainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  input: {
+    width: "70%",
+    marginRight: 27,
+    marginTop: 10,
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  Inputlabel: {
+    width: "26%",
+    marginTop: 10,
+    marginLeft: 5,
+    fontWeight: "500",
   },
   fixToText: {
     flex: 1,
     paddingLeft: 30,
     paddingRight: 30,
     marginHorizontal: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderRadius: 10,
   },
   inputFarmId: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
     padding: 10,
-    minWidth: "65%",
-    backgroundColor: 'gray',
-    color: 'white'
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    minWidth: "65%"
-  },
-  Inputcontainer: {
-    flexDirection: 'row', // Set flexDirection to 'row'
-    alignItems: 'center', // Align items vertically in the center
-    marginBottom: 10,
-  },
-  Inputlabel: {
-    minWidth: '25%', // Fixed width for labels
-    marginRight: 5, // Add some margin between the label and input
-    marginLeft: 5,
-    fontWeight: "500",
+    backgroundColor: "gray",
+    color: "white",
+    width: "70%",
+    marginRight: 27,
+    marginTop: 20,
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
   },
   buttonContainer: {
-    flexDirection: 'row', // Set flexDirection to 'row'
-    alignItems: 'center', // Align items vertically in the center
-    marginTop: 50
-  }
+    flexDirection: "row", // Set flexDirection to 'row'
+    alignItems: "center", // Align items vertically in the center
+    marginTop: 20,
+  },
 });

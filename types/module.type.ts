@@ -3,6 +3,7 @@ import { IDeviceOnModule } from "./device.type";
 type IModule = {
     id: string;
     name: string;
+    nameRef: string;
     moduleType: number;
     dateCreated?: string,
     note?: string | null;

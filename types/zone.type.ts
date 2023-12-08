@@ -1,5 +1,5 @@
 type IZoneParams = {
-	id?: number;
+	id: number;
 	zoneName?: string;
 	area?: number;
 	description?: string;
@@ -12,4 +12,20 @@ type IZoneParams = {
 	countInstrumentation?: number | null;
 };
 
+export interface IZoneUpdateModel {
+	id: number;
+	zoneName: string;
+	area: number | null;
+	description: string | null;
+	note: string | null;
+	timeToStartPlanting: string | null;
+	dateCreateFarm: string | null;
+	function: string | null;
+	typeTreeId: number | null;
+	farmId: number;
+}
+
 export { IZoneParams };
+	
+	
+	

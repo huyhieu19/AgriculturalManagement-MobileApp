@@ -1,118 +1,138 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppColors } from "../../../../global";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Farm } from "../../../../network/models";
-import { IFramDetails } from "../../../../types/farm.type";
 import { IZoneParams } from "../../../../types/zone.type";
-import { formatDateTime } from "../../../../utils";
 import { greenhouseIcon } from "../../../../assets";
-
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { IFramDetails } from "../../../../types/farm.type";
 interface ListZonetemProps {
-	zone: IZoneParams;
-	onPress?: () => void;
+  zone: IZoneParams;
+  farm?: IFramDetails;
+  onPress?: () => void;
+  isBorderRadius?: boolean;
+  isBgPrimary?: boolean;
+  isEdit?: boolean;
 }
 
 export const ListZoneItem = (props: ListZonetemProps) => {
-	return (
-		<TouchableOpacity onPress={props.onPress}>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
+  const navigation = useNavigation<any>();
+  const [zoneSt, setZoneSt] = useState<IZoneParams>(props.zone);
+  const goToEditZone = () => {
+    navigation.navigate("EditZoneScreen", zoneSt, props?.farm);
+  };
 
-					// marginHorizontal: 20,
-					paddingHorizontal: 20,
-					backgroundColor: AppColors.bgWhite,
-					paddingVertical: 16,
-					borderRadius: 15,
-					borderWidth: 0.5,
-					borderColor: AppColors.slate200,
-					elevation: 1,
-					marginBottom: 20,
-				}}
-			>
-				<Image
-					source={greenhouseIcon}
-					style={{
-						width: 80,
-						height: 80,
-						borderRadius: 5,
-					}}
-				/>
-				<View
-					style={{
-						marginLeft: 12,
-						flex: 1,
-					}}
-				>
-					<Text
-						style={{
-							fontSize: 18,
-							fontWeight: "700",
-							marginBottom: 8,
-						}}
-					>
-						{props.zone?.zoneName}
-					</Text>
-					<CardInfor
-						property={"Diện tích"}
-						value={props.zone?.area?.toString()!}
-					/>
-
-					<CardInfor
-						property={"Chức năng"}
-						value={props.zone?.function!}
-					/>
-					<CardInfor
-						property={"Số lượng thiết bị đo"}
-						value={props?.zone.countInstrumentation!}
-					/>
-					<CardInfor
-						property={"Số lượng khiển"}
-						value={props?.zone.countDeviceDriver!}
-					/>
-				</View>
-			</View>
-		</TouchableOpacity>
-	);
+  return (
+    <TouchableOpacity onPress={props.onPress}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          paddingHorizontal: 20,
+          backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
+          paddingVertical: 16,
+          borderRadius: props?.isBorderRadius ? 0 : 15,
+          borderBottomLeftRadius: props?.isBorderRadius ? 25 : 15,
+          borderBottomRightRadius: props?.isBorderRadius ? 25 : 15,
+          borderWidth: 0.5,
+          borderColor: AppColors.slate200,
+          elevation: 1,
+          marginBottom: props.isEdit ? 20 : 2,
+          height: 200,
+        }}
+      >
+        <Image
+          source={greenhouseIcon}
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 5,
+          }}
+        />
+        <View
+          style={{
+            marginLeft: 12,
+            flex: 1,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "700",
+                marginBottom: 8,
+              }}
+            >
+              {props.zone?.zoneName}
+            </Text>
+            {props.isEdit ? (
+              <TouchableOpacity onPress={goToEditZone} style={{ right: 0 }}>
+                <AntDesign name="edit" size={24} color="black" />
+              </TouchableOpacity>
+            ) : null}
+          </View>
+          <CardInfor
+            property={"Diện tích"}
+            value={props.zone?.area?.toString()!}
+          />
+          <CardInfor property={"Chức năng"} value={props.zone?.function!} />
+          <CardInfor
+            property={"SL thiết bị đo"}
+            value={props?.zone.countInstrumentation!}
+          />
+          <CardInfor
+            property={"SL thiết bị điều khiển"}
+            value={props?.zone.countDeviceDriver!}
+          />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 interface CardInforProps {
-	property: string;
-	value: string | number | null;
+  property: string;
+  value: string | number | null;
 }
 
 const CardInfor = (props: CardInforProps) => {
-	return (
-		<View
-			style={{
-				flexDirection: "row",
-				flex: 1,
-				alignItems: "center",
-				gap: 10,
-			}}
-		>
-			<Text
-				style={{
-					color: AppColors.slate600,
-					fontSize: 16,
-					fontWeight: "400",
-					marginBottom: 5,
-					fontStyle: "italic",
-				}}
-			>
-				{props.property}:{" "}
-			</Text>
-			<Text
-				style={{
-					color: "black",
-					fontSize: 16,
-					fontWeight: "500",
-					fontStyle: "normal",
-				}}
-			>
-				{props.value}
-			</Text>
-		</View>
-	);
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        flex: 1,
+        alignItems: "center",
+        gap: 10,
+      }}
+    >
+      <Text
+        style={{
+          color: AppColors.slate600,
+          fontSize: 16,
+          fontWeight: "400",
+          marginBottom: 5,
+          fontStyle: "italic",
+        }}
+      >
+        {props.property}:{" "}
+      </Text>
+      <Text
+        style={{
+          color: "black",
+          fontSize: 16,
+          fontWeight: "500",
+          fontStyle: "normal",
+          marginBottom: 5,
+        }}
+      >
+        {props.value}
+      </Text>
+    </View>
+  );
 };
