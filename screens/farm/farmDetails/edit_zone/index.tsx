@@ -8,36 +8,27 @@ import {
   Button,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
-import {
-  createZone,
-  deleteFarm,
-  deleteZone,
-  editFarm,
-  editZone,
-} from "../../../../network/apis";
+import { deleteZone, editZone } from "../../../../network/apis";
 import { IZoneParams, IZoneUpdateModel } from "../../../../types/zone.type";
-import { IFramDetails } from "../../../../types/farm.type";
 
 type ParamList = {
   Zone: IZoneParams;
-  Farm?: IFramDetails;
 };
 
 export const EditZoneScreen = () => {
   const routeZone = useRoute<RouteProp<ParamList, "Zone">>();
-  const routeFarm = useRoute<RouteProp<ParamList, "Farm">>();
   const navigation = useNavigation<any>();
 
   const [name, setName] = useState<string | undefined>(
-    routeZone.params?.zoneName!
+    routeZone.params.zoneName
   );
   const [note, setNote] = useState<string | undefined>(routeZone.params.note);
   const [funct, setFunct] = useState<string | undefined>(
-    routeZone.params?.function!
+    routeZone.params.function
   );
   const [area, setArea] = useState<number | undefined>(routeZone.params.area);
   const [description, setDescription] = useState(routeZone.params.description);
@@ -56,7 +47,7 @@ export const EditZoneScreen = () => {
         note: note!,
         timeToStartPlanting: routeZone.params.timeToStartPlanting!,
         dateCreateFarm: routeZone.params.dateCreateFarm!,
-        function: routeZone.params.function!,
+        function: funct!,
         typeTreeId: null,
         farmId: routeZone.params.farmId!,
       };
@@ -73,6 +64,7 @@ export const EditZoneScreen = () => {
     } catch (error) {
       Alert.alert("Lỗi", `${error}`, [{ text: "OK" }]);
     } finally {
+      goBack();
     }
   };
   const handleDeleteZone = async () => {
@@ -153,7 +145,9 @@ export const EditZoneScreen = () => {
           <Text style={styles.Inputlabel}>Chức năng:</Text>
           <TextInput
             style={styles.input}
-            onChangeText={(e) => setFunct(e)}
+            onChangeText={(e) => {
+              setFunct(e);
+            }}
             value={funct != undefined || funct != null ? funct.toString() : ""}
           />
         </View>

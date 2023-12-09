@@ -2,22 +2,48 @@ import {
   View,
   Text,
   Pressable,
+  Image,
+  ActivityIndicator,
   ScrollView,
   RefreshControl,
-  ActivityIndicator,
-  TouchableOpacity,
-  Image,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { AppColors } from "../../../../global";
-import { thresholdSetting, timerSetting } from "../../../../assets";
+import { timerSetting } from "../../../../assets";
+import { TimerDisplayModel } from "../../../../network/models/setting_timer/TimerModel";
+import { ListTimersItem } from "./timer_item";
+import { getTimers } from "../../../../network/apis/settings.api";
 
 const SettingsTimerScreen = () => {
   const navigation = useNavigation<any>();
+  const hangeNavigateScreen = (props: TimerDisplayModel) => {};
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const isFocused = useIsFocused();
 
+  const [timers, setTimers] = useState<TimerDisplayModel[]>([]);
+
+  const FetchListTimer = React.useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await getTimers();
+      setTimers(res.data.Data);
+    } catch (e) {
+      Alert.alert("Lỗi", `Lỗi lấy dữ liệu thời gian`, [
+        { text: "OK", onPress: navigation.goBack() },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+  React.useEffect(() => {
+    if (isFocused) {
+      FetchListTimer().then(() => {});
+    }
+  }, [isFocused]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
@@ -53,73 +79,99 @@ const SettingsTimerScreen = () => {
           Cài đặt thời gian
         </Text>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
           paddingHorizontal: 20,
-          paddingTop: 30,
+          paddingVertical: 16,
+          borderWidth: 0.5,
+          borderColor: AppColors.slate200,
+          elevation: 1,
+          marginBottom: 2,
+          height: 150,
+          borderBottomRightRadius: 20,
+          borderBottomLeftRadius: 20,
+          backgroundColor: AppColors.cardTop,
         }}
       >
-        <TouchableOpacity onPress={() => {}}>
+        <Image
+          source={timerSetting}
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 5,
+          }}
+        />
+        <View
+          style={{
+            marginLeft: 12,
+            flex: 1,
+          }}
+        >
           <View
             style={{
+              flex: 1,
               flexDirection: "row",
-              alignItems: "center",
-              // marginHorizontal: 20,
-              paddingHorizontal: 20,
-              paddingVertical: 16,
-              borderWidth: 0.5,
-              borderColor: AppColors.slate200,
-              elevation: 1,
-              marginBottom: 20,
-              height: 150,
-              borderRadius: 20,
+              justifyContent: "space-between",
             }}
           >
-            <Image
-              source={timerSetting}
+            <Text
               style={{
-                width: 80,
-                height: 80,
-                borderRadius: 5,
-              }}
-            />
-            <View
-              style={{
-                marginLeft: 12,
-                flex: 1,
+                fontSize: 18,
+                fontWeight: "700",
+                marginBottom: 8,
               }}
             >
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "700",
-                    marginBottom: 8,
-                  }}
-                >
-                  Đóng mở thiết bị tự động theo giời gian
-                </Text>
-              </View>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "400",
-                  marginBottom: 8,
-                }}
-              >
-                Số mốc thời gian
-              </Text>
-            </View>
+              Đóng mở thiết bị tự động theo giời gian
+            </Text>
           </View>
-        </TouchableOpacity>
-      </ScrollView>
+          <Text
+            style={{
+              fontSize: 12,
+              fontWeight: "400",
+              marginBottom: 8,
+            }}
+          >
+            Số mốc thời gian
+          </Text>
+        </View>
+      </View>
+      {isLoading ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator size={"large"} color={AppColors.primaryColor} />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={FetchListTimer} />
+          }
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+            paddingTop: 30,
+          }}
+        >
+          {timers != null && timers?.length > 0 ? (
+            timers.map((item) => (
+              <ListTimersItem
+                key={item?.id}
+                timer={item}
+                onPress={() => hangeNavigateScreen(item)}
+                isEdit={true}
+              />
+            ))
+          ) : (
+            <Text>Bạn chưa tạo thời gian hẹn giờ nào</Text>
+          )}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

@@ -70,7 +70,6 @@ const SettingsScreen = () => {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              // marginHorizontal: 20,
               paddingHorizontal: 20,
               paddingVertical: 16,
               borderWidth: 0.5,

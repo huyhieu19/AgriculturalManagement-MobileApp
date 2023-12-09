@@ -5,5 +5,6 @@ export const AppColors = {
     bgWhite: "#ffffff",
     slate300: "#94a3b8",
     slate200: "#e2e8f0",
-    slate600: "#475569"
+    slate600: "#475569",
+    cardTop: "#C7E8C7"
 }

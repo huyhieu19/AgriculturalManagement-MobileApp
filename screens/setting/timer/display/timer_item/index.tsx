@@ -1,27 +1,26 @@
 import React from "react";
-import { AppColors } from "../../../../global";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { IFramDetails } from "../../../../types/farm.type";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { formatDateTime } from "../../../../utils";
+import { TimerDisplayModel } from "../../../../../network/models/setting_timer/TimerModel";
+import { AppColors } from "../../../../../global";
 
 const fakeFarm =
   "https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
 
-interface ListFarmItemProps {
-  farm: IFramDetails;
-  onPress?: () => void;
+interface ListTimerItemProps {
+  timer: TimerDisplayModel;
+  onPress: () => void;
   isBorderRadius?: boolean;
   isBgPrimary?: boolean;
   isEdit?: boolean;
 }
 
-export const ListFarmItem = (props: ListFarmItemProps) => {
+export const ListTimersItem = (props: ListTimerItemProps) => {
   const navigation = useNavigation<any>();
-
+  console.log(props.timer.deviceName);
   const goToEditFarm = () => {
-    navigation.navigate("EditFarmScreen", props.farm);
+    //navigation.navigate("EditFarmScreen", props.farm);
   };
 
   return (
@@ -73,7 +72,7 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
                 marginBottom: 8,
               }}
             >
-              {props.farm?.name}
+              {props.timer.nameRef}
             </Text>
             {props.isEdit ? (
               <TouchableOpacity onPress={goToEditFarm} style={{ right: 0 }}>
@@ -82,11 +81,30 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
             ) : null}
           </View>
           <CardInfor
-            property={"Diện tích (m2)"}
-            value={props.farm?.area?.toString()!}
+            property={"Tên thiết bị"}
+            value={
+              props.timer?.deviceName == null ? "" : props.timer?.deviceName
+            }
           />
-          <CardInfor property={"Số lượng khu"} value={props.farm?.countZone!} />
-          <CardInfor property={"Địa chỉ"} value={props?.farm?.address!} />
+          <CardInfor
+            property={"Mở"}
+            value={props.timer?.openTimer?.toString()!}
+          />
+          <CardInfor
+            property={"Đóng"}
+            value={props.timer?.shutDownTimer?.toString()!}
+          />
+          <CardInfor property={"Ngày Tạo"} value={props?.timer?.dateCreated!} />
+          <CardInfor property={"Cập nhật"} value={props?.timer?.dateUpdated!} />
+          <CardInfor property={"Chú ý"} value={props?.timer?.note!} />
+          <CardInfor
+            property={"Hoàn thành"}
+            value={
+              props.timer.isSuccessON || props.timer.isSuccessOFF
+                ? "Rồi"
+                : "Chưa"
+            }
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -111,7 +129,7 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: AppColors.slate600,
-          fontSize: 16,
+          fontSize: 10,
           fontWeight: "400",
           marginBottom: 5,
           fontStyle: "italic",
@@ -122,7 +140,7 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: "black",
-          fontSize: 16,
+          fontSize: 10,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
