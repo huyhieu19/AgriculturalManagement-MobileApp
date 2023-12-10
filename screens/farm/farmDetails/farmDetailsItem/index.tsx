@@ -6,6 +6,8 @@ import { greenhouseIcon } from "../../../../assets";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { IFramDetails } from "../../../../types/farm.type";
+import { CardInforProps } from "../../../../network/models/card_display/CardModel";
+import { AppFontSize } from "../../../../global/styles/AppFontSize";
 interface ListZonetemProps {
   zone: IZoneParams;
   farm?: IFramDetails;
@@ -36,7 +38,6 @@ export const ListZoneItem = (props: ListZonetemProps) => {
           borderBottomRightRadius: props?.isBorderRadius ? 25 : 15,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
-          elevation: 1,
           marginBottom: props.isEdit ? 20 : 2,
           height: 200,
         }}
@@ -77,29 +78,21 @@ export const ListZoneItem = (props: ListZonetemProps) => {
               </TouchableOpacity>
             ) : null}
           </View>
-          <CardInfor
-            property={"Diện tích"}
-            value={props.zone?.area?.toString()!}
-          />
-          <CardInfor property={"Chức năng"} value={props.zone?.function!} />
+          <CardInfor property={"Diện tích"} value={props.zone.area} />
+          <CardInfor property={"Chức năng"} value={props.zone.function} />
           <CardInfor
             property={"SL thiết bị đo"}
-            value={props?.zone.countInstrumentation!}
+            value={props.zone.countInstrumentation}
           />
           <CardInfor
             property={"SL thiết bị điều khiển"}
-            value={props?.zone.countDeviceDriver!}
+            value={props.zone.countDeviceDriver}
           />
         </View>
       </View>
     </TouchableOpacity>
   );
 };
-
-interface CardInforProps {
-  property: string;
-  value: string | number | null;
-}
 
 const CardInfor = (props: CardInforProps) => {
   return (
@@ -114,7 +107,7 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: AppColors.slate600,
-          fontSize: 16,
+          fontSize: AppFontSize.sizeLabel,
           fontWeight: "400",
           marginBottom: 5,
           fontStyle: "italic",
@@ -125,7 +118,7 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: "black",
-          fontSize: 16,
+          fontSize: AppFontSize.sizeDetail,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,

@@ -6,10 +6,10 @@ import {
   TextInput,
   Button,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
 import { editDevice } from "../../../../network/apis";
@@ -17,6 +17,7 @@ import { IDeviceOnModule, IDeviceOnZone } from "../../../../types/device.type";
 import { RootStackParamList } from "../../../../AppNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Dropdown } from "react-native-element-dropdown";
+import { AppStyles } from "../../../../global";
 
 type ParamList = {
   device: IDeviceOnModule | IDeviceOnZone;
@@ -49,7 +50,6 @@ export const EditDeviceScreen = () => {
 
   const [name, setName] = useState(route.params.name);
   const [description, setDescription] = useState(route.params.description);
-
   const [isAction, setIsAction] = useState(route.params.isAction);
   const [isAuto, setIsAuto] = useState(route.params.isAuto);
   const [isUsed, setIsUsed] = useState(route.params.isUsed);
@@ -69,6 +69,15 @@ export const EditDeviceScreen = () => {
         isUsed: isUsed,
         isAuto: isAuto,
       });
+      console.log(route.params.id);
+      console.log(name);
+      console.log(description);
+      console.log(isAction);
+      console.log(isUsed);
+      console.log(isAuto);
+
+      console.log("data" + res.data.Data);
+
       if (res.data.Data) {
         Alert.alert("Thành công", "Thành công cập nhật thết bị", [
           { text: "OK", onPress: () => console.log("OK Pressed") },
@@ -88,7 +97,7 @@ export const EditDeviceScreen = () => {
   };
 
   return (
-    <SafeAreaView>
+    <ScrollView style={AppStyles.appContainer}>
       <View
         style={{
           display: "flex",
@@ -96,7 +105,8 @@ export const EditDeviceScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          paddingVertical: "auto",
+          height: 60,
           justifyContent: "center",
         }}
       >
@@ -116,6 +126,7 @@ export const EditDeviceScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Tên thiết bị:</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setName(e)}
             value={name ?? ""}
@@ -124,6 +135,8 @@ export const EditDeviceScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Chi tiết:</Text>
           <TextInput
+            multiline={true}
+            numberOfLines={4}
             style={styles.dropdown}
             onChangeText={(e) => setDescription(e)}
             value={description ?? ""}
@@ -148,7 +161,7 @@ export const EditDeviceScreen = () => {
             onFocus={() => setFocusAction(true)}
             onBlur={() => setFocusAction(false)}
             onChange={(item) => {
-              setIsAuto(item.value === "true");
+              setIsAuto(item.value == "true");
               setFocusAction(false);
             }}
             renderLeftIcon={() => (
@@ -180,7 +193,7 @@ export const EditDeviceScreen = () => {
             onFocus={() => setFocusAuto(true)}
             onBlur={() => setFocusAuto(false)}
             onChange={(item) => {
-              setIsAction(item.value === "true");
+              setIsAction(item.value == "true");
               setFocusAuto(false);
             }}
             renderLeftIcon={() => (
@@ -236,7 +249,7 @@ export const EditDeviceScreen = () => {
           <Button title="Quay lại" color={"red"} onPress={() => GoBack()} />
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -250,7 +263,7 @@ const styles = StyleSheet.create({
     width: "65%",
     marginRight: 27,
     marginTop: 20,
-    height: 50,
+    minHeight: 50,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
@@ -300,6 +313,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row", // Set flexDirection to 'row'
     alignItems: "center", // Align items vertically in the center
-    marginTop: 50,
+    marginTop: 20,
+    marginBottom: 20,
   },
 });

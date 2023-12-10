@@ -4,7 +4,8 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { IFramDetails } from "../../../../types/farm.type";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { formatDateTime } from "../../../../utils";
+import { CardInforProps } from "../../../../network/models/card_display/CardModel";
+import { AppFontSize } from "../../../../global/styles/AppFontSize";
 
 const fakeFarm =
   "https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
@@ -32,13 +33,12 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
           alignItems: "flex-start",
           paddingHorizontal: 20,
           backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
-          paddingVertical: 16,
+          paddingVertical: 10,
           borderRadius: props?.isBorderRadius ? 0 : 15,
           borderBottomLeftRadius: props?.isBorderRadius ? 25 : 15,
           borderBottomRightRadius: props?.isBorderRadius ? 25 : 15,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
-          elevation: 1,
           marginBottom: props.isEdit ? 20 : 2,
           height: props.isEdit ? "auto" : 150,
         }}
@@ -48,6 +48,7 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
             uri: fakeFarm,
           }}
           style={{
+            alignItems: "center",
             width: 100,
             height: 100,
             borderRadius: 5,
@@ -70,7 +71,7 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
               style={{
                 fontSize: 18,
                 fontWeight: "700",
-                marginBottom: 8,
+                //marginBottom: 8,
               }}
             >
               {props.farm?.name}
@@ -81,22 +82,14 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
               </TouchableOpacity>
             ) : null}
           </View>
-          <CardInfor
-            property={"Diện tích (m2)"}
-            value={props.farm?.area?.toString()!}
-          />
-          <CardInfor property={"Số lượng khu"} value={props.farm?.countZone!} />
-          <CardInfor property={"Địa chỉ"} value={props?.farm?.address!} />
+          <CardInfor property={"Diện tích (m2)"} value={props.farm.area} />
+          <CardInfor property={"Số lượng khu"} value={props.farm.countZone} />
+          <CardInfor property={"Địa chỉ"} value={props.farm.address} />
         </View>
       </View>
     </TouchableOpacity>
   );
 };
-
-interface CardInforProps {
-  property: string;
-  value: string | number;
-}
 
 const CardInfor = (props: CardInforProps) => {
   return (
@@ -111,7 +104,7 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: AppColors.slate600,
-          fontSize: 16,
+          fontSize: AppFontSize.sizeLabel,
           fontWeight: "400",
           marginBottom: 5,
           fontStyle: "italic",
@@ -122,7 +115,7 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: "black",
-          fontSize: 16,
+          fontSize: AppFontSize.sizeDetail,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,

@@ -6,13 +6,14 @@ import {
   TextInput,
   Button,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
 import { createFarm } from "../../../../network/apis";
+import { AppStyles } from "../../../../global";
 
 export const CreateFarmScreen = () => {
   const navigation = useNavigation<any>();
@@ -51,7 +52,7 @@ export const CreateFarmScreen = () => {
   };
 
   return (
-    <SafeAreaView>
+    <ScrollView style={AppStyles.appContainer}>
       <View
         style={{
           display: "flex",
@@ -79,6 +80,7 @@ export const CreateFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Tên nông trại:</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setName(e)}
             value={name}
@@ -87,6 +89,7 @@ export const CreateFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Chi tiết:</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setDescription(e)}
             value={description}
@@ -95,6 +98,7 @@ export const CreateFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Diện tích (m2):</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setArea(Number(e))}
             value={String(area)}
@@ -103,6 +107,7 @@ export const CreateFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Địa chỉ:</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setAddress(e)}
             value={address}
@@ -111,6 +116,7 @@ export const CreateFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Ghi chú:</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setNote(e)}
             value={note}
@@ -127,7 +133,7 @@ export const CreateFarmScreen = () => {
           <Button title="Quay lại" color={"red"} onPress={() => GoBack()} />
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -141,7 +147,8 @@ const styles = StyleSheet.create({
     width: "70%",
     marginRight: 27,
     marginTop: 20,
-    height: 50,
+    minHeight: 50,
+    maxHeight: 200,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
@@ -165,5 +172,6 @@ const styles = StyleSheet.create({
     flexDirection: "row", // Set flexDirection to 'row'
     alignItems: "center", // Align items vertically in the center
     marginTop: 20,
+    marginBottom: 20,
   },
 });

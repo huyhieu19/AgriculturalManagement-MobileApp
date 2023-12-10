@@ -98,6 +98,7 @@ const ModuleAddScreen = () => {
       <View style={styles.container}>
         <Text style={styles.label}>Mã module:</Text>
         <TextInput
+          multiline={true}
           style={styles.dropdown}
           onChangeText={(e) => setModuleId(e)}
         />
@@ -105,6 +106,7 @@ const ModuleAddScreen = () => {
       <View style={styles.container}>
         <Text style={styles.label}>Tên module:</Text>
         <TextInput
+          multiline={true}
           style={styles.dropdown}
           onChangeText={(e) => setNameRef(e)}
         />
@@ -150,7 +152,8 @@ const styles = StyleSheet.create({
     width: "73%",
     marginRight: 27,
     marginTop: 20,
-    height: 50,
+    minHeight: 50,
+    maxHeight: 200,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,

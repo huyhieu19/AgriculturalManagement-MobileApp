@@ -39,7 +39,7 @@ const AllDevicesOnZoneScreen = () => {
 
   const getDevices = React.useCallback(async () => {
     try {
-      const res = await getDevicesOnZone(zone?.id!);
+      const res = await getDevicesOnZone(zone.id);
       setDevices(res.data.Data);
       console.log("Data device" + res.data.Data);
     } catch (e) {

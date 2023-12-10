@@ -1,9 +1,11 @@
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { TimerDisplayModel } from "../../../../../network/models/setting_timer/TimerModel";
 import { AppColors } from "../../../../../global";
+import { AppFontSize } from "../../../../../global/styles/AppFontSize";
+import { formatDateTimeDisplay } from "../../../../../utils";
 
 const fakeFarm =
   "https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
@@ -39,10 +41,10 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
           borderColor: AppColors.slate200,
           elevation: 1,
           marginBottom: props.isEdit ? 20 : 2,
-          height: props.isEdit ? "auto" : 150,
+          height: props.isEdit ? "auto" : 120,
         }}
       >
-        <Image
+        {/* <Image
           source={{
             uri: fakeFarm,
           }}
@@ -51,7 +53,7 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
             height: 100,
             borderRadius: 5,
           }}
-        />
+        /> */}
         <View
           style={{
             marginLeft: 12,
@@ -67,42 +69,37 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
           >
             <Text
               style={{
-                fontSize: 18,
-                fontWeight: "700",
+                fontSize: AppFontSize.sizeTitle,
+                fontWeight: "600",
                 marginBottom: 8,
+                marginRight: 20,
               }}
             >
-              {props.timer.nameRef}
+              {props.timer?.deviceName == null ? "" : props.timer?.deviceName}
             </Text>
             {props.isEdit ? (
-              <TouchableOpacity onPress={goToEditFarm} style={{ right: 0 }}>
+              <TouchableOpacity
+                onPress={goToEditFarm}
+                style={{ right: 10, top: -10 }}
+              >
                 <AntDesign name="edit" size={24} color="black" />
               </TouchableOpacity>
             ) : null}
           </View>
           <CardInfor
-            property={"Tên thiết bị"}
-            value={
-              props.timer?.deviceName == null ? "" : props.timer?.deviceName
-            }
-          />
-          <CardInfor
             property={"Mở"}
-            value={props.timer?.openTimer?.toString()!}
+            value={formatDateTimeDisplay(props.timer.openTimer)}
           />
           <CardInfor
             property={"Đóng"}
-            value={props.timer?.shutDownTimer?.toString()!}
+            value={formatDateTimeDisplay(props.timer.shutDownTimer)}
           />
-          <CardInfor property={"Ngày Tạo"} value={props?.timer?.dateCreated!} />
-          <CardInfor property={"Cập nhật"} value={props?.timer?.dateUpdated!} />
-          <CardInfor property={"Chú ý"} value={props?.timer?.note!} />
           <CardInfor
             property={"Hoàn thành"}
             value={
               props.timer.isSuccessON || props.timer.isSuccessOFF
-                ? "Rồi"
-                : "Chưa"
+                ? "Đã hoàn thành"
+                : "Chưa hoàn thành"
             }
           />
         </View>
@@ -113,7 +110,7 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
 
 interface CardInforProps {
   property: string;
-  value: string | number;
+  value: string | number | null | undefined;
 }
 
 const CardInfor = (props: CardInforProps) => {
@@ -129,10 +126,11 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: AppColors.slate600,
-          fontSize: 10,
+          fontSize: AppFontSize.sizeLabel,
           fontWeight: "400",
           marginBottom: 5,
           fontStyle: "italic",
+          width: "30%",
         }}
       >
         {props.property}:{" "}
@@ -140,10 +138,11 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: "black",
-          fontSize: 10,
+          fontSize: AppFontSize.sizeLabel,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
+          width: "70%",
         }}
       >
         {props.value}

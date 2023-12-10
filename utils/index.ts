@@ -9,4 +9,13 @@ const formatDateTime = (date: any) => {
 	const formattedDate = dateObject.toISOString().split("T")[0];
 	return formattedDate;
 };
-export { sleep, formatDateTime };
+
+  function formatDateTimeDisplay(date: any) {
+    const dateString = date;
+    const dateObject = new Date(dateString);
+
+    const formattedDate = dateObject.toLocaleString();
+    return formattedDate;
+  }
+
+export { sleep, formatDateTime,formatDateTimeDisplay };

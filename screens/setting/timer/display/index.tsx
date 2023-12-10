@@ -73,11 +73,22 @@ const SettingsTimerScreen = () => {
           style={{
             color: "white",
             fontSize: 18,
-            fontWeight: "500",
+            fontWeight: "600",
           }}
         >
-          Cài đặt thời gian
+          Cài đặt hẹn giờ thiết bị
         </Text>
+        <Pressable
+          style={{
+            position: "absolute",
+            right: 20,
+          }}
+          onPress={() => {
+            navigation.navigate("AddNewTimerScreen");
+          }}
+        >
+          <AntDesign name="pluscircleo" size={24} color="white" />
+        </Pressable>
       </View>
       <View
         style={{

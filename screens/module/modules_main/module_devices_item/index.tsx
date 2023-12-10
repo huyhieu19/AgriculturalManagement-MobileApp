@@ -16,12 +16,13 @@ import {
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../../AppNavigator";
-import { AppColors } from "../../../../global";
+import { AppColors, AppStyles } from "../../../../global";
 import { AntDesign } from "@expo/vector-icons";
 import DevicesOnModulesItem from "./device_item";
 import { IModule } from "../../../../types/module.type";
 import { IDeviceOnModule } from "../../../../types/device.type";
 import { getListModules } from "../../../../network/apis";
+import { AppFontSize } from "../../../../global/styles/AppFontSize";
 
 type ScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -69,18 +70,15 @@ const ModuleDevicesScreen = () => {
   }, [isFocused]);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        marginTop: 25,
-      }}
-    >
+    <SafeAreaView style={AppStyles.appContainer}>
       <View
         style={{
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          paddingVertical: 12,
+          //paddingVertical: 15,
+          paddingBottom: 15,
+          paddingTop: 20,
           borderBottomWidth: 0.5,
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
@@ -101,7 +99,7 @@ const ModuleDevicesScreen = () => {
         <Text
           style={{
             color: "white",
-            fontSize: 18,
+            fontSize: AppFontSize.sizeTitle,
             fontWeight: "500",
           }}
         >

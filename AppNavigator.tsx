@@ -29,6 +29,7 @@ import SettingsTimerScreen from "./screens/setting/timer/display";
 import { EditFarmScreen } from "./screens/farm/components/edit_farm";
 import { EditZoneScreen } from "./screens/farm/farmDetails/edit_zone";
 import { EditModuleScreen } from "./screens/module/module_edit";
+import { AddNewTimerScreen } from "./screens/setting/timer/add";
 
 export type RootStackParamList = {
   // home
@@ -58,6 +59,7 @@ export type RootStackParamList = {
   // cài đặt
   SettingsScreen: undefined;
   SettingsTimerScreen: undefined;
+  AddNewTimerScreen: undefined;
   // Thống kê
   StatisticsScreen: undefined;
 };
@@ -155,6 +157,10 @@ const AppNavigator: React.FC = () => {
             <Stack.Screen
               name={"SettingsTimerScreen"}
               component={SettingsTimerScreen}
+            />
+            <Stack.Screen
+              name={"AddNewTimerScreen"}
+              component={AddNewTimerScreen}
             />
 
             {/* ---------------- */}
