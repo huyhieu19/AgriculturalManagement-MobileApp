@@ -69,20 +69,13 @@ export const EditDeviceScreen = () => {
         isUsed: isUsed,
         isAuto: isAuto,
       });
-      console.log(route.params.id);
-      console.log(name);
-      console.log(description);
-      console.log(isAction);
-      console.log(isUsed);
-      console.log(isAuto);
 
       console.log("data" + res.data.Data);
 
       if (res.data.Data) {
         Alert.alert("Thành công", "Thành công cập nhật thết bị", [
-          { text: "OK", onPress: () => console.log("OK Pressed") },
+          { text: "OK", onPress: () => GoBack() },
         ]);
-        GoBack();
       } else {
         Alert.alert("Lỗi", `Không thể cập nhật thiết bị`, [
           { text: "OK", onPress: () => console.log("OK Pressed") },
@@ -103,7 +96,7 @@ export const EditDeviceScreen = () => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          paddingHorizontal: 20,
+          paddingTop: 10,
           backgroundColor: AppColors.primaryColor,
           paddingVertical: "auto",
           height: 60,
@@ -114,6 +107,7 @@ export const EditDeviceScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={GoBack}
         >

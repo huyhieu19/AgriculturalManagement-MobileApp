@@ -78,7 +78,8 @@ const FarmDetailsScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          paddingTop: 10,
+          height: 55,
           justifyContent: "center",
         }}
       >
@@ -86,6 +87,7 @@ const FarmDetailsScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            top: 20,
           }}
           onPress={() => {
             navigation.goBack();
@@ -100,6 +102,7 @@ const FarmDetailsScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            top: 20,
           }}
           onPress={() => {
             hangeNavigateScreenCreateZone(farmState);

@@ -41,6 +41,7 @@ const DeviceAddScreen = () => {
   const [modules, setModules] = React.useState<IModule[]>([]);
   const [devices, setDevices] = React.useState<IDeviceOnZone[]>([]);
   const [device, setDevice] = React.useState<IDeviceOnZone | null>(null);
+  const [nameDeviceRef, setNameDeviceRef] = useState<string>();
   const [deviceId, setDeviceId] = React.useState<string>("");
   const [moduleId, setModuleId] = useState<string | null>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -63,6 +64,7 @@ const DeviceAddScreen = () => {
   React.useEffect(() => {
     if (isFocused) {
       fetchListModule().then(() => {});
+      setDevice(null);
     }
   }, [isFocused]);
 
@@ -215,6 +217,16 @@ const DeviceAddScreen = () => {
           )}
         />
       </View>
+      <View style={styles.Inputcontainer}>
+        <Text style={styles.label}>Note: </Text>
+        <TextInput
+          multiline={true}
+          style={[styles.dropdown]}
+          onChangeText={(e) => setNameDeviceRef(e)}
+          value={nameDeviceRef}
+          placeholder="Nhập tên thiết bị"
+        />
+      </View>
       {moduleId != null || devices != null ? (
         <View style={styles.container}>
           <Text style={styles.label}>Loại thiết bị:</Text>
@@ -223,6 +235,7 @@ const DeviceAddScreen = () => {
             value={
               device?.deviceType == "R" ? "Thiết bị đo" : "Thiết bị điều khiển"
             }
+            placeholder="Loại thiết bị"
             editable={false}
           />
         </View>

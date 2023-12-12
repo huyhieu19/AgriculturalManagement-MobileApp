@@ -14,6 +14,7 @@ import offDevcie from "./off-button.png"
 import onDevcie from "./on-button.png"
 import timerSetting from './timer_setting.png'
 import thresholdSetting from './threshold_setting.png'
+import calender from './calendar.png'
 
 export {
 	homeLeftIcon,
@@ -31,5 +32,6 @@ export {
 	offDevcie,
 	onDevcie,
 	timerSetting,
-	thresholdSetting
+	thresholdSetting,
+	calender
 };

@@ -91,7 +91,8 @@ const DeviceInstrumentationScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          height: 60,
+          paddingTop: 10,
           justifyContent: "center",
         }}
       >
@@ -99,6 +100,7 @@ const DeviceInstrumentationScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -113,6 +115,7 @@ const DeviceInstrumentationScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("DeviceAddScreen", zoneState);

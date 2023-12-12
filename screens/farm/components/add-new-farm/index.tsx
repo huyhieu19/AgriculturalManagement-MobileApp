@@ -60,7 +60,8 @@ export const CreateFarmScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          paddingTop: 10,
+          height: 60,
           justifyContent: "center",
         }}
       >
@@ -68,6 +69,7 @@ export const CreateFarmScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={GoBack}
         >

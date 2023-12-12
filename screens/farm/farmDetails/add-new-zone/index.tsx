@@ -68,7 +68,8 @@ export const AddNewZoneScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          height: 60,
+          paddingTop: 10,
           justifyContent: "center",
         }}
       >
@@ -76,6 +77,7 @@ export const AddNewZoneScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={goBack}
         >

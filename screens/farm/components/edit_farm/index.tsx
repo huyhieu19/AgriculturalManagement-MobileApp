@@ -93,7 +93,8 @@ export const EditFarmScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          paddingTop: 10,
+          height: 60,
           justifyContent: "center",
         }}
       >
@@ -101,6 +102,7 @@ export const EditFarmScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={goBack}
         >
