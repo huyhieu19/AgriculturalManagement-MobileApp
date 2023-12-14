@@ -62,8 +62,9 @@ const DeviceControlScreen = () => {
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 20,
+          paddingTop: 10,
+          height: 60,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
           justifyContent: "center",
         }}
       >
@@ -71,6 +72,7 @@ const DeviceControlScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -85,6 +87,7 @@ const DeviceControlScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("DeviceAddScreen", zoneState);

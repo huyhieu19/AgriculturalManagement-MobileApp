@@ -7,6 +7,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../../../AppNavigator";
+import { CardInforProps } from "../../../../../network/models/card_display/CardModel";
 
 type DevicesProps = {
   device: IDeviceOnModule;
@@ -107,11 +108,6 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
     </TouchableOpacity>
   );
 };
-
-interface CardInforProps {
-  property: string;
-  value: string | number | null;
-}
 
 const CardInfor = (props: CardInforProps) => {
   return (

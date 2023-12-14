@@ -7,66 +7,79 @@ import { IZoneParams } from "../../../types/zone.type";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import DeviceInstrumentationScreen from "./deviceInstrumentation";
 type ParamList = {
-    zone: IZoneParams;
+  zone: IZoneParams;
 };
 
 const Tab = createBottomTabNavigator();
 
 export default function DeviceOnZoneScreen() {
-    const route = useRoute<RouteProp<ParamList, "zone">>();
-    const routeParams = route?.params ?? [];
+  const route = useRoute<RouteProp<ParamList, "zone">>();
+  const routeParams = route?.params ?? [];
 
-    console.log("Dã chuyển data sang màn DeviceOnZoneScreen, Id = " + routeParams.id);
+  console.log(
+    "Dã chuyển data sang màn DeviceOnZoneScreen, Id = " + routeParams.id
+  );
 
-    return (
-        <Tab.Navigator
-            screenOptions={{
-                tabBarStyle: {
-                    height: 90,
-                },
-                headerShown: false,
-                tabBarActiveTintColor: AppColors.primaryColor,
-                tabBarInactiveTintColor: AppColors.inactiveColor,
-                tabBarLabelStyle: {
-                    fontSize: 13,
-                },
-            }}
-        >
-            <Tab.Screen
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <MaterialIcons name="device-thermostat" size={27} color={getFocusColor(focused)} />
-                    ),
-                }}
-                name="Thiết bị đo"
-                component={DeviceInstrumentationScreen}
-                initialParams={routeParams}
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          height: 90,
+        },
+        headerShown: false,
+        tabBarActiveTintColor: AppColors.primaryColor,
+        tabBarInactiveTintColor: AppColors.inactiveColor,
+        tabBarLabelStyle: {
+          fontSize: 13,
+        },
+      }}
+    >
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialIcons
+              name="device-hub"
+              size={27}
+              color={getFocusColor(focused)}
             />
-            <Tab.Screen
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <MaterialIcons name="device-hub" size={27} color={getFocusColor(focused)} />
-                    ),
-                }}
-                name="Thiết bị điều khiển"
-                component={DeviceControlScreen}
-                initialParams={routeParams}
+          ),
+        }}
+        name="Thiết bị điều khiển"
+        component={DeviceControlScreen}
+        initialParams={routeParams}
+      />
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialCommunityIcons
+              name="view-module"
+              size={24}
+              color={getFocusColor(focused)}
             />
-            <Tab.Screen
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <MaterialCommunityIcons name="view-module" size={24} color={getFocusColor(focused)} />
-                    ),
-                }}
-                name="Tất cả thiết bị"
-                component={AllDevicesOnZoneScreen}
-                initialParams={routeParams}
+          ),
+        }}
+        name="Tất cả thiết bị"
+        component={AllDevicesOnZoneScreen}
+        initialParams={routeParams}
+      />
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <MaterialIcons
+              name="device-thermostat"
+              size={27}
+              color={getFocusColor(focused)}
             />
-
-        </Tab.Navigator>
-    );
+          ),
+        }}
+        name="Thiết bị đo"
+        component={DeviceInstrumentationScreen}
+        initialParams={routeParams}
+      />
+    </Tab.Navigator>
+  );
 }
 
 const getFocusColor = (focus: boolean) => {
-    return focus ? AppColors.primaryColor : AppColors.inactiveColor;
+  return focus ? AppColors.primaryColor : AppColors.inactiveColor;
 };

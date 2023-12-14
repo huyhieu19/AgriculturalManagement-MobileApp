@@ -8,7 +8,7 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppColors, AppStyles } from "../../../../global";
 import {
   RouteProp,
@@ -21,11 +21,13 @@ import { AntDesign } from "@expo/vector-icons";
 import { ListZoneItem } from "../../farmDetails/farmDetailsItem";
 import { IDeviceOnZone } from "../../../../types/device.type";
 import { getInstrumentationOnZone } from "../../../../network/apis";
-import DevicesOnModulesItem from "../../../module/modules_main/module_devices_item/device_item";
+import DevicesInstrumentationItem from "./deviceInstrumentationItem";
+import MqttService from "../../../../Mqtt/mqttService";
 
 type ParamList = {
   ZoneList: IZoneParams;
 };
+
 const DeviceInstrumentationScreen = () => {
   const route = useRoute<RouteProp<ParamList, "ZoneList">>();
   const zone = route?.params ?? [];
@@ -35,36 +37,9 @@ const DeviceInstrumentationScreen = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [zoneState, SetZoneState] = useState<IZoneParams>(zone);
 
-  // const [receivedMessage, setReceivedMessage] = useState<string>("0");
-
-  // const [message, setMessage] = useState<string[]>([]);
-  // const [messageToSend, setMessageToSend] = useState<string>('');
-  // const [isConnected, setIsConnected] = useState<boolean>(false);
-  // const [error, setError] = useState<string>('');
-
-  // const onMessageArrived = (entry: Message) => {
-  //     console.log("onMessageArrived:" + entry.payloadString);
-  //     setMessage([...message, entry.payloadString]);
-  // };
-
-  // const onConnect = (Client: C) => {
-  //     console.log("Connected!!!!");
-  //     Client.subscribe('hello/world');
-  //     setIsConnected(true);
-  //     setError('');
-  // };
-
-  // const onConnectionLost = (responseObject: any) => {
-  //     if (responseObject.errorCode !== 0) {
-  //         console.log("onConnectionLost:" + responseObject.errorMessage);
-  //         setError('Lost Connection');
-  //         setIsConnected(false);
-  //     }
-  // };
-
   const getDevicesInstrumentation = React.useCallback(async () => {
     try {
-      const res = await getInstrumentationOnZone(zone?.id!);
+      const res = await getInstrumentationOnZone(zone.id);
       setDevices(res.data.Data);
       console.log("Data device" + res.data.Data);
     } catch (e) {
@@ -74,13 +49,74 @@ const DeviceInstrumentationScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [zone]);
 
-  React.useEffect(() => {
+  const mqttService = new MqttService();
+  console.log("Status connection mqtt: " + mqttService.client.isConnected());
+  useEffect(() => {
     if (isFocused) {
-      getDevicesInstrumentation().then(() => {});
+      getDevicesInstrumentation();
+      // Kiểm tra xem client đã kết nối chưa
+      if (!mqttService.client.isConnected()) {
+        // Nếu chưa kết nối, thực hiện kết nối
+        mqttService.connect(() => {
+          console.log("Connected to MQTT broker");
+          // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
+          mqttService.subscribeTopic(
+            "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/#"
+          );
+          mqttService.client.onMessageArrived = onMessageArrived;
+        });
+        // Thiết lập hàm xử lý khi nhận được message
+      } else {
+        console.log("Already connected");
+        // Nếu client đã kết nối trước đó, thực hiện thêm việc subscribe topic mới
+        //mqttService.subscribeTopic("3c531531-d5f5-4fe3-9954-5afd76ff2151/#");
+        //mqttService.client.onMessageArrived = onMessageArrived;
+      }
+      return () => {
+        if (mqttService.client.isConnected()) {
+          mqttService.client.disconnect();
+        }
+      };
     }
   }, [isFocused]);
+
+  // useEffect(() => {});
+  const onMessageArrived = (message: any) => {
+    // Tách topic thành mảng các phần tử
+    const topicParts = message.topic.split("/");
+
+    // Lấy id từ phần tử thứ 2 của mảng
+    const deviceIdFromTopic = topicParts[2];
+    const type = topicParts[3];
+
+    console.log("devices: " + devices);
+    console.log("deviceIdFromTopic: " + deviceIdFromTopic);
+    console.log("topicParts[3]: " + type);
+
+    // Cập nhật state với mảng devices đã được cập nhật
+    setDevices((prev) => {
+      return prev?.map((item) => {
+        if (item?.id.toUpperCase() === deviceIdFromTopic) {
+          if (type === "DA") {
+            return {
+              ...item,
+              value2: message.payloadString,
+            };
+          }
+          return {
+            ...item,
+            value1: message.payloadString,
+          };
+        }
+        return item;
+      });
+    });
+    console.log("device moi" + devices[0].id);
+    console.log("Received topic:", message.topic);
+    console.log("Received payload:", message.payloadString);
+  };
 
   return (
     <SafeAreaView style={AppStyles.appContainer}>
@@ -91,7 +127,8 @@ const DeviceInstrumentationScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          height: 60,
+          paddingTop: 10,
           justifyContent: "center",
         }}
       >
@@ -99,6 +136,7 @@ const DeviceInstrumentationScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -113,6 +151,7 @@ const DeviceInstrumentationScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("DeviceAddScreen", zoneState);
@@ -150,7 +189,7 @@ const DeviceInstrumentationScreen = () => {
         >
           {devices != null && devices?.length > 0 ? (
             devices.map((item) => (
-              <DevicesOnModulesItem key={item?.id} device={item} />
+              <DevicesInstrumentationItem key={item?.id} device={item} />
             ))
           ) : (
             <Text>Không có thiết bị trong khu này</Text>

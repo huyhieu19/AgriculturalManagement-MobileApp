@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,11 +27,6 @@ import { IModule } from "../../../../types/module.type";
 import { IDeviceOnZone } from "../../../../types/device.type";
 import { IZoneParams } from "../../../../types/zone.type";
 
-// type ScreenNavigationProp = NativeStackNavigationProp<
-//   RootStackParamList,
-//   "DeviceAddScreen"
-// >;
-
 type ParamList = {
   zone: IZoneParams;
 };
@@ -44,26 +40,13 @@ const DeviceAddScreen = () => {
   const isFocused = useIsFocused();
   const [modules, setModules] = React.useState<IModule[]>([]);
   const [devices, setDevices] = React.useState<IDeviceOnZone[]>([]);
+  const [device, setDevice] = React.useState<IDeviceOnZone | null>(null);
+  const [nameDeviceRef, setNameDeviceRef] = useState<string>();
   const [deviceId, setDeviceId] = React.useState<string>("");
-  const [moduleId, setModuleId] = useState<string>("");
+  const [moduleId, setModuleId] = useState<string | null>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isFocusModule, setIsFocusModule] = useState<boolean>(false);
   const [isFocusDevice, setIsFocusDevice] = useState<boolean>(false);
-
-  const renderLabelModule = () => {
-    return (
-      <Text style={[styles.label, isFocusModule && { color: "blue" }]}>
-        Tên Module
-      </Text>
-    );
-  };
-  const renderLabelDevice = () => {
-    return (
-      <Text style={[styles.label, isFocusDevice && { color: "blue" }]}>
-        Thiết bị - Chân cắm
-      </Text>
-    );
-  };
 
   const fetchListModule = React.useCallback(async () => {
     try {
@@ -81,6 +64,7 @@ const DeviceAddScreen = () => {
   React.useEffect(() => {
     if (isFocused) {
       fetchListModule().then(() => {});
+      setDevice(null);
     }
   }, [isFocused]);
 
@@ -92,12 +76,21 @@ const DeviceAddScreen = () => {
       setDevices([]);
     }
   };
+  const deviceOfGate = (id: string) => {
+    const de = devices?.find((element) => element.id === id);
+    console.log(de);
+    if (de != null) {
+      setDevice(de);
+    } else {
+      setDevice(null);
+    }
+  };
 
   const handleAddNew = async () => {
     if (deviceId.length == 36) {
       try {
         setIsLoading(true);
-        const res = await AddDeviceToZone(deviceId, routeParams?.id!);
+        const res = await AddDeviceToZone(deviceId, routeParams.id);
         if (res.data.Data) {
           Alert.alert("Thành công", `Thêm mới thiết bị thành công`, [
             { text: "OK", onPress: () => console.log("OK Pressed") },
@@ -159,7 +152,7 @@ const DeviceAddScreen = () => {
       </View>
 
       <View style={styles.container}>
-        {renderLabelModule()}
+        <Text style={styles.label}>Tên Module: </Text>
         <Dropdown
           style={[styles.dropdown, isFocusModule && { borderColor: "blue" }]}
           placeholderStyle={styles.placeholderStyle}
@@ -169,7 +162,7 @@ const DeviceAddScreen = () => {
           data={modules}
           search
           maxHeight={300}
-          labelField="name"
+          labelField="nameRef"
           valueField="id"
           placeholder={!isFocusModule ? "Select item" : "..."}
           searchPlaceholder="Search..."
@@ -192,14 +185,14 @@ const DeviceAddScreen = () => {
         />
       </View>
       <View style={styles.container}>
-        {renderLabelDevice()}
+        <Text style={styles.label}>Chân cắm: </Text>
         <Dropdown
           style={[styles.dropdown, isFocusDevice && { borderColor: "blue" }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
-          data={devices}
+          data={devices!}
           search
           maxHeight={300}
           labelField="gate"
@@ -212,6 +205,7 @@ const DeviceAddScreen = () => {
           onChange={(item) => {
             setDeviceId(item.id);
             setIsFocusDevice(false);
+            deviceOfGate(item.id);
           }}
           renderLeftIcon={() => (
             <AntDesign
@@ -223,7 +217,33 @@ const DeviceAddScreen = () => {
           )}
         />
       </View>
-
+      <View style={styles.Inputcontainer}>
+        <Text style={styles.label}>Note: </Text>
+        <TextInput
+          multiline={true}
+          style={[styles.dropdown]}
+          onChangeText={(e) => setNameDeviceRef(e)}
+          value={nameDeviceRef}
+          placeholder="Nhập tên thiết bị"
+        />
+      </View>
+      {moduleId != null || devices != null ? (
+        <View style={styles.container}>
+          <Text style={styles.label}>Loại thiết bị:</Text>
+          <TextInput
+            style={styles.dropdown1}
+            value={
+              device?.deviceType == "R" ? "Thiết bị đo" : "Thiết bị điều khiển"
+            }
+            placeholder="Loại thiết bị"
+            editable={false}
+          />
+        </View>
+      ) : (
+        <Text style={{ marginTop: 10, marginLeft: 5, color: `red` }}>
+          Hãy chọn đủ tên module và chân cắm
+        </Text>
+      )}
       {isLoading ? (
         <View
           style={{
@@ -257,27 +277,40 @@ const DeviceAddScreen = () => {
 };
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    padding: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
+
   dropdown: {
-    height: 50,
+    width: "65%",
+    marginRight: 27,
+    marginTop: 20,
+    minHeight: 50,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
   },
-  icon: {
-    marginRight: 5,
+  dropdown1: {
+    width: "65%",
+    marginRight: 27,
+    marginTop: 20,
+    minHeight: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    color: "white",
+    backgroundColor: "#808080",
   },
   label: {
-    position: "absolute",
-    backgroundColor: "white",
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
+    width: "30%",
+    marginTop: 20,
+    marginLeft: 5,
+  },
+  icon: {
+    marginRight: 5,
   },
   placeholderStyle: {
     fontSize: 16,
@@ -321,6 +354,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row", // Set flexDirection to 'row'
     alignItems: "center", // Align items vertically in the center
+    marginTop: 20,
+    marginBottom: 20,
   },
 });
 

@@ -1,17 +1,9 @@
-import {
-  Alert,
-  Image,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { AppColors } from "../../../../global";
 import { formatDateTime } from "../../../../utils";
 import { IModule } from "../../../../types/module.type";
-import { closeIcon, esp8266 } from "../../../../assets";
-import { removeModuleFromUser } from "../../../../network/apis";
+import { esp8266 } from "../../../../assets";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 interface ModulesItemProps {
@@ -82,8 +74,8 @@ const ModulesItem = (props: ModulesItemProps) => {
               <AntDesign name="edit" size={24} color="black" />
             </TouchableOpacity>
           </View>
-          <CardInfor property={"Loại"} value={props.modules?.name!} />
-          <CardInfor property={"Ghi chú"} value={props?.modules?.note!} />
+          <CardInfor property={"Loại"} value={props.modules.name} />
+          <CardInfor property={"Ghi chú"} value={props.modules.note} />
           <CardInfor
             property={"Ngày tạo"}
             value={String(formatDateTime(props?.modules?.dateCreated!))}
@@ -96,7 +88,7 @@ const ModulesItem = (props: ModulesItemProps) => {
 
 interface CardInforProps {
   property: string;
-  value: string | number;
+  value: string | number | null | undefined;
 }
 
 const CardInfor = (props: CardInforProps) => {

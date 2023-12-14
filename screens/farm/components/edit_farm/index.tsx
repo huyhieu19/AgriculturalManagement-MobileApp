@@ -6,14 +6,15 @@ import {
   TextInput,
   StyleSheet,
   Button,
+  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from "react";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
-import { createZone, deleteFarm, editFarm } from "../../../../network/apis";
+import { deleteFarm, editFarm } from "../../../../network/apis";
 import { IFramDetails } from "../../../../types/farm.type";
+import { AppStyles } from "../../../../global";
 
 type ParamList = {
   FarmDetailsScreen: IFramDetails;
@@ -60,7 +61,12 @@ export const EditFarmScreen = () => {
       {
         text: "Cancel",
       },
-      { text: "OK", onPress: async () => await handleDeleteFarm1() },
+      {
+        text: "OK",
+        onPress: async () => {
+          await handleDeleteFarm1();
+        },
+      },
     ]);
   };
   const handleDeleteFarm1 = async () => {
@@ -79,7 +85,7 @@ export const EditFarmScreen = () => {
   };
 
   return (
-    <SafeAreaView>
+    <ScrollView style={AppStyles.appContainer}>
       <View
         style={{
           display: "flex",
@@ -87,7 +93,8 @@ export const EditFarmScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          paddingTop: 10,
+          height: 60,
           justifyContent: "center",
         }}
       >
@@ -95,6 +102,7 @@ export const EditFarmScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={goBack}
         >
@@ -116,6 +124,8 @@ export const EditFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Chi tiết:</Text>
           <TextInput
+            multiline={true}
+            numberOfLines={4}
             style={styles.dropdown}
             onChangeText={(e) => setDescription(e)}
             value={
@@ -128,6 +138,7 @@ export const EditFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Diện tích (m2):</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setArea(Number(e))}
             value={area != undefined || area != null ? String(area) : ""}
@@ -136,6 +147,7 @@ export const EditFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Địa chỉ:</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setAddress(e)}
             value={
@@ -146,6 +158,8 @@ export const EditFarmScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Ghi chú:</Text>
           <TextInput
+            multiline={true}
+            numberOfLines={4}
             style={styles.dropdown}
             onChangeText={(e) => setNote(e)}
             value={note != undefined || note != null ? note.toString() : ""}
@@ -166,7 +180,7 @@ export const EditFarmScreen = () => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
@@ -179,7 +193,8 @@ const styles = StyleSheet.create({
     width: "70%",
     marginRight: 27,
     marginTop: 15,
-    height: 50,
+    minHeight: 50,
+    maxHeight: 200,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
@@ -204,5 +219,6 @@ const styles = StyleSheet.create({
     flexDirection: "row", // Set flexDirection to 'row'
     alignItems: "center", // Align items vertically in the center
     marginTop: 20,
+    marginBottom: 20,
   },
 });

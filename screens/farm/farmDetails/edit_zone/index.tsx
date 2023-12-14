@@ -6,38 +6,30 @@ import {
   TextInput,
   StyleSheet,
   Button,
+  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from "react";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
-import {
-  createZone,
-  deleteFarm,
-  deleteZone,
-  editFarm,
-  editZone,
-} from "../../../../network/apis";
+import { deleteZone, editZone } from "../../../../network/apis";
 import { IZoneParams, IZoneUpdateModel } from "../../../../types/zone.type";
-import { IFramDetails } from "../../../../types/farm.type";
+import { AppStyles } from "../../../../global";
 
 type ParamList = {
   Zone: IZoneParams;
-  Farm?: IFramDetails;
 };
 
 export const EditZoneScreen = () => {
   const routeZone = useRoute<RouteProp<ParamList, "Zone">>();
-  const routeFarm = useRoute<RouteProp<ParamList, "Farm">>();
   const navigation = useNavigation<any>();
 
   const [name, setName] = useState<string | undefined>(
-    routeZone.params?.zoneName!
+    routeZone.params.zoneName
   );
   const [note, setNote] = useState<string | undefined>(routeZone.params.note);
   const [funct, setFunct] = useState<string | undefined>(
-    routeZone.params?.function!
+    routeZone.params.function
   );
   const [area, setArea] = useState<number | undefined>(routeZone.params.area);
   const [description, setDescription] = useState(routeZone.params.description);
@@ -56,7 +48,7 @@ export const EditZoneScreen = () => {
         note: note!,
         timeToStartPlanting: routeZone.params.timeToStartPlanting!,
         dateCreateFarm: routeZone.params.dateCreateFarm!,
-        function: routeZone.params.function!,
+        function: funct!,
         typeTreeId: null,
         farmId: routeZone.params.farmId!,
       };
@@ -73,6 +65,7 @@ export const EditZoneScreen = () => {
     } catch (error) {
       Alert.alert("Lỗi", `${error}`, [{ text: "OK" }]);
     } finally {
+      goBack();
     }
   };
   const handleDeleteZone = async () => {
@@ -94,7 +87,7 @@ export const EditZoneScreen = () => {
   };
 
   return (
-    <SafeAreaView>
+    <ScrollView style={AppStyles.appContainer}>
       <View
         style={{
           display: "flex",
@@ -124,6 +117,7 @@ export const EditZoneScreen = () => {
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Tên khu:</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             onChangeText={(e) => setName(e)}
             value={name != undefined || name != null ? name.toString() : ""}
@@ -132,6 +126,8 @@ export const EditZoneScreen = () => {
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Chi tiết:</Text>
           <TextInput
+            multiline={true}
+            numberOfLines={4}
             style={styles.input}
             onChangeText={(e) => setDescription(e)}
             value={
@@ -144,6 +140,7 @@ export const EditZoneScreen = () => {
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Diện tích (m2):</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
             onChangeText={(e) => setArea(Number(e))}
             value={area != undefined || area != null ? String(area) : ""}
@@ -152,14 +149,19 @@ export const EditZoneScreen = () => {
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Chức năng:</Text>
           <TextInput
+            multiline={true}
             style={styles.input}
-            onChangeText={(e) => setFunct(e)}
+            onChangeText={(e) => {
+              setFunct(e);
+            }}
             value={funct != undefined || funct != null ? funct.toString() : ""}
           />
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Ghi chú:</Text>
           <TextInput
+            multiline={true}
+            numberOfLines={4}
             style={styles.input}
             onChangeText={(e) => setNote(e)}
             value={note != undefined || note != null ? note.toString() : ""}
@@ -180,7 +182,7 @@ export const EditZoneScreen = () => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
@@ -193,7 +195,8 @@ const styles = StyleSheet.create({
     width: "70%",
     marginRight: 27,
     marginTop: 10,
-    height: 50,
+    minHeight: 50,
+    maxHeight: 200,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,

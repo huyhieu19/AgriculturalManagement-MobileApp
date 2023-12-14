@@ -57,15 +57,16 @@ const ListFarmScreen: React.FC = () => {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={[AppStyles.appContainer, {}]}>
+    <SafeAreaView style={AppStyles.appContainer}>
       <View
         style={{
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          paddingVertical: 12,
+          height: 60,
           borderBottomWidth: 0.5,
           paddingHorizontal: 20,
+          paddingTop: 10,
           backgroundColor: AppColors.primaryColor,
           position: "relative",
         }}
@@ -74,6 +75,7 @@ const ListFarmScreen: React.FC = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.goBack();
@@ -94,6 +96,7 @@ const ListFarmScreen: React.FC = () => {
           style={{
             position: "absolute",
             right: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             hangeNavigateScreenCreateFarm();

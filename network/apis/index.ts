@@ -5,7 +5,7 @@ import { CreateZone, DeleteZoneResModel, EditZoneResModel } from "../models/Zone
 import { IModule } from "../../types/module.type";
 import { IDeviceOnModule, IDeviceOnZone } from "../../types/device.type";
 
-
+// login
 export function login(loginPayload: { email: string; password: string }) {
 	return axiosInstance.post<BaseResponse<LoginResponse>>(
 		"/Authentication/login",

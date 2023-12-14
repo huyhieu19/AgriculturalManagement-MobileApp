@@ -39,7 +39,7 @@ const AllDevicesOnZoneScreen = () => {
 
   const getDevices = React.useCallback(async () => {
     try {
-      const res = await getDevicesOnZone(zone?.id!);
+      const res = await getDevicesOnZone(zone.id);
       setDevices(res.data.Data);
       console.log("Data device" + res.data.Data);
     } catch (e) {
@@ -69,7 +69,8 @@ const AllDevicesOnZoneScreen = () => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
+          paddingTop: 10,
+          height: 60,
           justifyContent: "center",
         }}
       >
@@ -77,6 +78,7 @@ const AllDevicesOnZoneScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -91,6 +93,7 @@ const AllDevicesOnZoneScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            paddingTop: 10,
           }}
           onPress={() => {
             goToAddDeviceScreen();

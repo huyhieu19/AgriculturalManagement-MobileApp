@@ -111,6 +111,7 @@ export const EditModuleScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Tên module:</Text>
           <TextInput
+            multiline={true}
             style={styles.dropdown}
             onChangeText={(e) => setNameRef(e)}
             value={
@@ -121,6 +122,8 @@ export const EditModuleScreen = () => {
         <View style={styles.container}>
           <Text style={styles.label}>Ghi chú:</Text>
           <TextInput
+            multiline={true}
+            numberOfLines={4}
             style={styles.dropdown}
             onChangeText={(e) => setNote(e)}
             value={note != undefined || note != null ? note.toString() : ""}
@@ -154,7 +157,8 @@ const styles = StyleSheet.create({
     width: "70%",
     marginRight: 27,
     marginTop: 15,
-    height: 50,
+    minHeight: 50,
+    maxHeight: 200,
     borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
