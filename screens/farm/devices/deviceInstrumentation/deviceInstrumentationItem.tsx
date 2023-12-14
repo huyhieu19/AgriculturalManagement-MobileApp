@@ -1,10 +1,6 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import React, { useEffect, useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React from "react";
 import { IDeviceOnModule } from "../../../../types/device.type";
-import { RootStackParamList } from "../../../../AppNavigator";
 import { AppColors } from "../../../../global";
 import { CardInforProps } from "../../../../network/models/card_display/CardModel";
 
@@ -12,18 +8,7 @@ type DevicesProps = {
   device: IDeviceOnModule;
   onPress?: () => void;
 };
-
-type ScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "ModuleDevicesScreen"
->;
-
 const DevicesInstrumentationItem = (props: DevicesProps) => {
-  // const navigation = useNavigation<ScreenNavigationProp>();
-  // const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  // const [deviceSt, setDeviceSt] = useState<IDeviceOnModule>(props.device);
-  // const [receivedMessages, setReceivedMessages] = useState<string[]>([]);
-
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View
@@ -40,7 +25,7 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
           marginBottom: 20,
         }}
       >
-        {props.device.value == null ? (
+        {props.device.value1 == null && props.device.value2 == null ? (
           <View
             style={{
               justifyContent: "center",
@@ -52,22 +37,44 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
             <ActivityIndicator size={"large"} color={AppColors.primaryColor} />
           </View>
         ) : (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: 80,
-              height: 80,
-              borderRadius: 40, // Đặt giá trị borderRadius để biến thành vòng tròn
-              borderWidth: 2,
-            }}
-          >
-            <Text style={{ fontSize: 30 }}>{props.device.value}</Text>
+          <View>
+            {props.device.nameRef == "ND_DA" ? (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 110,
+                  height: 90,
+                  borderRadius: 10, // Đặt giá trị borderRadius để biến thành vòng tròn
+                  borderWidth: 0.5,
+                }}
+              >
+                <Text style={{ fontSize: 20, color: "green" }}>
+                  {props.device.value1} *C
+                </Text>
+                <Text style={{ fontSize: 20, color: "red" }}>
+                  {props.device.value2} %
+                </Text>
+              </View>
+            ) : (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 110,
+                  height: 110,
+                  borderRadius: 50, // Đặt giá trị borderRadius để biến thành vòng tròn
+                  borderWidth: 0.5,
+                }}
+              >
+                <Text style={{ fontSize: 20 }}>{props.device.value1}</Text>
+              </View>
+            )}
           </View>
         )}
         <View
           style={{
-            marginLeft: 12,
+            marginLeft: 20,
             flex: 1,
           }}
         >

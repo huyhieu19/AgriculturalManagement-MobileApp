@@ -12,37 +12,34 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  RouteProp,
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
 import {
-  createZone,
   getControlOnZone,
   getListFarm,
   getListZone,
 } from "../../../../network/apis";
 import { IFramDetails } from "../../../../types/farm.type";
 import { AppStyles } from "../../../../global";
-import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import RNDateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { calender } from "../../../../assets";
 import { formatDateTimeDisplay } from "../../../../utils";
 import { Dropdown } from "react-native-element-dropdown";
 import { IZoneParams } from "../../../../types/zone.type";
 import { IDeviceOnZone } from "../../../../types/device.type";
+import { TimerCreateModel } from "../../../../network/models/setting_timer/TimerModel";
+import { createTimer } from "../../../../network/apis/settings.api";
 
-type ParamList = {
-  FarmDetailsScreen: IFramDetails;
-};
+// type ParamList = {
+//   FarmDetailsScreen: IFramDetails;
+// };
 
 export const AddNewTimerScreen = () => {
-  const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
+  // const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
   const navigation = useNavigation<any>();
-  const farm = route?.params ?? [];
+  // const farm = route?.params ?? [];
   const isFocused = useIsFocused();
 
   const [isFocusFarm, setIsForcusFarm] = useState(false);
@@ -124,10 +121,9 @@ export const AddNewTimerScreen = () => {
   console.log("showTime", showTimePickerOn);
 
   const onChangeDateOn = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    const {
-      type,
-      nativeEvent: { timestamp },
-    } = event;
+    if (selectedDate) {
+      setDateOn(selectedDate);
+    }
     console.log(selectedDate);
     console.log("hoan thanh chon date xong");
     setShowDatePickerOn(false);
@@ -143,10 +139,9 @@ export const AddNewTimerScreen = () => {
   };
 
   const onChangeDateOff = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    const {
-      type,
-      nativeEvent: { timestamp },
-    } = event;
+    if (selectedDate) {
+      setDateOff(selectedDate);
+    }
     console.log(selectedDate);
     console.log("hoan thanh chon off");
     setShowDatePickerOff(false);
@@ -157,23 +152,29 @@ export const AddNewTimerScreen = () => {
     navigation.goBack();
   };
 
-  const handleAddNew = async () => {
+  const handleAddNewTimer = async () => {
     // Perform API request to add new item
     try {
-      const res = await createZone({});
-      if (res.data.Data.isSuccess) {
-        Alert.alert("Thành công", "Thành công thêm khu mới", [
+      const params: TimerCreateModel = {
+        deviceDriverId: deviceId,
+        note: note,
+        openTimer: dateOn.toISOString(),
+        shutDownTimer: dateOff.toISOString(),
+      };
+      const res = await createTimer(params);
+      if (res.data.Data != null && res.data.Data) {
+        Alert.alert("Thành công", "Thành công thêm thời gian đóng mở", [
           { text: "OK", onPress: goBack },
         ]);
       } else {
-        Alert.alert("Lỗi thêm mới", `Thêm mới khu không thành công`, [
-          { text: "OK", onPress: goBack },
-        ]);
+        Alert.alert(
+          "Lỗi thêm mới",
+          `Thêm thời gian đóng mở cho thiết bị không thành công`,
+          [{ text: "OK" }]
+        );
       }
     } catch (error) {
-      Alert.alert("Lỗi thêm mới", `${error}`, [
-        { text: "OK", onPress: goBack },
-      ]);
+      Alert.alert("Lỗi thêm mới", `${error}`, [{ text: "OK" }]);
     }
   };
   React.useEffect(() => {
@@ -392,7 +393,7 @@ export const AddNewTimerScreen = () => {
             <Button
               title="Thêm mới"
               color={AppColors.primaryColor}
-              onPress={() => handleAddNew()}
+              onPress={() => handleAddNewTimer()}
             />
             <Button title="Quay lại" color={"red"} onPress={() => goBack()} />
           </View>

@@ -6,12 +6,11 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IDeviceOnModule } from "../../../../types/device.type";
 import { AppColors } from "../../../../global";
 import { offDevcie, onDevcie } from "../../../../assets";
 import { OnOffDeviceControl } from "../../../../network/apis/controlDevice.api";
-import MqttService from "../../../../Mqtt/mqttService";
 
 type DevicesProps = {
   device: IDeviceOnModule;
@@ -21,46 +20,9 @@ type DevicesProps = {
 const DevicesControlItem = (props: DevicesProps) => {
   const [isOn, setIsOn] = useState<boolean>(props.device.isAction);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [receivedMessages, setReceivedMessages] = useState<string>("");
-  // const mqttService = new MqttService();
-
-  // useEffect(() => {
-  //   // Kiểm tra xem client đã kết nối chưa
-  //   if (!mqttService.client.isConnected()) {
-  //     // Nếu chưa kết nối, thực hiện kết nối
-  //     mqttService.connect(() => {
-  //       console.log("Connected to MQTT broker");
-
-  //       // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
-  //       mqttService.subscribeTopic("fdfcvxzcvzxvbbx");
-  //     });
-
-  //     // Thiết lập hàm xử lý khi nhận được message
-  //     mqttService.client.onMessageArrived = onMessageArrived;
-  //   } else {
-  //     console.log("da ket noi trươc đó");
-  //     // Nếu client đã kết nối trước đó, thực hiện thêm việc subscribe topic mới
-  //     mqttService.subscribeTopic("new_topic");
-  //   }
-
-  //   // Cleanup function khi component unmount
-  //   return () => {
-  //     mqttService.client.disconnect();
-  //   };
-  // }, []);
-
-  // const onMessageArrived = (message: any) => {
-  //   console.log("Received message1:", message.payloadString);
-
-  //   // Cập nhật state để hiển thị message trên màn hình
-  //   // setReceivedMessages((prevMessages) => [
-  //   //   ...prevMessages,
-  //   //   message.payloadString,
-  //   // ]);
-  //   setReceivedMessages(message.payloadString);
-  // };
 
   const onOffDevice = async () => {
+    setIsLoading(true);
     const res = await OnOffDeviceControl({
       moduleId: props.device.moduleId,
       deviceId: props.device.id,
@@ -68,27 +30,20 @@ const DevicesControlItem = (props: DevicesProps) => {
       deviceNameNumber: "",
       deviceType: 1,
     });
-    console.log(isOn);
-    const timeoutId = setTimeout(() => {
-      if (res.data.Data) {
-        setIsLoading(false);
-        setIsOn(!isOn);
-      } else {
-        Alert.alert(
-          "Lỗi",
-          isOn
-            ? `Đóng thiết bị ${props.device.name} không thành công`
-            : `Mở thiết bị ${props.device.name} không thành công`,
-          [{ text: "OK" }]
-        );
-        setIsLoading(false);
-      }
-    }, 10000);
-    return () => clearTimeout(timeoutId);
-  };
-  const pressOnOff = () => {
-    setIsLoading(true);
-    onOffDevice();
+    console.log("isOn" + isOn);
+    if (res.data.Data) {
+      setIsLoading(false);
+      setIsOn(!isOn);
+    } else {
+      Alert.alert(
+        "Lỗi",
+        isOn
+          ? `Đóng thiết bị ${props.device.name} không thành công`
+          : `Mở thiết bị ${props.device.name} không thành công`,
+        [{ text: "OK" }]
+      );
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -107,23 +62,19 @@ const DevicesControlItem = (props: DevicesProps) => {
           marginBottom: 20,
         }}
       >
-        <TouchableOpacity onPress={pressOnOff}>
-          {isLoading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                width: 80,
-                height: 80,
-              }}
-            >
-              <ActivityIndicator
-                size={"large"}
-                color={AppColors.primaryColor}
-              />
-            </View>
-          ) : (
+        {isLoading ? (
+          <View
+            style={{
+              width: 80,
+              height: 80,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator size={"large"} color={AppColors.primaryColor} />
+          </View>
+        ) : (
+          <TouchableOpacity onPress={() => onOffDevice()}>
             <Image
               source={isOn ? onDevcie : offDevcie}
               style={{
@@ -132,8 +83,8 @@ const DevicesControlItem = (props: DevicesProps) => {
                 borderRadius: 5,
               }}
             />
-          )}
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
         <View
           style={{
             marginLeft: 12,
@@ -170,7 +121,6 @@ const DevicesControlItem = (props: DevicesProps) => {
                 : "Thiết bị điều khiển"
             }
           />
-          <CardInfor property={"Giá trị"} value={receivedMessages.toString()} />
         </View>
       </View>
     </TouchableOpacity>

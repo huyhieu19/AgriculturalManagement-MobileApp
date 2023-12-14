@@ -21,3 +21,10 @@ enum DeviceType {
   W = 1,
   R = 2
 }
+
+export interface TimerCreateModel {
+  shutDownTimer: string | null;
+  openTimer: string | null;
+  note: string | null;
+  deviceDriverId: string;
+}

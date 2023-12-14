@@ -62,7 +62,9 @@ const DeviceInstrumentationScreen = () => {
         mqttService.connect(() => {
           console.log("Connected to MQTT broker");
           // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
-          mqttService.subscribeTopic("3c531531-d5f5-4fe3-9954-5afd76ff2151/#");
+          mqttService.subscribeTopic(
+            "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/#"
+          );
           mqttService.client.onMessageArrived = onMessageArrived;
         });
         // Thiết lập hàm xử lý khi nhận được message
@@ -87,17 +89,25 @@ const DeviceInstrumentationScreen = () => {
 
     // Lấy id từ phần tử thứ 2 của mảng
     const deviceIdFromTopic = topicParts[2];
+    const type = topicParts[3];
 
     console.log("devices: " + devices);
     console.log("deviceIdFromTopic: " + deviceIdFromTopic);
+    console.log("topicParts[3]: " + type);
 
     // Cập nhật state với mảng devices đã được cập nhật
     setDevices((prev) => {
       return prev?.map((item) => {
-        if (item?.id === deviceIdFromTopic) {
+        if (item?.id.toUpperCase() === deviceIdFromTopic) {
+          if (type === "DA") {
+            return {
+              ...item,
+              value2: message.payloadString,
+            };
+          }
           return {
             ...item,
-            value: message.payloadString,
+            value1: message.payloadString,
           };
         }
         return item;

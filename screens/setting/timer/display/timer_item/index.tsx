@@ -137,12 +137,19 @@ const CardInfor = (props: CardInforProps) => {
       </Text>
       <Text
         style={{
-          color: "black",
+          //color: "black",
           fontSize: AppFontSize.sizeLabel,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
           width: "70%",
+          color:
+            props.property === "Hoàn thành" && props.value === "Chưa hoàn thành"
+              ? "#EF4040"
+              : props.value === "Đã hoàn thành" &&
+                props.property === "Hoàn thành"
+              ? "#65B741"
+              : "black",
         }}
       >
         {props.value}
