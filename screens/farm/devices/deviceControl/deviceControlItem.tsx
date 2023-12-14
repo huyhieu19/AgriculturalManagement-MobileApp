@@ -6,11 +6,12 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IDeviceOnModule } from "../../../../types/device.type";
 import { AppColors } from "../../../../global";
 import { offDevcie, onDevcie } from "../../../../assets";
 import { OnOffDeviceControl } from "../../../../network/apis/controlDevice.api";
+import MqttService from "../../../../Mqtt/mqttService";
 
 type DevicesProps = {
   device: IDeviceOnModule;
@@ -20,6 +21,44 @@ type DevicesProps = {
 const DevicesControlItem = (props: DevicesProps) => {
   const [isOn, setIsOn] = useState<boolean>(props.device.isAction);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [receivedMessages, setReceivedMessages] = useState<string>("");
+  // const mqttService = new MqttService();
+
+  // useEffect(() => {
+  //   // Kiểm tra xem client đã kết nối chưa
+  //   if (!mqttService.client.isConnected()) {
+  //     // Nếu chưa kết nối, thực hiện kết nối
+  //     mqttService.connect(() => {
+  //       console.log("Connected to MQTT broker");
+
+  //       // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
+  //       mqttService.subscribeTopic("fdfcvxzcvzxvbbx");
+  //     });
+
+  //     // Thiết lập hàm xử lý khi nhận được message
+  //     mqttService.client.onMessageArrived = onMessageArrived;
+  //   } else {
+  //     console.log("da ket noi trươc đó");
+  //     // Nếu client đã kết nối trước đó, thực hiện thêm việc subscribe topic mới
+  //     mqttService.subscribeTopic("new_topic");
+  //   }
+
+  //   // Cleanup function khi component unmount
+  //   return () => {
+  //     mqttService.client.disconnect();
+  //   };
+  // }, []);
+
+  // const onMessageArrived = (message: any) => {
+  //   console.log("Received message1:", message.payloadString);
+
+  //   // Cập nhật state để hiển thị message trên màn hình
+  //   // setReceivedMessages((prevMessages) => [
+  //   //   ...prevMessages,
+  //   //   message.payloadString,
+  //   // ]);
+  //   setReceivedMessages(message.payloadString);
+  // };
 
   const onOffDevice = async () => {
     const res = await OnOffDeviceControl({
@@ -35,15 +74,23 @@ const DevicesControlItem = (props: DevicesProps) => {
         setIsLoading(false);
         setIsOn(!isOn);
       } else {
-        Alert.alert("Lỗi", "Đóng thiết bị không thành công", [{ text: "OK" }]);
+        Alert.alert(
+          "Lỗi",
+          isOn
+            ? `Đóng thiết bị ${props.device.name} không thành công`
+            : `Mở thiết bị ${props.device.name} không thành công`,
+          [{ text: "OK" }]
+        );
+        setIsLoading(false);
       }
-    }, 5000);
+    }, 10000);
     return () => clearTimeout(timeoutId);
   };
   const pressOnOff = () => {
     setIsLoading(true);
     onOffDevice();
   };
+
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View
@@ -52,9 +99,9 @@ const DevicesControlItem = (props: DevicesProps) => {
           alignItems: "center",
           paddingHorizontal: 20,
           backgroundColor: AppColors.bgWhite,
-          paddingVertical: 16,
           borderRadius: 15,
           borderWidth: 0.5,
+          paddingVertical: 10,
           borderColor: AppColors.slate200,
           elevation: 1,
           marginBottom: 20,
@@ -67,6 +114,8 @@ const DevicesControlItem = (props: DevicesProps) => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
+                width: 80,
+                height: 80,
               }}
             >
               <ActivityIndicator
@@ -121,6 +170,7 @@ const DevicesControlItem = (props: DevicesProps) => {
                 : "Thiết bị điều khiển"
             }
           />
+          <CardInfor property={"Giá trị"} value={receivedMessages.toString()} />
         </View>
       </View>
     </TouchableOpacity>

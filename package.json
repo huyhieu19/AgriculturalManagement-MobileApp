@@ -20,7 +20,10 @@
     "axios": "^1.5.1",
     "expo": "~49.0.15",
     "expo-status-bar": "~1.6.0",
+    "install": "^0.13.0",
     "mqtt": "^4.3.7",
+    "mqtts": "^1.5.0",
+    "net": "^1.0.2",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "0.72.6",
@@ -31,6 +34,7 @@
     "react-native-vector-icons": "^10.0.0",
     "react-native-web": "^0.19.9",
     "react-redux": "^8.1.3",
+    "react_native_mqtt": "^1.3.1",
     "redux-persist": "^6.0.0",
     "uuid": "^9.0.1"
   },

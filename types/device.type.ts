@@ -12,6 +12,7 @@ type IDeviceOnModule = {
     unit: string;
     gate: string;
     deviceType: string;
+    value?: string;
 }
 
 type IDeviceOnZone = {
@@ -28,6 +29,7 @@ type IDeviceOnZone = {
     unit: string;
     gate: string;
     deviceType: string;
+    value?: string;
 }
 
 export { IDeviceOnModule, IDeviceOnZone };
