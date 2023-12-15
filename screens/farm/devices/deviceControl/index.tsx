@@ -36,10 +36,12 @@ const DeviceControlScreen = () => {
   const navigation = useNavigation<any>();
   const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
 
-  const getDevices = React.useCallback(async () => {
+  const getDevices = async () => {
     try {
-      const res = await getControlOnZone(zone?.id!);
-      setDevices(res.data.Data);
+      const res = await getControlOnZone(zone.id);
+      if (res.data.Success) {
+        setDevices(res.data.Data);
+      }
       console.log("Data device" + res.data.Data);
     } catch (e) {
       Alert.alert("Lỗi", `Lỗi lấy dữ liệu nông trại`, [{ text: "OK" }]);
@@ -48,12 +50,27 @@ const DeviceControlScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [getControlOnZone]);
+  };
+
   React.useEffect(() => {
     if (isFocused) {
       getDevices().then(() => {});
     }
   }, [isFocused]);
+
+  React.useEffect(() => {
+    // Hàm sẽ được gọi lại mỗi 1000 miliseconds (1 giây)
+    const intervalId = setInterval(async () => {
+      // Gọi hàm của bạn ở đây
+      await getDevices();
+    }, 5000);
+
+    // Cleanup function khi component unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [devices]); // Dependency array trống đảm bảo useEffect chỉ chạy một lần khi component được mount
+
   return (
     <SafeAreaView style={AppStyles.appContainer}>
       <View
@@ -116,7 +133,7 @@ const DeviceControlScreen = () => {
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
-              //onRefresh={fetchListDevicesOnModule}
+              onRefresh={() => getDevices()}
             />
           }
           contentContainerStyle={{

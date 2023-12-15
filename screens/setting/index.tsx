@@ -3,8 +3,6 @@ import {
   Text,
   Pressable,
   ScrollView,
-  RefreshControl,
-  ActivityIndicator,
   TouchableOpacity,
   Image,
 } from "react-native";
@@ -20,7 +18,11 @@ const SettingsScreen = () => {
 
   const goToSettingTimer = () => {
     navigation.navigate("SettingsTimerScreen");
-    console.log("asdhfasd");
+    console.log("Go to page SettingsTimerScreen");
+  };
+  const goToSettingThres = () => {
+    navigation.navigate("SettingsThresScreen");
+    console.log("Go to page SettingsThresScreen");
   };
 
   return (
@@ -76,7 +78,7 @@ const SettingsScreen = () => {
               borderColor: AppColors.slate200,
               backgroundColor: AppColors.cardTop,
               marginBottom: 20,
-              height: 150,
+              height: 130,
               borderRadius: 20,
             }}
           >
@@ -106,24 +108,16 @@ const SettingsScreen = () => {
                     fontSize: 18,
                     fontWeight: "700",
                     marginBottom: 8,
+                    paddingVertical: "auto",
                   }}
                 >
                   Đóng mở thiết bị tự động theo giời gian
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "400",
-                  marginBottom: 8,
-                }}
-              >
-                Số mốc thời gian
-              </Text>
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={goToSettingThres}>
           <View
             style={{
               flexDirection: "row",
@@ -134,7 +128,7 @@ const SettingsScreen = () => {
               borderColor: AppColors.slate200,
               backgroundColor: AppColors.cardTop,
               marginBottom: 20,
-              height: 150,
+              height: 130,
               borderRadius: 20,
             }}
           >
@@ -164,20 +158,12 @@ const SettingsScreen = () => {
                     fontSize: 18,
                     fontWeight: "700",
                     marginBottom: 8,
+                    paddingVertical: "auto",
                   }}
                 >
                   Đóng mở thiết bị tự động giá trị ngưỡng của thiết bị đo
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "400",
-                  marginBottom: 8,
-                }}
-              >
-                Số mốc giá trị ngưỡng
-              </Text>
             </View>
           </View>
         </TouchableOpacity>

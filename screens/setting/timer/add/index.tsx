@@ -9,6 +9,7 @@ import {
   Button,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -32,14 +33,8 @@ import { IDeviceOnZone } from "../../../../types/device.type";
 import { TimerCreateModel } from "../../../../network/models/setting_timer/TimerModel";
 import { createTimer } from "../../../../network/apis/settings.api";
 
-// type ParamList = {
-//   FarmDetailsScreen: IFramDetails;
-// };
-
 export const AddNewTimerScreen = () => {
-  // const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
   const navigation = useNavigation<any>();
-  // const farm = route?.params ?? [];
   const isFocused = useIsFocused();
 
   const [isFocusFarm, setIsForcusFarm] = useState(false);

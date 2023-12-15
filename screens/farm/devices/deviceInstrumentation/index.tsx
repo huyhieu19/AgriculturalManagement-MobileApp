@@ -82,7 +82,6 @@ const DeviceInstrumentationScreen = () => {
     }
   }, [isFocused]);
 
-  // useEffect(() => {});
   const onMessageArrived = (message: any) => {
     // Tách topic thành mảng các phần tử
     const topicParts = message.topic.split("/");
@@ -99,10 +98,12 @@ const DeviceInstrumentationScreen = () => {
     setDevices((prev) => {
       return prev?.map((item) => {
         if (item?.id.toUpperCase() === deviceIdFromTopic) {
-          if (type === "DA") {
+          if (type === "ND_DA") {
+            const payloadParts = message.payloadString.split("/");
             return {
               ...item,
-              value2: message.payloadString,
+              value1: payloadParts[0],
+              value2: payloadParts[1],
             };
           }
           return {

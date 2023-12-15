@@ -12,29 +12,29 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { AppColors } from "../../../../global";
-import { timerSetting } from "../../../../assets";
-import { TimerDisplayModel } from "../../../../network/models/setting_timer/TimerModel";
-import { ListTimersItem } from "./timer_item";
-import { getTimers } from "../../../../network/apis/settings.api";
+import { ThresholdDisplayModel } from "../../../network/models/setting_threshold/ThresholdModel";
+import { getThres } from "../../../network/apis/settings.api";
+import { AppColors } from "../../../global";
+import { thresholdSetting } from "../../../assets";
+import { ListThresItem } from "./thresholdItem";
 
-const SettingsTimerScreen = () => {
+const SettingsThresScreen = () => {
   const navigation = useNavigation<any>();
-  const hangeNavigateEditTimerScreen = (item: TimerDisplayModel) => {
+  const hangeNavigateEditThresScreen = (item: ThresholdDisplayModel) => {
     navigation.navigate("EditTimerScreen", item);
   };
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const isFocused = useIsFocused();
 
-  const [timers, setTimers] = useState<TimerDisplayModel[]>([]);
+  const [thres, setThres] = useState<ThresholdDisplayModel[]>([]);
 
-  const FetchListTimer = React.useCallback(async () => {
+  const FetchListThres = React.useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await getTimers();
-      setTimers(res.data.Data);
+      const res = await getThres();
+      setThres(res.data.Data);
     } catch (e) {
-      Alert.alert("Lỗi", `Lỗi lấy dữ liệu thời gian`, [
+      Alert.alert("Lỗi", `Lỗi lấy dữ liệu ngưỡng`, [
         { text: "OK", onPress: navigation.goBack() },
       ]);
     } finally {
@@ -43,7 +43,7 @@ const SettingsTimerScreen = () => {
   }, []);
   React.useEffect(() => {
     if (isFocused) {
-      FetchListTimer().then(() => {});
+      FetchListThres().then(() => {});
     }
   }, [isFocused]);
   return (
@@ -78,7 +78,7 @@ const SettingsTimerScreen = () => {
             fontWeight: "600",
           }}
         >
-          Cài đặt hẹn giờ thiết bị
+          Cài đặt giá trị ngưỡng
         </Text>
         <Pressable
           style={{
@@ -86,7 +86,7 @@ const SettingsTimerScreen = () => {
             right: 20,
           }}
           onPress={() => {
-            navigation.navigate("AddNewTimerScreen");
+            navigation.navigate("AddNewThresScreen");
           }}
         >
           <AntDesign name="pluscircleo" size={24} color="white" />
@@ -109,7 +109,7 @@ const SettingsTimerScreen = () => {
         }}
       >
         <Image
-          source={timerSetting}
+          source={thresholdSetting}
           style={{
             width: 80,
             height: 80,
@@ -136,7 +136,7 @@ const SettingsTimerScreen = () => {
                 marginBottom: 8,
               }}
             >
-              Đóng mở thiết bị tự động theo giời gian
+              Đóng mở thiết bị tự động theo giá trị ngưỡng
             </Text>
           </View>
           <Text
@@ -146,7 +146,7 @@ const SettingsTimerScreen = () => {
               marginBottom: 8,
             }}
           >
-            Số cặp mốc thời gian : {timers.length}
+            Số cặp ngưỡng đóng/mở : {thres.length}
           </Text>
         </View>
       </View>
@@ -164,25 +164,19 @@ const SettingsTimerScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={FetchListTimer} />
+            <RefreshControl refreshing={isLoading} onRefresh={FetchListThres} />
           }
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingTop: 30,
           }}
         >
-          {timers != null && timers?.length > 0 ? (
-            timers.map((item) => (
-              <ListTimersItem
-                key={item?.id}
-                timer={item}
-                onPress={() => hangeNavigateEditTimerScreen(item)}
-                isEdit={true}
-                isBgPrimary={false}
-              />
+          {thres != null && thres?.length > 0 ? (
+            thres.map((item) => (
+              <ListThresItem key={item?.id} thres={item} onPress={() => {}} />
             ))
           ) : (
-            <Text>Bạn chưa tạo thời gian hẹn giờ nào</Text>
+            <Text>Bạn chưa tạo ngưỡng giá trị đóng mở nào</Text>
           )}
         </ScrollView>
       )}
@@ -190,4 +184,4 @@ const SettingsTimerScreen = () => {
   );
 };
 
-export default SettingsTimerScreen;
+export default SettingsThresScreen;

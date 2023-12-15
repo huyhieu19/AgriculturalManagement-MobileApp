@@ -21,6 +21,10 @@ const DevicesControlItem = (props: DevicesProps) => {
   const [isOn, setIsOn] = useState<boolean>(props.device.isAction);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
+  React.useEffect(() => {
+    setIsOn(props.device.isAction);
+  });
+
   const onOffDevice = async () => {
     setIsLoading(true);
     const res = await OnOffDeviceControl({

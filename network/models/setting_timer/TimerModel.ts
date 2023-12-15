@@ -28,3 +28,11 @@ export interface TimerCreateModel {
   note: string | null;
   deviceDriverId: string;
 }
+
+export interface TimerUpdateModel {
+  id: number;
+  shutDownTimer: string | null;
+  openTimer: string | null;
+  note: string | null;
+  deviceDriverId: string;
+}

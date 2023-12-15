@@ -30,6 +30,10 @@ import { EditFarmScreen } from "./screens/farm/components/edit_farm";
 import { EditZoneScreen } from "./screens/farm/farmDetails/edit_zone";
 import { EditModuleScreen } from "./screens/module/module_edit";
 import { AddNewTimerScreen } from "./screens/setting/timer/add";
+import { EditTimerScreen } from "./screens/setting/timer/edit";
+import { SafeAreaView } from "react-native-safe-area-context";
+import SettingsThresScreen from "./screens/setting/threshold";
+import { AddNewThresScreen } from "./screens/setting/threshold/add";
 
 export type RootStackParamList = {
   // home
@@ -60,6 +64,10 @@ export type RootStackParamList = {
   SettingsScreen: undefined;
   SettingsTimerScreen: undefined;
   AddNewTimerScreen: undefined;
+  EditTimerScreen: undefined;
+
+  SettingsThresScreen: undefined;
+  AddNewThresScreen: undefined;
   // Thống kê
   StatisticsScreen: undefined;
 };
@@ -161,6 +169,19 @@ const AppNavigator: React.FC = () => {
             <Stack.Screen
               name={"AddNewTimerScreen"}
               component={AddNewTimerScreen}
+            />
+            <Stack.Screen
+              name={"EditTimerScreen"}
+              component={EditTimerScreen}
+            />
+
+            <Stack.Screen
+              name={"SettingsThresScreen"}
+              component={SettingsThresScreen}
+            />
+            <Stack.Screen
+              name={"AddNewThresScreen"}
+              component={AddNewThresScreen}
             />
 
             {/* ---------------- */}
