@@ -1,14 +1,12 @@
 import {
   View,
   Text,
-  Image,
   Pressable,
   Alert,
   TextInput,
   StyleSheet,
   Button,
   ScrollView,
-  TouchableOpacity,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -26,11 +24,11 @@ import { IZoneParams } from "../../../../types/zone.type";
 import { IDeviceOnZone } from "../../../../types/device.type";
 import { TimerCreateModel } from "../../../../network/models/setting_timer/TimerModel";
 import { createTimer } from "../../../../network/apis/settings.api";
+import RadioForm from "react-native-simple-radio-button";
 
 export const AddNewThresScreen = () => {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
-
   const [isFocusFarm, setIsForcusFarm] = useState(false);
   const [farms, setFarms] = useState<IFramDetails[]>([]);
   const [farmId, setFarmId] = useState<number>(0);
@@ -40,11 +38,20 @@ export const AddNewThresScreen = () => {
   const [isFocusDevice, setIsForcusDevice] = useState(false);
   const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
-
-  const [dateOn, setDateOn] = useState(new Date());
-  const [dateOff, setDateOff] = useState(new Date());
+  const [typeDevice, setTypeDevice] = useState<string>("");
 
   const [note, setNote] = useState<string>("");
+  const [chosenType, setChosenType] = useState(true); //will store our current user options
+
+  const options = [
+    { label: "Type 1", value: "true" },
+    { label: "Type 2", value: "false" },
+  ]; //create our options for radio group
+
+  const indexDevices = [
+    { label: "Nhiệt độ", value: "nhietdo" },
+    { label: "Độ ẩm", value: "doam" },
+  ];
 
   const FetchFarms = async () => {
     try {
@@ -55,6 +62,7 @@ export const AddNewThresScreen = () => {
       console.log(e);
     }
   };
+
   const FetchZones = async () => {
     try {
       console.log("fetch zone");
@@ -70,6 +78,7 @@ export const AddNewThresScreen = () => {
       console.log(e);
     }
   };
+
   const FetchDevices = async () => {
     try {
       console.log("fetch devices");
@@ -92,11 +101,9 @@ export const AddNewThresScreen = () => {
   const handleAddNewTimer = async () => {
     // Perform API request to add new item
     try {
-      const params: TimerCreateModel = {
+      const params: ThresholdCreateModel = {
         deviceDriverId: deviceId,
         note: note,
-        openTimer: dateOn.toISOString(),
-        shutDownTimer: dateOff.toISOString(),
       };
       const res = await createTimer(params);
       if (res.data.Data != null && res.data.Data) {
@@ -172,16 +179,16 @@ export const AddNewThresScreen = () => {
             />
           </View>
           <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>
-              Lớn hơn ngưỡng mở thiết bị mở, nhở hơn ngưỡng đóng thiết bị đóng:{" "}
-            </Text>
-            <TextInput
-              multiline={true}
-              style={[styles.input]}
-              onChangeText={(e) => setNote(e)}
-              value={note}
-              placeholder="Nhập ghi chú"
-            />
+            <Text style={styles.Inputlabel}>Kiểu đóng mở: </Text>
+            <View style={{ marginTop: 20 }}>
+              <RadioForm
+                radio_props={options}
+                initial={0} //initial value of this group
+                onPress={(value: any) => {
+                  setChosenType(value);
+                }} //if the user changes options, set the new value
+              />
+            </View>
           </View>
           <View style={styles.Inputcontainer}>
             <Text style={styles.Inputlabel}>Nông trại:</Text>
@@ -264,6 +271,33 @@ export const AddNewThresScreen = () => {
               }}
             />
           </View>
+          <View style={styles.Inputcontainer}>
+            <Text style={styles.Inputlabel}>Loại chỉ số:</Text>
+            <Dropdown
+              style={[styles.input, isFocusDevice && { borderColor: "blue" }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={indexDevices}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocusFarm ? "Select item" : "..."}
+              searchPlaceholder="Search..."
+              value={deviceId}
+              onFocus={() => {
+                setIsForcusDevice(true);
+                FetchDevices();
+              }}
+              onBlur={() => setIsForcusDevice(false)}
+              onChange={(item) => {
+                setDeviceId(item.label);
+                setIsForcusDevice(false);
+              }}
+            />
+          </View>
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.fixToText}>
@@ -274,6 +308,19 @@ export const AddNewThresScreen = () => {
             />
             <Button title="Quay lại" color={"red"} onPress={() => goBack()} />
           </View>
+        </View>
+        <View>
+          <Text style={{ color: "red" }}>* Chú thích: </Text>
+          <Text>
+            Type 1: Giá trị thiết bị đo lớn hơn ngưỡng mở thì mở thiết bị điều
+            khiển, Giá trị thiết bị đo nhỏ ngưỡng đóng thì đóng thiết bị điều
+            khiển
+          </Text>
+          <Text>
+            Type 2: Giá trị thiết bị đo lớn hơn ngưỡng đóng thì đóng thiết bị
+            điều khiển, Giá trị thiết bị đo nhỏ ngưỡng mở thì mở thiết bị điều
+            khiển
+          </Text>
         </View>
       </View>
     </ScrollView>

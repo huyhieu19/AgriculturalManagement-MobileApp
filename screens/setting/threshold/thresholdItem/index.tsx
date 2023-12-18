@@ -21,12 +21,9 @@ export const ListThresItem = (props: ListThresItemProps) => {
           flex: 1,
           flexDirection: "row",
           alignItems: "flex-start",
-          paddingHorizontal: 20,
+          paddingHorizontal: 5,
           backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
           paddingVertical: 16,
-          borderRadius: props?.isBorderRadius ? 0 : 15,
-          borderBottomLeftRadius: props?.isBorderRadius ? 25 : 15,
-          borderBottomRightRadius: props?.isBorderRadius ? 25 : 15,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
           elevation: 1,
@@ -49,29 +46,22 @@ export const ListThresItem = (props: ListThresItemProps) => {
           >
             <Text
               style={{
-                fontSize: AppFontSize.sizeTitle,
+                fontSize: AppFontSize.sizeLabel,
                 fontWeight: "600",
                 marginBottom: 8,
                 marginRight: 20,
               }}
             >
-              {props.thres?.deviceDriverName ?? ""}
+              {props.thres?.deviceInstrumentationName ?? ""}
             </Text>
-            {props.isEdit ? (
-              <TouchableOpacity
-                onPress={() => {
-                  props.onPress(props.thres);
-                  console.log("chuyen sang man edit");
-                }}
-                style={{ right: 10, top: -10 }}
-              >
-                <AntDesign name="edit" size={24} color="black" />
-              </TouchableOpacity>
-            ) : null}
           </View>
           <CardInfor
-            property={"Thiết bị đo"}
-            value={props.thres?.deviceDriverName}
+            property={"Ngưỡng mở"}
+            value={props.thres?.thresholdValueOn}
+          />
+          <CardInfor
+            property={"Ngưỡng đóng"}
+            value={props.thres?.thresholdValueOff}
           />
         </View>
       </View>
@@ -80,12 +70,9 @@ export const ListThresItem = (props: ListThresItemProps) => {
           flex: 1,
           flexDirection: "row",
           alignItems: "flex-start",
-          paddingHorizontal: 20,
+          paddingHorizontal: 5,
           backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
           paddingVertical: 16,
-          borderRadius: props?.isBorderRadius ? 0 : 15,
-          borderBottomLeftRadius: props?.isBorderRadius ? 25 : 15,
-          borderBottomRightRadius: props?.isBorderRadius ? 25 : 15,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
           elevation: 1,
@@ -108,10 +95,9 @@ export const ListThresItem = (props: ListThresItemProps) => {
           >
             <Text
               style={{
-                fontSize: AppFontSize.sizeTitle,
+                fontSize: AppFontSize.sizeLabel,
                 fontWeight: "600",
                 marginBottom: 8,
-                marginRight: 20,
               }}
             >
               {props.thres?.deviceDriverName ?? ""}
@@ -129,8 +115,12 @@ export const ListThresItem = (props: ListThresItemProps) => {
             ) : null}
           </View>
           <CardInfor
-            property={"Thiết bị đo"}
-            value={props.thres?.deviceDriverName}
+            property={"Trạng thái"}
+            value={props.thres?.deviceDriverAction ? "On" : "Off"}
+          />
+          <CardInfor
+            property={"Kiểu đóng mở"}
+            value={props.thres?.onInUpperThreshold ? "1" : "2"}
           />
         </View>
       </View>
@@ -156,23 +146,21 @@ const CardInfor = (props: CardInforProps) => {
       <Text
         style={{
           color: AppColors.slate600,
-          fontSize: AppFontSize.sizeLabel,
+          fontSize: AppFontSize.sizeDetail,
           fontWeight: "400",
           marginBottom: 5,
           fontStyle: "italic",
-          width: "30%",
         }}
       >
         {props.property}:{" "}
       </Text>
       <Text
         style={{
-          //color: "black",
-          fontSize: AppFontSize.sizeLabel,
+          fontSize: AppFontSize.sizeDetail,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
-          width: "70%",
+          maxWidth: "70%",
           color: "black",
         }}
       >
