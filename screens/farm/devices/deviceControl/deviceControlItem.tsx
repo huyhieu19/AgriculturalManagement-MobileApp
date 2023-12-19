@@ -10,7 +10,10 @@ import React, { useState } from "react";
 import { IDeviceOnModule } from "../../../../types/device.type";
 import { AppColors } from "../../../../global";
 import { offDevcie, onDevcie } from "../../../../assets";
-import { OnOffDeviceControl } from "../../../../network/apis/controlDevice.api";
+import {
+  AsyncOnOffDeviceControl,
+  OnOffDeviceControl,
+} from "../../../../network/apis/controlDevice.api";
 
 type DevicesProps = {
   device: IDeviceOnModule;
@@ -21,9 +24,9 @@ const DevicesControlItem = (props: DevicesProps) => {
   const [isOn, setIsOn] = useState<boolean>(props.device.isAction);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  React.useEffect(() => {
-    setIsOn(props.device.isAction);
-  });
+  // React.useEffect(() => {
+  //   setIsOn(props.device.isAction);
+  // });
 
   const onOffDevice = async () => {
     setIsLoading(true);
