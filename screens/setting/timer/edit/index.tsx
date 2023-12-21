@@ -24,7 +24,7 @@ import { calender } from "../../../../assets";
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { formatDateTimeDisplay } from "../../../../utils";
+import { formatGetOnlyDateDisplay } from "../../../../utils";
 import {
   TimerDisplayModel,
   TimerUpdateModel,
@@ -237,7 +237,7 @@ export const EditTimerScreen = () => {
                   />
                 </TouchableOpacity>
                 <Text style={{ marginTop: 12, marginLeft: 15 }}>
-                  {formatDateTimeDisplay(dateOn)}
+                  {formatGetOnlyDateDisplay(dateOn)}
                 </Text>
 
                 {showTimePickerOn ? (
@@ -276,7 +276,7 @@ export const EditTimerScreen = () => {
                   />
                 </TouchableOpacity>
                 <Text style={{ marginTop: 12, marginLeft: 15 }}>
-                  {formatDateTimeDisplay(dateOff)}
+                  {formatGetOnlyDateDisplay(dateOff)}
                 </Text>
 
                 {showTimePickerOff && (

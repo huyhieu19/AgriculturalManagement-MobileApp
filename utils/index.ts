@@ -2,20 +2,21 @@ async function sleep(ms: number) {
 	await new Promise((r) => setTimeout(r, ms));
 }
 
-const formatDateTime = (date: any) => {
+const formatGetOnlyDate = (date: any) => {
 	const dateString = date;
 	const dateObject = new Date(dateString);
 
-	const formattedDate = dateObject.toISOString().split("T")[0];
+  const formattedDate = dateObject.toLocaleDateString();
 	return formattedDate;
 };
 
-  function formatDateTimeDisplay(date: any) {
-    const dateString = date;
-    const dateObject = new Date(dateString);
+function formatGetOnlyDateDisplay(date: any) {
+  const dateString = date;
+  const dateObject = new Date(dateString);
 
-    const formattedDate = dateObject.toLocaleString();
-    return formattedDate;
-  }
+  const formattedDate = dateObject.toLocaleString();
+  return formattedDate;
+}
 
-export { sleep, formatDateTime,formatDateTimeDisplay };
+
+export { sleep, formatGetOnlyDate, formatGetOnlyDateDisplay };

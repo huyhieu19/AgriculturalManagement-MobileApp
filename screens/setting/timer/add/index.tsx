@@ -26,7 +26,7 @@ import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { calender } from "../../../../assets";
-import { formatDateTimeDisplay } from "../../../../utils";
+import { formatGetOnlyDateDisplay } from "../../../../utils";
 import { Dropdown } from "react-native-element-dropdown";
 import { IZoneParams } from "../../../../types/zone.type";
 import { IDeviceOnZone } from "../../../../types/device.type";
@@ -105,42 +105,42 @@ export const AddNewTimerScreen = () => {
 
   // on
   const onChangeTimeOn = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowTimePickerOn(false);
+    setShowDatePickerOn(true);
     if (selectedDate) {
       setDateOn(selectedDate);
     }
     console.log("chon time xong");
-    setShowTimePickerOn(false);
-    setShowDatePickerOn(true);
   };
 
   console.log("showTime", showTimePickerOn);
 
   const onChangeDateOn = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowDatePickerOn(false);
+    setShowTimePickerOn(false);
     if (selectedDate) {
       setDateOn(selectedDate);
     }
     console.log(selectedDate);
     console.log("hoan thanh chon date xong");
-    setShowDatePickerOn(false);
-    setShowTimePickerOn(false);
   };
   // off
   const onChangeTimeOff = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowTimePickerOff(false);
+    setShowDatePickerOff(true);
     if (selectedDate) {
       setDateOff(selectedDate);
     }
-    setShowTimePickerOff(false);
-    setShowDatePickerOff(true);
   };
 
   const onChangeDateOff = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowDatePickerOff(false);
+    setShowTimePickerOff(false);
     if (selectedDate) {
       setDateOff(selectedDate);
     }
     console.log(selectedDate);
     console.log("hoan thanh chon off");
-    setShowDatePickerOff(false);
-    setShowTimePickerOff(false);
   };
 
   const goBack = () => {
@@ -228,7 +228,7 @@ export const AddNewTimerScreen = () => {
               />
             </TouchableOpacity>
             <Text style={{ marginTop: 12, marginLeft: 15 }}>
-              {formatDateTimeDisplay(dateOn)}
+              {formatGetOnlyDateDisplay(dateOn)}
             </Text>
 
             {showTimePickerOn ? (
@@ -267,7 +267,7 @@ export const AddNewTimerScreen = () => {
               />
             </TouchableOpacity>
             <Text style={{ marginTop: 12, marginLeft: 15 }}>
-              {formatDateTimeDisplay(dateOff)}
+              {formatGetOnlyDateDisplay(dateOff)}
             </Text>
 
             {showTimePickerOff && (

@@ -92,14 +92,14 @@ function HomeTab() {
       backgroundColor: "rgba(22,163,74,0.1)",
       onPress: () => {},
     },
-    {
-      title: "Nhiệm vụ",
-      icon: (
-        <FontAwesome5 name="tasks" size={48} color={AppColors.primaryColor} />
-      ),
-      backgroundColor: "rgba(22,163,74,0.1)",
-      onPress: () => {},
-    },
+    // {
+    //   title: "Nhiệm vụ",
+    //   icon: (
+    //     <FontAwesome5 name="tasks" size={48} color={AppColors.primaryColor} />
+    //   ),
+    //   backgroundColor: "rgba(22,163,74,0.1)",
+    //   onPress: () => {},
+    // },
   ];
   return (
     <SafeAreaView style={[AppStyles.appContainer]}>
