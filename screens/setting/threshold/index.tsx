@@ -173,7 +173,11 @@ const SettingsThresScreen = () => {
         >
           {thres != null && thres?.length > 0 ? (
             thres.map((item) => (
-              <ListThresItem key={item?.id} thres={item} onPress={() => {}} />
+              <ListThresItem
+                key={item?.deviceDriverId + "/" + item.instrumentationId}
+                thres={item}
+                onPress={() => {}}
+              />
             ))
           ) : (
             <Text>Bạn chưa tạo ngưỡng giá trị đóng mở nào</Text>

@@ -65,42 +65,56 @@ export const EditTimerScreen = () => {
 
   // on
   const onChangeTimeOn = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowTimePickerOn(false);
+    setShowDatePickerOn(true);
     if (selectedDate) {
       setDateOn(selectedDate);
     }
     console.log("chon time xong");
-    setShowTimePickerOn(false);
-    setShowDatePickerOn(true);
   };
 
   console.log("showTime", showTimePickerOn);
 
   const onChangeDateOn = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowDatePickerOn(false);
+    setShowTimePickerOn(false);
     if (selectedDate) {
-      setDateOn(selectedDate);
+      setDateOn((prevState: any) => {
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        const day = selectedDate.getDate();
+        const hours = prevState.getHours();
+        const minutes = prevState.getMinutes();
+        return new Date(year, month, day, hours, minutes);
+      });
     }
     console.log(selectedDate);
     console.log("hoan thanh chon date xong");
-    setShowDatePickerOn(false);
-    setShowTimePickerOn(false);
   };
   // off
   const onChangeTimeOff = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowTimePickerOff(false);
+    setShowDatePickerOff(true);
     if (selectedDate) {
       setDateOff(selectedDate);
     }
-    setShowTimePickerOff(false);
-    setShowDatePickerOff(true);
   };
 
   const onChangeDateOff = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowDatePickerOff(false);
+    setShowTimePickerOff(false);
     if (selectedDate) {
-      setDateOff(selectedDate);
+      setDateOff((prevState: any) => {
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        const day = selectedDate.getDate();
+        const hours = prevState.getHours();
+        const minutes = prevState.getMinutes();
+        return new Date(year, month, day, hours, minutes);
+      });
     }
     console.log(selectedDate);
     console.log("hoan thanh chon off");
-    setShowDatePickerOff(false);
-    setShowTimePickerOff(false);
   };
 
   React.useEffect(() => {

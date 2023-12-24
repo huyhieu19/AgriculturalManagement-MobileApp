@@ -14,6 +14,14 @@ interface ListThresItemProps {
 }
 
 export const ListThresItem = (props: ListThresItemProps) => {
+  const GetTypeDevice = (typeDevice: string | null) => {
+    if (typeDevice === "ND") {
+      return "Nhiệt độ";
+    } else if (typeDevice === "DA") {
+      return "Độ ẩm";
+    }
+    return "Phát hiện mưa";
+  };
   return (
     <TouchableOpacity style={{ flexDirection: "row" }}>
       <View
@@ -27,8 +35,9 @@ export const ListThresItem = (props: ListThresItemProps) => {
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
           elevation: 1,
-          marginBottom: props.isEdit ? 20 : 2,
-          height: props.isEdit ? "auto" : 120,
+          //marginBottom: props.isEdit ? 20 : 2,
+          height: props.isEdit ? "auto" : 130,
+          marginBottom: 20,
         }}
       >
         <View
@@ -48,7 +57,6 @@ export const ListThresItem = (props: ListThresItemProps) => {
               style={{
                 fontSize: AppFontSize.sizeLabel,
                 fontWeight: "600",
-                marginBottom: 8,
                 marginRight: 20,
               }}
             >
@@ -62,6 +70,10 @@ export const ListThresItem = (props: ListThresItemProps) => {
           <CardInfor
             property={"Ngưỡng đóng"}
             value={props.thres?.thresholdValueOff}
+          />
+          <CardInfor
+            property={"Loại"}
+            value={GetTypeDevice(props.thres?.typeDevice)}
           />
         </View>
       </View>
@@ -77,7 +89,7 @@ export const ListThresItem = (props: ListThresItemProps) => {
           borderColor: AppColors.slate200,
           elevation: 1,
           marginBottom: props.isEdit ? 20 : 2,
-          height: props.isEdit ? "auto" : 120,
+          height: props.isEdit ? "auto" : 130,
         }}
       >
         <View
@@ -97,7 +109,6 @@ export const ListThresItem = (props: ListThresItemProps) => {
               style={{
                 fontSize: AppFontSize.sizeLabel,
                 fontWeight: "600",
-                marginBottom: 8,
               }}
             >
               {props.thres?.deviceDriverName ?? ""}
@@ -148,7 +159,7 @@ const CardInfor = (props: CardInforProps) => {
           color: AppColors.slate600,
           fontSize: AppFontSize.sizeDetail,
           fontWeight: "400",
-          marginBottom: 5,
+          marginTop: 5,
           fontStyle: "italic",
         }}
       >
@@ -159,7 +170,7 @@ const CardInfor = (props: CardInforProps) => {
           fontSize: AppFontSize.sizeDetail,
           fontWeight: "500",
           fontStyle: "normal",
-          marginBottom: 5,
+          marginTop: 5,
           maxWidth: "70%",
           color: "black",
         }}

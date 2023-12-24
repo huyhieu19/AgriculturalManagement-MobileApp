@@ -14,6 +14,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
 import {
   getControlOnZone,
+  getInstrumentationOnZone,
   getListFarm,
   getListZone,
 } from "../../../../network/apis";
@@ -22,13 +23,19 @@ import { AppStyles } from "../../../../global";
 import { Dropdown } from "react-native-element-dropdown";
 import { IZoneParams } from "../../../../types/zone.type";
 import { IDeviceOnZone } from "../../../../types/device.type";
-import { TimerCreateModel } from "../../../../network/models/setting_timer/TimerModel";
-import { createTimer } from "../../../../network/apis/settings.api";
+import { createThres } from "../../../../network/apis/settings.api";
 import RadioForm from "react-native-simple-radio-button";
+import { ThresholdCreateModel } from "../../../../network/models/setting_threshold/ThresholdModel";
+import { AppFontSize } from "../../../../global/styles/AppFontSize";
 
 export const AddNewThresScreen = () => {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
+
+  const [openValue, setOpenValue] = useState<number>(0);
+  const [closeValue, setCloseValue] = useState<number>(0);
+
+  // Using for choose device instrumentation
   const [isFocusFarm, setIsForcusFarm] = useState(false);
   const [farms, setFarms] = useState<IFramDetails[]>([]);
   const [farmId, setFarmId] = useState<number>(0);
@@ -38,7 +45,21 @@ export const AddNewThresScreen = () => {
   const [isFocusDevice, setIsForcusDevice] = useState(false);
   const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
+  const [isFocusIndex, setIsForcusIndex] = useState(false);
+  const [indexDevice, setIndexDevice] = useState<string>("");
   const [typeDevice, setTypeDevice] = useState<string>("");
+
+  // using for choose device driver
+  const [isFocusFarm1, setIsForcusFarm1] = useState(false);
+  const [farms1, setFarms1] = useState<IFramDetails[]>([]);
+  const [farmId1, setFarmId1] = useState<number>(0);
+  const [isFocusZone1, setIsFocusZone1] = useState(false);
+  const [zones1, setZones1] = useState<IZoneParams[]>([]);
+  const [zoneId1, setZoneId1] = useState<number>(0);
+  const [isFocusDevice1, setIsForcusDevice1] = useState(false);
+  const [devices1, setDevices1] = useState<IDeviceOnZone[]>([]);
+  const [deviceId1, setDeviceId1] = useState<string>("");
+  const [typeDevice1, setTypeDevice1] = useState<string>("");
 
   const [note, setNote] = useState<string>("");
   const [chosenType, setChosenType] = useState(true); //will store our current user options
@@ -49,14 +70,27 @@ export const AddNewThresScreen = () => {
   ]; //create our options for radio group
 
   const indexDevices = [
-    { label: "Nhiệt độ", value: "nhietdo" },
-    { label: "Độ ẩm", value: "doam" },
+    { label: "Nhiệt độ", value: "ND" },
+    { label: "Độ ẩm", value: "DA" },
   ];
 
   const FetchFarms = async () => {
     try {
       const res = await getListFarm();
-      setFarms(res.data.Data);
+      if (res.data.Success) {
+        setFarms(res.data.Data);
+      }
+      console.log("Fetch Farm" + farms);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const FetchFarms1 = async () => {
+    try {
+      const res = await getListFarm();
+      if (res.data.Success) {
+        setFarms1(res.data.Data);
+      }
       console.log("Fetch Farm" + farms);
     } catch (e) {
       console.log(e);
@@ -67,33 +101,50 @@ export const AddNewThresScreen = () => {
     try {
       console.log("fetch zone");
       const res = await getListZone({ farmId });
-      const zonesRes = res.data.Data;
-      if (zonesRes.length == 0) {
-        setZones([]);
-      } else {
-        setZones(zonesRes);
+      if (res.data.Success) {
+        setZones(res.data.Data);
       }
-      setDevices([]);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const FetchZones1 = async () => {
+    try {
+      console.log("fetch zone");
+      const res = await getListZone({ farmId });
+      if (res.data.Success) {
+        setZones1(res.data.Data);
+      }
     } catch (e) {
       console.log(e);
     }
   };
 
-  const FetchDevices = async () => {
+  const FetchDevicesDriver = async () => {
     try {
-      console.log("fetch devices");
+      console.log("fetch devices driver");
       const res = await getControlOnZone(zoneId);
       const devicesRes = res.data.Data;
-      if (devicesRes.length == 0) {
-        setDevices([]);
-      } else {
+      if (res.data.Success) {
+        setDevices1(devicesRes);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const FetchDevicesInstrumentation = async () => {
+    try {
+      console.log("fetch devices instrumentation");
+      const res = await getInstrumentationOnZone(zoneId);
+      const devicesRes = res.data.Data;
+      if (res.data.Success) {
         setDevices(devicesRes);
       }
     } catch (e) {
       console.log(e);
     }
   };
-
   const goBack = () => {
     navigation.goBack();
   };
@@ -102,10 +153,14 @@ export const AddNewThresScreen = () => {
     // Perform API request to add new item
     try {
       const params: ThresholdCreateModel = {
-        deviceDriverId: deviceId,
-        note: note,
+        deviceDriverId: deviceId1,
+        instrumentationId: deviceId,
+        onInUpperThreshold: chosenType,
+        thresholdValueOff: closeValue,
+        thresholdValueOn: openValue,
+        typeDevice: indexDevice,
       };
-      const res = await createTimer(params);
+      const res = await createThres(params);
       if (res.data.Data != null && res.data.Data) {
         Alert.alert("Thành công", "Thành công thêm thời gian đóng mở", [
           { text: "OK", onPress: goBack },
@@ -123,6 +178,9 @@ export const AddNewThresScreen = () => {
   };
   React.useEffect(() => {
     if (isFocused) {
+      setFarms([]);
+      setZones([]);
+      setDevices([]);
     }
     console.log("effect");
     console.log(isFocused);
@@ -163,9 +221,10 @@ export const AddNewThresScreen = () => {
             <TextInput
               multiline={true}
               style={[styles.input]}
-              onChangeText={(e) => setNote(e)}
-              value={note}
+              onChangeText={(e) => setOpenValue(Number(e))}
+              value={String(openValue)}
               placeholder="Nhập ngưỡng mở"
+              inputMode="decimal"
             />
           </View>
           <View style={styles.Inputcontainer}>
@@ -173,22 +232,32 @@ export const AddNewThresScreen = () => {
             <TextInput
               multiline={true}
               style={[styles.input]}
-              onChangeText={(e) => setNote(e)}
-              value={note}
+              onChangeText={(e) => setCloseValue(Number(e))}
+              value={String(closeValue)}
               placeholder="Nhập ngưỡng đóng"
+              inputMode="decimal"
             />
           </View>
           <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>Kiểu đóng mở: </Text>
+            <Text style={styles.Inputlabel}>Kiểu đóng/mở: </Text>
             <View style={{ marginTop: 20 }}>
               <RadioForm
                 radio_props={options}
                 initial={0} //initial value of this group
                 onPress={(value: any) => {
-                  setChosenType(value);
+                  setChosenType(value === "true");
                 }} //if the user changes options, set the new value
               />
             </View>
+          </View>
+
+          {/* Chọn thiết bị đo */}
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            <Text style={{ fontWeight: "500", fontSize: 18 }}>
+              Chọn Thiết bị đo
+            </Text>
           </View>
           <View style={styles.Inputcontainer}>
             <Text style={styles.Inputlabel}>Nông trại:</Text>
@@ -205,7 +274,7 @@ export const AddNewThresScreen = () => {
               valueField="id"
               placeholder={!isFocusFarm ? "Select item" : "..."}
               searchPlaceholder="Search..."
-              //value={farmId.toString()}
+              value={farmId.toString()}
               onFocus={() => {
                 setIsForcusFarm(true);
                 FetchFarms();
@@ -245,7 +314,7 @@ export const AddNewThresScreen = () => {
             />
           </View>
           <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>Thiết bị:</Text>
+            <Text style={styles.Inputlabel}>Thiết bị đo:</Text>
             <Dropdown
               style={[styles.input, isFocusDevice && { borderColor: "blue" }]}
               placeholderStyle={styles.placeholderStyle}
@@ -257,12 +326,12 @@ export const AddNewThresScreen = () => {
               maxHeight={300}
               labelField="name"
               valueField="id"
-              placeholder={!isFocusFarm ? "Select item" : "..."}
+              placeholder={!isFocusDevice ? "Select item" : "..."}
               searchPlaceholder="Search..."
               value={deviceId}
               onFocus={() => {
                 setIsForcusDevice(true);
-                FetchDevices();
+                FetchDevicesInstrumentation();
               }}
               onBlur={() => setIsForcusDevice(false)}
               onChange={(item) => {
@@ -274,7 +343,7 @@ export const AddNewThresScreen = () => {
           <View style={styles.Inputcontainer}>
             <Text style={styles.Inputlabel}>Loại chỉ số:</Text>
             <Dropdown
-              style={[styles.input, isFocusDevice && { borderColor: "blue" }]}
+              style={[styles.input, isFocusIndex && { borderColor: "blue" }]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
@@ -284,20 +353,107 @@ export const AddNewThresScreen = () => {
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder={!isFocusFarm ? "Select item" : "..."}
+              placeholder={!isFocusIndex ? "Select item" : "..."}
               searchPlaceholder="Search..."
-              value={deviceId}
-              onFocus={() => {
-                setIsForcusDevice(true);
-                FetchDevices();
-              }}
-              onBlur={() => setIsForcusDevice(false)}
+              value={indexDevice}
+              onFocus={() => setIsForcusIndex(true)}
+              onBlur={() => setIsForcusIndex(false)}
               onChange={(item) => {
-                setDeviceId(item.label);
-                setIsForcusDevice(false);
+                setIndexDevice(item.value);
+                setIsForcusIndex(false);
               }}
             />
           </View>
+        </View>
+
+        {/* Chọn thiết bị điều khiển */}
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text style={{ fontWeight: "500", fontSize: 18 }}>
+            Chọn Thiết bị điều khiển
+          </Text>
+        </View>
+        <View style={styles.Inputcontainer}>
+          <Text style={styles.Inputlabel}>Nông trại:</Text>
+          <Dropdown
+            style={[styles.input, isFocusFarm && { borderColor: "blue" }]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={farms1}
+            search
+            maxHeight={300}
+            labelField="name"
+            valueField="id"
+            placeholder={!isFocusFarm1 ? "Select item" : "..."}
+            searchPlaceholder="Search..."
+            //value={farmId.toString()}
+            onFocus={() => {
+              setIsForcusFarm1(true);
+              FetchFarms1();
+            }}
+            onBlur={() => setIsForcusFarm1(false)}
+            onChange={(item) => {
+              setFarmId(item.id);
+              setIsForcusFarm(false);
+            }}
+          />
+        </View>
+        <View style={styles.Inputcontainer}>
+          <Text style={styles.Inputlabel}>Khu:</Text>
+          <Dropdown
+            style={[styles.input, isFocusZone1 && { borderColor: "blue" }]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={zones1}
+            search
+            maxHeight={300}
+            labelField="zoneName"
+            valueField="id"
+            placeholder={!isFocusZone ? "Select item" : "..."}
+            searchPlaceholder="Search..."
+            value={farmId.toString()}
+            onFocus={() => {
+              setIsFocusZone1(true);
+              FetchZones1();
+            }}
+            onBlur={() => setIsFocusZone1(false)}
+            onChange={(item) => {
+              setZoneId(item.id);
+              setIsFocusZone1(false);
+            }}
+          />
+        </View>
+        <View style={styles.Inputcontainer}>
+          <Text style={styles.Inputlabel}>Thiết bị điều khiển:</Text>
+          <Dropdown
+            style={[styles.input, isFocusDevice1 && { borderColor: "blue" }]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={devices1}
+            search
+            maxHeight={300}
+            labelField="name"
+            valueField="id"
+            placeholder={!isFocusDevice1 ? "Select item" : "..."}
+            searchPlaceholder="Search..."
+            value={deviceId1}
+            onFocus={() => {
+              setIsForcusDevice1(true);
+              FetchDevicesDriver();
+            }}
+            onBlur={() => setIsForcusDevice1(false)}
+            onChange={(item) => {
+              setDeviceId1(item.id);
+              setIsForcusDevice1(false);
+            }}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.fixToText}>

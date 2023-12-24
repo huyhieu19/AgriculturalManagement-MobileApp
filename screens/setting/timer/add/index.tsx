@@ -113,13 +113,19 @@ export const AddNewTimerScreen = () => {
     console.log("chon time xong");
   };
 
-  console.log("showTime", showTimePickerOn);
-
   const onChangeDateOn = (event: DateTimePickerEvent, selectedDate?: Date) => {
     setShowDatePickerOn(false);
     setShowTimePickerOn(false);
     if (selectedDate) {
-      setDateOn(selectedDate);
+      // Cập nhật dateOn với ngày và thời gian được kết hợp
+      setDateOn((prevState: any) => {
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        const day = selectedDate.getDate();
+        const hours = prevState.getHours();
+        const minutes = prevState.getMinutes();
+        return new Date(year, month, day, hours, minutes);
+      });
     }
     console.log(selectedDate);
     console.log("hoan thanh chon date xong");
@@ -134,10 +140,18 @@ export const AddNewTimerScreen = () => {
   };
 
   const onChangeDateOff = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    setShowDatePickerOff(false);
     setShowTimePickerOff(false);
+    setShowDatePickerOff(false);
     if (selectedDate) {
-      setDateOff(selectedDate);
+      // Cập nhật dateOn với ngày và thời gian được kết hợp
+      setDateOff((prevState: any) => {
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        const day = selectedDate.getDate();
+        const hours = prevState.getHours();
+        const minutes = prevState.getMinutes();
+        return new Date(year, month, day, hours, minutes);
+      });
     }
     console.log(selectedDate);
     console.log("hoan thanh chon off");

@@ -10,23 +10,21 @@ export interface ThresholdDisplayModel {
     thresholdValueOn: number | null;
     thresholdValueOff: number | null;
     isDelete: boolean;
-    
 }
 export interface ThresholdUpdateModel {
     id: number;
-    deviceDriverId: number | null;
-    instrumentationId: number | null;
+    deviceDriverId: string;
+    instrumentationId: string;
+    typeDevice: string;
     onInUpperThreshold: boolean | null;
     thresholdValueOn: number | null;
     thresholdValueOff: number | null;
-        typeDevice: string| null;
 }
-
 export interface ThresholdCreateModel {
-    deviceDriverId: number | null;
-    instrumentationId: number | null;
+    deviceDriverId: string;
+    instrumentationId: string;
+    typeDevice: string;
     thresholdValueOn: number | null;
     thresholdValueOff: number | null;
     onInUpperThreshold: boolean | null;
-        typeDevice: string | null;
 }
