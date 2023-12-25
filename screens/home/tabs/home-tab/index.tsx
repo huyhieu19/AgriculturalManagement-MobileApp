@@ -22,7 +22,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../../AppNavigator";
 import { useNavigation } from "@react-navigation/native";
 import { homeLeftIcon } from "../../../../assets";
-
+import { FontAwesome } from "@expo/vector-icons";
 type ScreenNavigationProps = NativeStackNavigationProp<
   RootStackParamList,
   "HomeScreen"
@@ -61,24 +61,14 @@ function HomeTab() {
       },
     },
     {
-      title: "Thông báo",
+      title: "Cài đặt",
       icon: (
-        <AntDesign
-          name="notification"
-          size={48}
-          color={AppColors.primaryColor}
-        />
+        <Feather name="settings" size={48} color={AppColors.primaryColor} />
       ),
       backgroundColor: "rgba(22,163,74,0.1)",
-      onPress: () => {},
-    },
-    {
-      title: "Nhiệm vụ",
-      icon: (
-        <FontAwesome5 name="tasks" size={48} color={AppColors.primaryColor} />
-      ),
-      backgroundColor: "rgba(22,163,74,0.1)",
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate("SettingsScreen");
+      },
     },
     {
       title: "Thống kê",
@@ -95,15 +85,21 @@ function HomeTab() {
       },
     },
     {
-      title: "Cài đặt",
+      title: "Lịch sử",
       icon: (
-        <Feather name="settings" size={48} color={AppColors.primaryColor} />
+        <FontAwesome name="history" size={48} color={AppColors.primaryColor} />
       ),
       backgroundColor: "rgba(22,163,74,0.1)",
-      onPress: () => {
-        navigation.navigate("SettingsScreen");
-      },
+      onPress: () => {},
     },
+    // {
+    //   title: "Nhiệm vụ",
+    //   icon: (
+    //     <FontAwesome5 name="tasks" size={48} color={AppColors.primaryColor} />
+    //   ),
+    //   backgroundColor: "rgba(22,163,74,0.1)",
+    //   onPress: () => {},
+    // },
   ];
   return (
     <SafeAreaView style={[AppStyles.appContainer]}>

@@ -1,7 +1,7 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { AppColors } from "../../../../global";
-import { formatDateTime } from "../../../../utils";
+import { formatGetOnlyDate } from "../../../../utils";
 import { IModule } from "../../../../types/module.type";
 import { esp8266 } from "../../../../assets";
 import { AntDesign } from "@expo/vector-icons";
@@ -78,7 +78,7 @@ const ModulesItem = (props: ModulesItemProps) => {
           <CardInfor property={"Ghi chú"} value={props.modules.note} />
           <CardInfor
             property={"Ngày tạo"}
-            value={String(formatDateTime(props?.modules?.dateCreated!))}
+            value={String(formatGetOnlyDate(props?.modules?.dateCreated!))}
           />
         </View>
       </View>

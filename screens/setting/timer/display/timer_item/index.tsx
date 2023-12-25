@@ -1,32 +1,63 @@
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { TimerDisplayModel } from "../../../../../network/models/setting_timer/TimerModel";
 import { AppColors } from "../../../../../global";
 import { AppFontSize } from "../../../../../global/styles/AppFontSize";
-import { formatDateTimeDisplay } from "../../../../../utils";
-
-const fakeFarm =
-  "https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_limit,h_256,dpr_3/https://assets.app.engoo.com/images/QKVwutsxMHDrNur49p0IxFhxQRqCgYldwxT5Keeq0SQ.jpeg";
+import { DeviceInformationDisplayModel } from "../../../../../network/models/device_display/deviceInfor";
+import { Modal } from "../../../../Modal";
+import { DeviceInfo } from "../../../../../network/apis/device.api";
 
 interface ListTimerItemProps {
   timer: TimerDisplayModel;
-  onPress: () => void;
+  onPress: (item: TimerDisplayModel) => void;
   isBorderRadius?: boolean;
   isBgPrimary?: boolean;
   isEdit?: boolean;
 }
 
 export const ListTimersItem = (props: ListTimerItemProps) => {
-  const navigation = useNavigation<any>();
-  console.log(props.timer.deviceName);
-  const goToEditFarm = () => {
-    //navigation.navigate("EditFarmScreen", props.farm);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [deviceInfor, setDeviceInfo] =
+    useState<DeviceInformationDisplayModel>();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  function formatGetOnlyDateDisplayLocalTime(date: any) {
+    const dateString = date;
+    const dateObject = new Date(dateString);
+    // Thêm 1 giờ vào đối tượng Date
+    const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+
+    const formattedDate = newDate.toLocaleString();
+    return formattedDate;
+  }
+
+  const handleModal = () => {
+    setIsModalVisible(() => !isModalVisible);
+  };
+
+  const GetInforDevice = async () => {
+    handleModal();
+    setIsLoading(true);
+    try {
+      const deviceId = props.timer.deviceId;
+      const res = await DeviceInfo({ deviceId });
+      if (res.data.Success) {
+        setDeviceInfo(res.data.Data);
+      }
+    } catch (ex) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <TouchableOpacity onPress={props.onPress}>
+    <TouchableOpacity onPress={GetInforDevice}>
       <View
         style={{
           flexDirection: "row",
@@ -44,16 +75,6 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
           height: props.isEdit ? "auto" : 120,
         }}
       >
-        {/* <Image
-          source={{
-            uri: fakeFarm,
-          }}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 5,
-          }}
-        /> */}
         <View
           style={{
             marginLeft: 12,
@@ -79,31 +100,101 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
             </Text>
             {props.isEdit ? (
               <TouchableOpacity
-                onPress={goToEditFarm}
-                style={{ right: 10, top: -10 }}
+                onPress={() => {
+                  props.onPress(props.timer);
+                  console.log("chuyen sang man edit");
+                }}
+                style={{ right: 0, top: -10 }}
               >
-                <AntDesign name="edit" size={24} color="black" />
+                <AntDesign
+                  name="edit"
+                  size={28}
+                  color={AppColors.primaryColor}
+                />
               </TouchableOpacity>
             ) : null}
           </View>
           <CardInfor
             property={"Mở"}
-            value={formatDateTimeDisplay(props.timer.openTimer)}
+            value={formatGetOnlyDateDisplayLocalTime(props.timer.openTimer)}
           />
           <CardInfor
             property={"Đóng"}
-            value={formatDateTimeDisplay(props.timer.shutDownTimer)}
-          />
-          <CardInfor
-            property={"Hoàn thành"}
-            value={
-              props.timer.isSuccessON || props.timer.isSuccessOFF
-                ? "Đã hoàn thành"
-                : "Chưa hoàn thành"
-            }
+            value={formatGetOnlyDateDisplayLocalTime(props.timer.shutDownTimer)}
           />
         </View>
       </View>
+      <Modal isVisible={isModalVisible} title="Thong in device">
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator size={"large"} color={AppColors.primaryColor} />
+          </View>
+        ) : (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              paddingHorizontal: 20,
+              paddingVertical: 16,
+              borderWidth: 0.5,
+              borderColor: AppColors.slate200,
+              elevation: 1,
+              backgroundColor: "white",
+              minHeight: 150,
+            }}
+          >
+            <View
+              style={{
+                marginLeft: 12,
+                flex: 1,
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: AppFontSize.sizeTitle,
+                    fontWeight: "600",
+                    marginRight: 20,
+                  }}
+                >
+                  Thông tin thiết bị
+                </Text>
+                <Pressable
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                  }}
+                  onPress={handleModal}
+                >
+                  <FontAwesome name="close" size={30} color="black" />
+                </Pressable>
+              </View>
+              <CardInfor
+                property={"Tên thiết bị"}
+                value={deviceInfor?.deviceName}
+              />
+              <CardInfor
+                property={"Tên Nông trại"}
+                value={deviceInfor?.farmName}
+              />
+              <CardInfor property={"Tên khu"} value={deviceInfor?.zoneName} />
+            </View>
+          </View>
+        )}
+      </Modal>
     </TouchableOpacity>
   );
 };
@@ -142,14 +233,8 @@ const CardInfor = (props: CardInforProps) => {
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
-          width: "70%",
-          color:
-            props.property === "Hoàn thành" && props.value === "Chưa hoàn thành"
-              ? "#EF4040"
-              : props.value === "Đã hoàn thành" &&
-                props.property === "Hoàn thành"
-              ? "#65B741"
-              : "black",
+          width: "65%",
+          color: "black",
         }}
       >
         {props.value}

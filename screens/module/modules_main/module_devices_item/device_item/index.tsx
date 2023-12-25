@@ -1,17 +1,28 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { IDeviceOnModule } from "../../../../../types/device.type";
 import { AppColors } from "../../../../../global";
 import { deviceIot } from "../../../../../assets";
-import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../../../AppNavigator";
 import { CardInforProps } from "../../../../../network/models/card_display/CardModel";
+import { Modal } from "../../../../Modal";
+import { AppFontSize } from "../../../../../global/styles/AppFontSize";
+import { DeviceInformationDisplayModel } from "../../../../../network/models/device_display/deviceInfor";
+import { DeviceInfo } from "../../../../../network/apis/device.api";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
 type DevicesProps = {
   device: IDeviceOnModule;
-  onPress?: () => void;
 };
 
 type ScreenNavigationProp = NativeStackNavigationProp<
@@ -20,16 +31,53 @@ type ScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const DevicesOnModulesItem = (props: DevicesProps) => {
-  const navigation = useNavigation<ScreenNavigationProp>();
+  const mockDevice: DeviceInformationDisplayModel = {
+    deviceName: "Chưa đặt tên",
+    farmName: "Chưa thêm vào nông trại",
+    zoneName: "Chưa thêm vào khu",
+  };
 
+  const navigation = useNavigation<ScreenNavigationProp>();
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [deviceInfor, setDeviceInfo] =
+    useState<DeviceInformationDisplayModel>(mockDevice);
   const [deviceSt, setDeviceSt] = useState<IDeviceOnModule>(props.device);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const goToEditDevice = () => {
     navigation.navigate("EditDeviceScreen", deviceSt);
   };
+  const handleModal = () => {
+    setIsModalVisible(() => !isModalVisible);
+  };
+  const GetInforDevice = async () => {
+    handleModal();
+    setIsLoading(true);
+    try {
+      const deviceId = props.device.id;
+      if (props.device.name != null) {
+        const res = await DeviceInfo({ deviceId });
+        if (res.data.Success) {
+          setDeviceInfo(
+            res.data.Data as unknown as DeviceInformationDisplayModel
+          );
+        } else {
+          setDeviceInfo(mockDevice);
+        }
+      } else {
+        setDeviceInfo(mockDevice);
+      }
+    } catch (ex) {
+      Alert.alert("Lỗi", `Không thể lấy thông tin thiết bị`, [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <TouchableOpacity onPress={props.onPress}>
+    <TouchableOpacity onPress={GetInforDevice}>
       <View
         style={{
           flexDirection: "row",
@@ -105,6 +153,82 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
           />
         </View>
       </View>
+      <Modal isVisible={isModalVisible} title="Thong in device">
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator size={"large"} color={AppColors.primaryColor} />
+          </View>
+        ) : (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              paddingHorizontal: 20,
+              paddingVertical: 16,
+              borderWidth: 0.5,
+              borderColor: AppColors.slate200,
+              elevation: 1,
+              backgroundColor: "white",
+              minHeight: 150,
+            }}
+          >
+            <View
+              style={{
+                marginLeft: 12,
+                flex: 1,
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: AppFontSize.sizeTitle,
+                    fontWeight: "600",
+                    marginRight: 20,
+                  }}
+                >
+                  Thông tin thiết bị
+                </Text>
+                <Pressable
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                  }}
+                  onPress={handleModal}
+                >
+                  <FontAwesome name="close" size={30} color="black" />
+                </Pressable>
+              </View>
+              <CardInfor
+                property={"Tên thiết bị"}
+                value={deviceInfor?.deviceName ?? "Thiết bị chưa được đặt tên"}
+              />
+              <CardInfor
+                property={"Tên Nông trại"}
+                value={
+                  deviceInfor?.farmName ?? "Bạn chưa thêm vào nông trại nào"
+                }
+              />
+              <CardInfor
+                property={"Tên khu"}
+                value={deviceInfor?.zoneName ?? "Bạn chưa thêm vào khu nào"}
+              />
+            </View>
+          </View>
+        )}
+      </Modal>
     </TouchableOpacity>
   );
 };

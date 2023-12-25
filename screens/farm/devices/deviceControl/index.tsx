@@ -22,6 +22,7 @@ import { ListZoneItem } from "../../farmDetails/farmDetailsItem";
 import { IDeviceOnZone } from "../../../../types/device.type";
 import { getControlOnZone } from "../../../../network/apis";
 import DevicesControlItem from "./deviceControlItem";
+import { AsyncOnOffDeviceControl } from "../../../../network/apis/controlDevice.api";
 
 type ParamList = {
   ZoneList: IZoneParams;
@@ -36,10 +37,12 @@ const DeviceControlScreen = () => {
   const navigation = useNavigation<any>();
   const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
 
-  const getDevices = React.useCallback(async () => {
+  const getDevices = async () => {
     try {
-      const res = await getControlOnZone(zone?.id!);
-      setDevices(res.data.Data);
+      const res = await getControlOnZone(zone.id);
+      if (res.data.Success) {
+        setDevices(res.data.Data);
+      }
       console.log("Data device" + res.data.Data);
     } catch (e) {
       Alert.alert("Lỗi", `Lỗi lấy dữ liệu nông trại`, [{ text: "OK" }]);
@@ -48,12 +51,46 @@ const DeviceControlScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [getControlOnZone]);
+  };
+
+  const AsyncOnOffDevice = async () => {
+    setIsLoading(true);
+    const res = await AsyncOnOffDeviceControl();
+    const resZone = await getControlOnZone(zone.id);
+    if (resZone.data.Success) {
+      setDevices(resZone.data.Data);
+    }
+    if (res.data.Success) {
+      setIsLoading(false);
+      Alert.alert("Thành công", `Đồng bộ trạng thái thiết bị thành công`, [
+        { text: "OK" },
+      ]);
+    } else {
+      Alert.alert("Lỗi", `Đồng bộ trạng thái thiết bị không thành công`, [
+        { text: "OK" },
+      ]);
+      setIsLoading(false);
+    }
+  };
   React.useEffect(() => {
     if (isFocused) {
       getDevices().then(() => {});
     }
   }, [isFocused]);
+
+  // React.useEffect(() => {
+  //   // Hàm sẽ được gọi lại mỗi 1000 miliseconds (1 giây)
+  //   const intervalId = setInterval(async () => {
+  //     // Gọi hàm của bạn ở đây
+  //     await getDevices();
+  //   }, 5000);
+
+  //   // Cleanup function khi component unmount
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [devices]); // Dependency array trống đảm bảo useEffect chỉ chạy một lần khi component được mount
+
   return (
     <SafeAreaView style={AppStyles.appContainer}>
       <View
@@ -98,6 +135,27 @@ const DeviceControlScreen = () => {
       </View>
       <View>
         <ListZoneItem zone={zone} isBorderRadius isBgPrimary isEdit={false} />
+        <Pressable
+          style={({ pressed }) => ({
+            backgroundColor: pressed ? "darkgreen" : "#FF9800",
+            alignSelf: "center",
+            paddingVertical: 8,
+            paddingHorizontal: 10,
+            borderRadius: 5,
+            alignItems: "center",
+            justifyContent: "center",
+          })}
+          onPress={AsyncOnOffDevice}
+        >
+          <Text
+            style={{
+              marginLeft: 10,
+              color: "white",
+            }}
+          >
+            Async status device
+          </Text>
+        </Pressable>
       </View>
 
       {isLoading ? (
@@ -116,7 +174,7 @@ const DeviceControlScreen = () => {
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
-              //onRefresh={fetchListDevicesOnModule}
+              onRefresh={() => getDevices()}
             />
           }
           contentContainerStyle={{

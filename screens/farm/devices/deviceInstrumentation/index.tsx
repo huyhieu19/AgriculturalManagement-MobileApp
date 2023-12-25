@@ -82,7 +82,6 @@ const DeviceInstrumentationScreen = () => {
     }
   }, [isFocused]);
 
-  // useEffect(() => {});
   const onMessageArrived = (message: any) => {
     // Tách topic thành mảng các phần tử
     const topicParts = message.topic.split("/");
@@ -94,15 +93,18 @@ const DeviceInstrumentationScreen = () => {
     console.log("devices: " + devices);
     console.log("deviceIdFromTopic: " + deviceIdFromTopic);
     console.log("topicParts[3]: " + type);
-
+    const jsonData = JSON.parse(message.payloadString.toString());
+    const values1 = jsonData.ND;
+    const values2 = jsonData.DA;
     // Cập nhật state với mảng devices đã được cập nhật
     setDevices((prev) => {
       return prev?.map((item) => {
         if (item?.id.toUpperCase() === deviceIdFromTopic) {
-          if (type === "DA") {
+          if (type === "ND_DA") {
             return {
               ...item,
-              value2: message.payloadString,
+              value1: values1,
+              value2: values2,
             };
           }
           return {
@@ -113,7 +115,6 @@ const DeviceInstrumentationScreen = () => {
         return item;
       });
     });
-    console.log("device moi" + devices[0].id);
     console.log("Received topic:", message.topic);
     console.log("Received payload:", message.payloadString);
   };

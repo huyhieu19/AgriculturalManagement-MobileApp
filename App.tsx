@@ -6,7 +6,6 @@ import AppNavigator from "./AppNavigator";
 import { reduxPersistor, store } from "./redux/store";
 import SplashScreen from "./screens/splash";
 import { sleep } from "./utils";
-import { MqttProvider } from "./Mqtt/mqttContext";
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
