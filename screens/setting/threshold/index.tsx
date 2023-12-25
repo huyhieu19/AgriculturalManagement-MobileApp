@@ -20,12 +20,8 @@ import { ListThresItem } from "./thresholdItem";
 
 const SettingsThresScreen = () => {
   const navigation = useNavigation<any>();
-  const hangeNavigateEditThresScreen = (item: ThresholdDisplayModel) => {
-    navigation.navigate("EditTimerScreen", item);
-  };
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const isFocused = useIsFocused();
-
   const [thres, setThres] = useState<ThresholdDisplayModel[]>([]);
 
   const FetchListThres = React.useCallback(async () => {
@@ -174,9 +170,10 @@ const SettingsThresScreen = () => {
           {thres != null && thres?.length > 0 ? (
             thres.map((item) => (
               <ListThresItem
-                key={item?.deviceDriverId + "/" + item.instrumentationId}
+                onPressRefresh={FetchListThres}
+                key={item?.id}
                 thres={item}
-                onPress={() => {}}
+                isEdit={true}
               />
             ))
           ) : (

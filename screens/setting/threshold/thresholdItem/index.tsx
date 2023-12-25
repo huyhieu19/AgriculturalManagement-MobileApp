@@ -1,19 +1,26 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { ThresholdDisplayModel } from "../../../../network/models/setting_threshold/ThresholdModel";
 import { AppColors } from "../../../../global";
 import { AppFontSize } from "../../../../global/styles/AppFontSize";
+import { Modal } from "../../../Modal";
+import UpdateThresholdModal from "../edit";
 
 interface ListThresItemProps {
   thres: ThresholdDisplayModel;
-  onPress: (item: ThresholdDisplayModel) => void;
-  isBorderRadius?: boolean;
+  onPressRefresh: () => void;
+  //isBorderRadius?: boolean;
   isBgPrimary?: boolean;
   isEdit?: boolean;
 }
 
 export const ListThresItem = (props: ListThresItemProps) => {
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+
+  const handleModal = () => {
+    setIsModalVisible(() => !isModalVisible);
+  };
+
   const GetTypeDevice = (typeDevice: string | null) => {
     if (typeDevice === "ND") {
       return "Nhiệt độ";
@@ -23,7 +30,13 @@ export const ListThresItem = (props: ListThresItemProps) => {
     return "Phát hiện mưa";
   };
   return (
-    <TouchableOpacity style={{ flexDirection: "row" }}>
+    <TouchableOpacity
+      style={{ flexDirection: "row" }}
+      onPress={() => {
+        handleModal();
+        console.log("chuyen sang man edit");
+      }}
+    >
       <View
         style={{
           flex: 1,
@@ -113,17 +126,13 @@ export const ListThresItem = (props: ListThresItemProps) => {
             >
               {props.thres?.deviceDriverName ?? ""}
             </Text>
-            {props.isEdit ? (
-              <TouchableOpacity
-                onPress={() => {
-                  props.onPress(props.thres);
-                  console.log("chuyen sang man edit");
-                }}
-                style={{ right: 10, top: -10 }}
-              >
-                <AntDesign name="edit" size={24} color="black" />
-              </TouchableOpacity>
-            ) : null}
+            <Modal isVisible={isModalVisible} title="Chỉnh sửa giá trị ngưỡng">
+              <UpdateThresholdModal
+                onPressHandelModel={() => handleModal()}
+                onPressRefresh={() => props.onPressRefresh()}
+                thres={props.thres}
+              />
+            </Modal>
           </View>
           <CardInfor
             property={"Trạng thái"}

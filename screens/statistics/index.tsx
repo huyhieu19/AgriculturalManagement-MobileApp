@@ -7,6 +7,7 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,12 +19,18 @@ import { Dropdown } from "react-native-element-dropdown";
 import { IFramDetails } from "../../types/farm.type";
 import { IZoneParams } from "../../types/zone.type";
 import { IDeviceOnZone } from "../../types/device.type";
-import { getControlOnZone, getListFarm, getListZone } from "../../network/apis";
+import {
+  getControlOnZone,
+  getInstrumentationOnZone,
+  getListFarm,
+  getListZone,
+} from "../../network/apis";
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { calender } from "../../assets";
 import { formatGetOnlyDate } from "../../utils";
+import { LineChart } from "react-native-chart-kit";
 
 const StatisticsScreen = () => {
   const navigation = useNavigation<any>();
@@ -40,7 +47,41 @@ const StatisticsScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [date, setDate] = useState(new Date());
+  // Tạo mảng labels từ 0h đến 23h
+  const labels = Array.from({ length: 24 }, (_, i) => `${i}h`);
 
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        data: [
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+          Math.random() * 100,
+        ],
+      },
+    ],
+  };
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
     setShowDatePicker(false);
@@ -85,7 +126,7 @@ const StatisticsScreen = () => {
   const FetchDevices = async () => {
     try {
       console.log("fetch devices");
-      const res = await getControlOnZone(zoneId);
+      const res = await getInstrumentationOnZone(zoneId);
       const devicesRes = res.data.Data;
       if (devicesRes.length == 0) {
         setDevices([]);
@@ -314,7 +355,70 @@ const StatisticsScreen = () => {
           </View>
         </Modal>
         <ScrollView>
-          <Text>asjdjfkjsdfasjd</Text>
+          <Text>Bezier Line Chart</Text>
+          <ScrollView horizontal>
+            <LineChart
+              data={data}
+              width={Dimensions.get("window").width * 2} // from react-native
+              height={220}
+              yAxisLabel="$"
+              yAxisSuffix="k"
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#e26a00",
+                backgroundGradientFrom: "#fb8c00",
+                backgroundGradientTo: "#ffa726",
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726",
+                },
+              }}
+              bezier
+              style={{
+                marginVertical: 8,
+                borderRadius: 16,
+              }}
+            />
+          </ScrollView>
+          <Text>Bezier Line Chart</Text>
+          <ScrollView horizontal>
+            <LineChart
+              data={data}
+              width={Dimensions.get("window").width * 2} // from react-native
+              height={220}
+              yAxisLabel="$"
+              yAxisSuffix="k"
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#e26a00",
+                backgroundGradientFrom: "#fb8c00",
+                backgroundGradientTo: "#ffa726",
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726",
+                },
+              }}
+              bezier
+              style={{
+                marginVertical: 8,
+                borderRadius: 16,
+              }}
+            />
+          </ScrollView>
         </ScrollView>
       </View>
     </SafeAreaView>

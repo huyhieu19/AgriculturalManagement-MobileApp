@@ -168,7 +168,7 @@ export const AddNewThresScreen = () => {
       } else {
         Alert.alert(
           "Lỗi thêm mới",
-          `Thêm thời gian đóng mở cho thiết bị không thành công`,
+          "Hai thiết bị đã được cài đặt, hãy xem lại trên giao diện",
           [{ text: "OK" }]
         );
       }

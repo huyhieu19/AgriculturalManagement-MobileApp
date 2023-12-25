@@ -27,6 +27,6 @@ export function updateThres(params: ThresholdUpdateModel) {
 export function createThres(params: ThresholdCreateModel) {
     return axiosInstance.post<BaseResponse<any>>("/InstrumentSetThreshold/Create", params);
 }
-export function removeThres(id: number) {
-    return axiosInstance.delete<BaseResponse<any>>(`/InstrumentSetThreshold/DeleteById?Id=${id}`);
+export function removeThres(id: any) {
+    return axiosInstance.post<BaseResponse<any>>("/InstrumentSetThreshold/DeleteById", id);
 }

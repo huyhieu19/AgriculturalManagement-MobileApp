@@ -15,7 +15,7 @@ export interface ThresholdUpdateModel {
     id: number;
     deviceDriverId: string;
     instrumentationId: string;
-    typeDevice: string;
+    typeDevice: string | null;
     onInUpperThreshold: boolean | null;
     thresholdValueOn: number | null;
     thresholdValueOff: number | null;
