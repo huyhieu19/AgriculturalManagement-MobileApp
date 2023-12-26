@@ -39,6 +39,13 @@ type ParamList = {
   Timer: TimerDisplayModel;
 };
 
+// chuyến sang giờ +7 Viet Nam
+function formatGetOnlyDateDisplayLocalTime(date: any) {
+  const dateString = date;
+  const dateObject = new Date(dateString);
+  return new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+}
+
 export const EditTimerScreen = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<ParamList, "Timer">>();
@@ -47,8 +54,15 @@ export const EditTimerScreen = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const isFocused = useIsFocused();
 
-  const [dateOn, setDateOn] = useState(new Date());
-  const [dateOff, setDateOff] = useState(new Date());
+  const [dateOn, setDateOn] = useState(
+    formatGetOnlyDateDisplayLocalTime(timer_item.openTimer!)
+  );
+  const [dateOff, setDateOff] = useState(
+    formatGetOnlyDateDisplayLocalTime(timer_item.shutDownTimer!)
+  );
+
+  console.log("Ngày mở: " + dateOn);
+  console.log("Ngày/giờ đóng: " + dateOff);
 
   const [showTimePickerOn, setShowTimePickerOn] = useState(false);
   const [showDatePickerOn, setShowDatePickerOn] = useState(false);

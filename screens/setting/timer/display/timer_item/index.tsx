@@ -21,22 +21,19 @@ interface ListTimerItemProps {
   isBgPrimary?: boolean;
   isEdit?: boolean;
 }
-
+function formatGetOnlyDateDisplayLocalTime(date: any) {
+  const dateString = date;
+  const dateObject = new Date(dateString);
+  // Thêm 7 giờ vào đối tượng Date
+  const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+  const formattedDate = newDate.toLocaleString();
+  return formattedDate;
+}
 export const ListTimersItem = (props: ListTimerItemProps) => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [deviceInfor, setDeviceInfo] =
     useState<DeviceInformationDisplayModel>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  function formatGetOnlyDateDisplayLocalTime(date: any) {
-    const dateString = date;
-    const dateObject = new Date(dateString);
-    // Thêm 1 giờ vào đối tượng Date
-    const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
-
-    const formattedDate = newDate.toLocaleString();
-    return formattedDate;
-  }
-
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
   };

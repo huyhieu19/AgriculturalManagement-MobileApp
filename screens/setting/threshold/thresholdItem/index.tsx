@@ -20,7 +20,6 @@ export const ListThresItem = (props: ListThresItemProps) => {
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
   };
-
   const GetTypeDevice = (typeDevice: string | null) => {
     if (typeDevice === "ND") {
       return "Nhiệt độ";
@@ -29,6 +28,7 @@ export const ListThresItem = (props: ListThresItemProps) => {
     }
     return "Phát hiện mưa";
   };
+
   return (
     <TouchableOpacity
       style={{ flexDirection: "row" }}

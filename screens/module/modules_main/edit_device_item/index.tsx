@@ -124,6 +124,8 @@ export const EditDeviceScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setName(e)}
             value={name ?? ""}
+            placeholder="Nhập tên thiết bị"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>
@@ -134,6 +136,8 @@ export const EditDeviceScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setDescription(e)}
             value={description ?? ""}
+            placeholder="Nhập thông tin thiết bị"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>

@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInput,
   Alert,
+  ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import {
@@ -18,6 +20,9 @@ import {
   removeThres,
   updateThres,
 } from "../../../../network/apis/settings.api";
+import { DeviceInfo } from "../../../../network/apis/device.api";
+import { DeviceInformationDisplayModel } from "../../../../network/models/device_display/deviceInfor";
+import { useIsFocused } from "@react-navigation/native";
 interface ListThresItemProps {
   thres: ThresholdDisplayModel;
   onPressHandelModel: () => void;
@@ -27,13 +32,20 @@ interface ListThresItemProps {
 export default function UpdateThresholdModal(
   props: Readonly<ListThresItemProps>
 ) {
-  const [openValue, setOpenValue] = useState<number | null>(
-    props.thres.thresholdValueOn
+  const [openValue, setOpenValue] = useState<string | null>(
+    String(props.thres.thresholdValueOn)
   );
-  const [closeValue, setCloseValue] = useState<number | null>(
-    props.thres.thresholdValueOff
+  const [closeValue, setCloseValue] = useState<string | null>(
+    String(props.thres.thresholdValueOff)
   );
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [deviceDriverInfor, setDeviceDriverInfo] =
+    useState<DeviceInformationDisplayModel>();
+  const [deviceInstrumentationInfor, setDeviceInstrumentationInfo] =
+    useState<DeviceInformationDisplayModel>();
 
+  const isFocus = useIsFocused();
   const UpdateThreshold = async () => {
     const params: ThresholdUpdateModel = {
       deviceDriverId: props.thres.deviceDriverId,
@@ -41,8 +53,8 @@ export default function UpdateThresholdModal(
       instrumentationId: props.thres.instrumentationId,
       typeDevice: props.thres.typeDevice,
       onInUpperThreshold: props.thres.onInUpperThreshold,
-      thresholdValueOff: closeValue,
-      thresholdValueOn: openValue,
+      thresholdValueOff: Number(closeValue),
+      thresholdValueOn: Number(openValue),
     };
     try {
       const res = await updateThres(params);
@@ -84,8 +96,43 @@ export default function UpdateThresholdModal(
       ]);
     }
   };
+  const handleModal = () => {
+    setIsModalVisible(() => !isModalVisible);
+  };
+
+  const GetInforDevice = async () => {
+    handleModal();
+    setIsLoading(true);
+    try {
+      let deviceId = props.thres.deviceDriverId;
+      const res1 = await DeviceInfo({ deviceId });
+      deviceId = props.thres.instrumentationId;
+      const res2 = await DeviceInfo({ deviceId });
+      if (res1.data.Success && res2.data.Success) {
+        setDeviceDriverInfo(res1.data.Data);
+        setDeviceInstrumentationInfo(res2.data.Data);
+      }
+    } catch (ex) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const GetTypeDevice = (typeDevice: string | null) => {
+    if (typeDevice === "ND") {
+      return "Nhiệt độ";
+    } else if (typeDevice === "DA") {
+      return "Độ ẩm";
+    }
+    return "Phát hiện mưa";
+  };
+  React.useEffect(() => {
+    if (isFocus) {
+      GetInforDevice();
+    }
+  }, [isFocus]);
+
   return (
-    <View>
+    <ScrollView>
       <View
         style={{
           backgroundColor: "white",
@@ -122,8 +169,8 @@ export default function UpdateThresholdModal(
           <TextInput
             multiline={true}
             style={[styles.input]}
-            onChangeText={(e) => setOpenValue(Number(e))}
-            value={String(openValue)}
+            onChangeText={(e) => setOpenValue(e)}
+            value={openValue!}
             placeholder="Nhập ngưỡng mở"
             inputMode="decimal"
           />
@@ -133,36 +180,137 @@ export default function UpdateThresholdModal(
           <TextInput
             multiline={true}
             style={[styles.input]}
-            onChangeText={(e) => setCloseValue(Number(e))}
-            value={String(closeValue)}
+            onChangeText={(e) => setCloseValue(e)}
+            value={closeValue!}
             placeholder="Nhập ngưỡng đóng"
             inputMode="decimal"
           />
         </View>
+
         <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Thiết bị đo: </Text>
+          <Text style={styles.Inputlabel}>Kiểu đóng/mở: </Text>
           <Text
             style={{
               fontSize: 18,
               fontWeight: "500",
               color: AppColors.slate600,
+              marginTop: 10,
             }}
           >
-            {props.thres.deviceInstrumentationName}
+            {props.thres?.onInUpperThreshold ? "Kiểu 1" : "Kiểu 2"}
           </Text>
         </View>
-        <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Thiết bị điều khiển: </Text>
-          <Text
+        {isLoading ? (
+          <View
             style={{
-              fontSize: 18,
-              fontWeight: "500",
-              color: AppColors.slate600,
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {props.thres.deviceDriverName}
-          </Text>
-        </View>
+            <ActivityIndicator size={"large"} color={AppColors.primaryColor} />
+          </View>
+        ) : (
+          <View>
+            <View style={styles.horizontalLine} />
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Thiết bị đo: </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "500",
+                  color: AppColors.slate600,
+                  marginTop: 10,
+                }}
+              >
+                {props.thres.deviceInstrumentationName}
+              </Text>
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Nông trại: </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                }}
+              >
+                {deviceDriverInfor?.farmName}
+              </Text>
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Khu: </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                }}
+              >
+                {deviceDriverInfor?.zoneName}
+              </Text>
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Loại thiết bị: </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                }}
+              >
+                {GetTypeDevice(props.thres.typeDevice)}
+              </Text>
+            </View>
+            <View style={styles.horizontalLine} />
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Thiết bị điều khiển: </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "500",
+                  color: AppColors.slate600,
+                  marginTop: 15,
+                }}
+              >
+                {props.thres.deviceDriverName}
+              </Text>
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Trạng thái: </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                }}
+              >
+                {props.thres.deviceDriverAction
+                  ? "Hoạt dộng"
+                  : "Không hoạt động"}
+              </Text>
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Nông trại: </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                }}
+              >
+                {deviceInstrumentationInfor?.farmName}
+              </Text>
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Khu: </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                }}
+              >
+                {deviceInstrumentationInfor?.zoneName}
+              </Text>
+            </View>
+            <View style={styles.horizontalLine} />
+          </View>
+        )}
         <View style={styles.buttonContainer}>
           <View style={styles.fixToText}>
             <Button
@@ -180,11 +328,16 @@ export default function UpdateThresholdModal(
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  horizontalLine: {
+    height: 1, // Đặt chiều cao của đường kẻ ngang
+    backgroundColor: "black", // Đặt màu sắc của đường kẻ ngang
+    marginVertical: 10, // Đặt khoảng cách giữa đường kẻ và các phần tử khác (nếu cần)
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -245,7 +398,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    width: "70%",
+    width: "60%",
     marginRight: 27,
     marginTop: 10,
     minHeight: 50,
@@ -256,7 +409,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   Inputlabel: {
-    width: "26%",
+    width: "35%",
     marginTop: 10,
     marginLeft: 5,
     fontWeight: "500",
