@@ -20,6 +20,7 @@ interface ListTimerItemProps {
   isBorderRadius?: boolean;
   isBgPrimary?: boolean;
   isEdit?: boolean;
+  isHistory: boolean;
 }
 function formatGetOnlyDateDisplayLocalTime(date: any) {
   const dateString = date;
@@ -68,8 +69,8 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
           elevation: 1,
-          marginBottom: props.isEdit ? 20 : 2,
-          height: props.isEdit ? "auto" : 120,
+          marginBottom: 15,
+          //height: props.isEdit && props.isHistory ? "auto" : 120,
         }}
       >
         <View
@@ -95,7 +96,7 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
             >
               {props.timer?.deviceName == null ? "" : props.timer?.deviceName}
             </Text>
-            {props.isEdit ? (
+            {props.isEdit && !props.isHistory ? (
               <TouchableOpacity
                 onPress={() => {
                   props.onPress(props.timer);
@@ -119,6 +120,19 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
             property={"Đóng"}
             value={formatGetOnlyDateDisplayLocalTime(props.timer.shutDownTimer)}
           />
+          <CardInfor property={"Ghi chú"} value={props.timer.note ?? ""} />
+          {props.isHistory ? (
+            <CardInfor
+              property={"Hoàn thành đóng"}
+              value={String(props.timer.isSuccessOFF)}
+            />
+          ) : null}
+          {props.isHistory ? (
+            <CardInfor
+              property={"Hoàn thành mở"}
+              value={String(props.timer.isSuccessON)}
+            />
+          ) : null}
         </View>
       </View>
       <Modal isVisible={isModalVisible} title="Thong in device">

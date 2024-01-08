@@ -161,9 +161,11 @@ export const AddNewThresScreen = () => {
       };
       const res = await createThres(params);
       if (res.data.Data != null && res.data.Data) {
-        Alert.alert("Thành công", "Thành công thêm thời gian đóng mở", [
-          { text: "OK", onPress: goBack },
-        ]);
+        Alert.alert(
+          "Thành công",
+          "Thành công thêm liên kết đóng mở thiết bị theo giá trị ngưỡng",
+          [{ text: "OK", onPress: goBack }]
+        );
       } else {
         Alert.alert(
           "Lỗi thêm mới",

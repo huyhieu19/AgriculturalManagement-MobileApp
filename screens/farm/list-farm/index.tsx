@@ -26,7 +26,7 @@ type ScreenNavigationProp = NativeStackNavigationProp<
 const ListFarmScreen: React.FC = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
   const [farms, setFarms] = React.useState<Farm[]>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const isFocused = useIsFocused();
   const fetchListFarm = React.useCallback(async () => {
     try {
@@ -52,7 +52,9 @@ const ListFarmScreen: React.FC = () => {
 
   React.useEffect(() => {
     if (isFocused) {
-      fetchListFarm().then(() => {});
+      fetchListFarm();
+    } else {
+      setIsLoading(true);
     }
   }, [isFocused]);
 

@@ -132,6 +132,8 @@ const ModulesScreen = () => {
                 key={item?.id}
                 modules={item}
                 onPress={() => hangeNavigateToModuleDetailScreen(item)}
+                isEdit={true}
+                isBorderRadius={true}
               />
             ))
           ) : (

@@ -32,7 +32,7 @@ type ScreenNavigationProp = NativeStackNavigationProp<
 
 const DevicesOnModulesItem = (props: DevicesProps) => {
   const mockDevice: DeviceInformationDisplayModel = {
-    deviceName: "Chưa đặt tên",
+    deviceName: props.device.name ?? "Chưa đặt tên",
     farmName: "Chưa thêm vào nông trại",
     zoneName: "Chưa thêm vào khu",
   };
@@ -55,7 +55,11 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
     setIsLoading(true);
     try {
       const deviceId = props.device.id;
-      if (props.device.name != null) {
+      if (
+        props.device.name != null &&
+        props.device.isUsed &&
+        props.device.zoneId != null
+      ) {
         const res = await DeviceInfo({ deviceId });
         if (res.data.Success) {
           setDeviceInfo(

@@ -86,6 +86,18 @@ const DeviceAddScreen = () => {
     }
   };
 
+  const ReturnDeviceType = (DType: string | undefined) => {
+    if (DType != undefined) {
+      if (DType.toLowerCase() === "r") {
+        return "Thiết bị đo";
+      } else if (DType.toLowerCase() === "w") {
+        return "Thiết bị điều khiển";
+      }
+    } else {
+      return "";
+    }
+  };
+
   const handleAddNew = async () => {
     if (deviceId.length == 36) {
       try {
@@ -145,7 +157,7 @@ const DeviceAddScreen = () => {
             fontWeight: "500",
           }}
         >
-          Thêm thiết bị vào Zone
+          Thêm thiết bị vào khu
         </Text>
       </View>
 
@@ -216,7 +228,7 @@ const DeviceAddScreen = () => {
         />
       </View>
       <View style={styles.Inputcontainer}>
-        <Text style={styles.label}>Note: </Text>
+        <Text style={styles.label}>Ghi chú: </Text>
         <TextInput
           multiline={true}
           style={[styles.dropdown]}
@@ -226,14 +238,22 @@ const DeviceAddScreen = () => {
           inputMode="text"
         />
       </View>
+      <View style={styles.container}>
+        <Text style={styles.label}>Tên thiết bị: </Text>
+        <TextInput
+          style={styles.dropdown1}
+          value={device?.name ?? "Thiết bị chưa được đặt tên"}
+          placeholder="Tên thiết bị"
+          editable={false}
+        />
+      </View>
       {moduleId != null || devices != null ? (
         <View style={styles.container}>
           <Text style={styles.label}>Loại thiết bị:</Text>
           <TextInput
             style={styles.dropdown1}
-            value={
-              device?.deviceType == "R" ? "Thiết bị đo" : "Thiết bị điều khiển"
-            }
+            placeholder="Loại thiết bị"
+            value={ReturnDeviceType(device?.deviceType)}
             editable={false}
           />
         </View>

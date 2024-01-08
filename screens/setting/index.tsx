@@ -17,7 +17,7 @@ const SettingsScreen = () => {
   const navigation = useNavigation<any>();
 
   const goToSettingTimer = () => {
-    navigation.navigate("SettingsTimerScreen");
+    navigation.navigate("TimerScreen");
     console.log("Go to page SettingsTimerScreen");
   };
   const goToSettingThres = () => {

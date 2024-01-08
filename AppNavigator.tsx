@@ -34,12 +34,15 @@ import { EditTimerScreen } from "./screens/setting/timer/edit";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SettingsThresScreen from "./screens/setting/threshold";
 import { AddNewThresScreen } from "./screens/setting/threshold/add";
+import RegisterScreen from "./screens/auth/register";
+import { UserRegisterationModel } from "./network/models/RegisterModel";
+import TimerScreen from "./screens/setting/timer";
 
 export type RootStackParamList = {
   // home
   HomeScreen: undefined;
   LoginScreen: undefined;
-  RegisterScreen: undefined;
+  RegisterScreen: any;
   // farm
   ListFarmScreen: undefined;
   CreateFarmScreen: undefined;
@@ -62,6 +65,7 @@ export type RootStackParamList = {
 
   // cài đặt
   SettingsScreen: undefined;
+  TimerScreen: undefined;
   SettingsTimerScreen: undefined;
   AddNewTimerScreen: undefined;
   EditTimerScreen: undefined;
@@ -95,6 +99,7 @@ const AppNavigator: React.FC = () => {
         screenOptions={{
           headerShown: false,
         }}
+        initialRouteName="HomeScreen"
       >
         {user ? (
           <>
@@ -162,6 +167,7 @@ const AppNavigator: React.FC = () => {
 
             {/* Setting */}
             <Stack.Screen name={"SettingsScreen"} component={SettingsScreen} />
+            <Stack.Screen name={"TimerScreen"} component={TimerScreen} />
             <Stack.Screen
               name={"SettingsTimerScreen"}
               component={SettingsTimerScreen}
@@ -196,6 +202,7 @@ const AppNavigator: React.FC = () => {
         ) : (
           <>
             <Stack.Screen name={"LoginScreen"} component={LoginScreen} />
+            <Stack.Screen name={"RegisterScreen"} component={RegisterScreen} />
           </>
         )}
       </Stack.Navigator>

@@ -6,6 +6,9 @@ import { TimerCreateModel, TimerDisplayModel, TimerUpdateModel } from "../models
 export function getTimers() {
     return axiosInstance.post<BaseResponse<TimerDisplayModel[]>>("/timer/g/all-available");
 }
+export function getTimersHis() {
+    return axiosInstance.post<BaseResponse<TimerDisplayModel[]>>("/timer/g/histories");
+}
 
 export function createTimer(params: TimerCreateModel) {
     return axiosInstance.post<BaseResponse<boolean |  null>>("/timer/c", params);
