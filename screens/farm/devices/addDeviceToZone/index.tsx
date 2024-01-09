@@ -63,7 +63,7 @@ const DeviceAddScreen = () => {
 
   React.useEffect(() => {
     if (isFocused) {
-      fetchListModule().then(() => {});
+      fetchListModule();
       setDevice(null);
     }
   }, [isFocused]);
@@ -117,6 +117,8 @@ const DeviceAddScreen = () => {
         Alert.alert("Lỗi thêm mới", `Thêm mới thiết bị không thành công`, [
           { text: "OK", onPress: () => navigation.goBack() },
         ]);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       Alert.alert("Lỗi thêm mới", `Mã số cần đủ 36 ký tự`, [
