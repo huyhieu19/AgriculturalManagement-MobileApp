@@ -31,7 +31,9 @@ export const EditZoneScreen = () => {
   const [funct, setFunct] = useState<string | undefined>(
     routeZone.params.function
   );
-  const [area, setArea] = useState<number | undefined>(routeZone.params.area);
+  const [area, setArea] = useState<string | undefined>(
+    String(routeZone.params.area)
+  );
   const [description, setDescription] = useState(routeZone.params.description);
 
   const goBack = () => {
@@ -43,7 +45,7 @@ export const EditZoneScreen = () => {
       const paramsUpdate: IZoneUpdateModel = {
         id: routeZone.params.id,
         zoneName: name!,
-        area: area!,
+        area: Number(area),
         description: description!,
         note: note!,
         timeToStartPlanting: routeZone.params.timeToStartPlanting!,
@@ -57,15 +59,16 @@ export const EditZoneScreen = () => {
         Alert.alert("Thành công", "Thành công chỉnh sửa khu", [
           {
             text: "OK",
+            onPress: () => goBack(),
           },
         ]);
       } else {
-        Alert.alert("Lỗi", `Chỉnh sửa khu không thành công`, [{ text: "OK" }]);
+        Alert.alert("Lỗi", `Chỉnh sửa khu không thành công`, [
+          { text: "OK", onPress: () => goBack() },
+        ]);
       }
     } catch (error) {
-      Alert.alert("Lỗi", `${error}`, [{ text: "OK" }]);
-    } finally {
-      goBack();
+      Alert.alert("Lỗi", `${error}`, [{ text: "OK", onPress: () => goBack() }]);
     }
   };
   const handleDeleteZone = async () => {
@@ -121,6 +124,8 @@ export const EditZoneScreen = () => {
             style={styles.input}
             onChangeText={(e) => setName(e)}
             value={name != undefined || name != null ? name.toString() : ""}
+            placeholder="Nhập tên khu"
+            inputMode="text"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -135,6 +140,8 @@ export const EditZoneScreen = () => {
                 ? description.toString()
                 : ""
             }
+            placeholder="Nhập thông tin chi tiết"
+            inputMode="text"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -142,8 +149,10 @@ export const EditZoneScreen = () => {
           <TextInput
             multiline={true}
             style={styles.input}
-            onChangeText={(e) => setArea(Number(e))}
+            onChangeText={(e) => setArea(e)}
             value={area != undefined || area != null ? String(area) : ""}
+            placeholder="Nhập diện tích khu"
+            inputMode="decimal"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -155,6 +164,8 @@ export const EditZoneScreen = () => {
               setFunct(e);
             }}
             value={funct != undefined || funct != null ? funct.toString() : ""}
+            placeholder="Nhập chức năng của khu"
+            inputMode="text"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -165,6 +176,8 @@ export const EditZoneScreen = () => {
             style={styles.input}
             onChangeText={(e) => setNote(e)}
             value={note != undefined || note != null ? note.toString() : ""}
+            placeholder="Nhập ghi chú của khu"
+            inputMode="text"
           />
         </View>
         <View style={styles.buttonContainer}>

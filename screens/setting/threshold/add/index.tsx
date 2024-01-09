@@ -26,14 +26,13 @@ import { IDeviceOnZone } from "../../../../types/device.type";
 import { createThres } from "../../../../network/apis/settings.api";
 import RadioForm from "react-native-simple-radio-button";
 import { ThresholdCreateModel } from "../../../../network/models/setting_threshold/ThresholdModel";
-import { AppFontSize } from "../../../../global/styles/AppFontSize";
 
 export const AddNewThresScreen = () => {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
 
-  const [openValue, setOpenValue] = useState<number>(0);
-  const [closeValue, setCloseValue] = useState<number>(0);
+  const [openValue, setOpenValue] = useState<string>("");
+  const [closeValue, setCloseValue] = useState<string>("");
 
   // Using for choose device instrumentation
   const [isFocusFarm, setIsForcusFarm] = useState(false);
@@ -65,8 +64,8 @@ export const AddNewThresScreen = () => {
   const [chosenType, setChosenType] = useState(true); //will store our current user options
 
   const options = [
-    { label: "Type 1", value: "true" },
-    { label: "Type 2", value: "false" },
+    { label: "Kiểu 1", value: "true" },
+    { label: "Kiểu 2", value: "false" },
   ]; //create our options for radio group
 
   const indexDevices = [
@@ -156,24 +155,28 @@ export const AddNewThresScreen = () => {
         deviceDriverId: deviceId1,
         instrumentationId: deviceId,
         onInUpperThreshold: chosenType,
-        thresholdValueOff: closeValue,
-        thresholdValueOn: openValue,
+        thresholdValueOff: Number(closeValue),
+        thresholdValueOn: Number(openValue),
         typeDevice: indexDevice,
       };
       const res = await createThres(params);
       if (res.data.Data != null && res.data.Data) {
-        Alert.alert("Thành công", "Thành công thêm thời gian đóng mở", [
-          { text: "OK", onPress: goBack },
-        ]);
+        Alert.alert(
+          "Thành công",
+          "Thành công thêm liên kết đóng mở thiết bị theo giá trị ngưỡng",
+          [{ text: "OK", onPress: goBack }]
+        );
       } else {
         Alert.alert(
           "Lỗi thêm mới",
           "Hai thiết bị đã được cài đặt, hãy xem lại trên giao diện",
-          [{ text: "OK" }]
+          [{ text: "OK", onPress: goBack }]
         );
       }
     } catch (error) {
-      Alert.alert("Lỗi thêm mới", `${error}`, [{ text: "OK" }]);
+      Alert.alert("Lỗi thêm mới", `${error}`, [
+        { text: "OK", onPress: goBack },
+      ]);
     }
   };
   React.useEffect(() => {
@@ -221,8 +224,8 @@ export const AddNewThresScreen = () => {
             <TextInput
               multiline={true}
               style={[styles.input]}
-              onChangeText={(e) => setOpenValue(Number(e))}
-              value={String(openValue)}
+              onChangeText={(e) => setOpenValue(e)}
+              value={openValue}
               placeholder="Nhập ngưỡng mở"
               inputMode="decimal"
             />
@@ -232,8 +235,8 @@ export const AddNewThresScreen = () => {
             <TextInput
               multiline={true}
               style={[styles.input]}
-              onChangeText={(e) => setCloseValue(Number(e))}
-              value={String(closeValue)}
+              onChangeText={(e) => setCloseValue(e)}
+              value={closeValue}
               placeholder="Nhập ngưỡng đóng"
               inputMode="decimal"
             />
@@ -468,12 +471,12 @@ export const AddNewThresScreen = () => {
         <View>
           <Text style={{ color: "red" }}>* Chú thích: </Text>
           <Text>
-            Type 1: Giá trị thiết bị đo lớn hơn ngưỡng mở thì mở thiết bị điều
+            Kiểu 1: Giá trị thiết bị đo lớn hơn ngưỡng mở thì mở thiết bị điều
             khiển, Giá trị thiết bị đo nhỏ ngưỡng đóng thì đóng thiết bị điều
             khiển
           </Text>
           <Text>
-            Type 2: Giá trị thiết bị đo lớn hơn ngưỡng đóng thì đóng thiết bị
+            Kiểu 2: Giá trị thiết bị đo lớn hơn ngưỡng đóng thì đóng thiết bị
             điều khiển, Giá trị thiết bị đo nhỏ ngưỡng mở thì mở thiết bị điều
             khiển
           </Text>

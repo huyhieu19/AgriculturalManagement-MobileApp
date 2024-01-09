@@ -16,9 +16,9 @@ import { AppColors } from "../../../../global";
 import { timerSetting } from "../../../../assets";
 import { TimerDisplayModel } from "../../../../network/models/setting_timer/TimerModel";
 import { ListTimersItem } from "./timer_item";
-import { getTimers } from "../../../../network/apis/settings.api";
+import { getTimersHis } from "../../../../network/apis/settings.api";
 
-const SettingsTimerScreen = () => {
+const SettingsTimerHisScreen = () => {
   const navigation = useNavigation<any>();
   const hangeNavigateEditTimerScreen = (item: TimerDisplayModel) => {
     navigation.navigate("EditTimerScreen", item);
@@ -28,10 +28,10 @@ const SettingsTimerScreen = () => {
 
   const [timers, setTimers] = useState<TimerDisplayModel[]>([]);
 
-  const FetchListTimer = async () => {
+  const FetchListTimer = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await getTimers();
+      const res = await getTimersHis();
       setTimers(res.data.Data);
     } catch (e) {
       Alert.alert("Lỗi", `Lỗi lấy dữ liệu thời gian`, [
@@ -40,7 +40,7 @@ const SettingsTimerScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
   React.useEffect(() => {
     if (isFocused) {
       FetchListTimer();
@@ -179,9 +179,8 @@ const SettingsTimerScreen = () => {
                 key={item?.id}
                 timer={item}
                 onPress={() => hangeNavigateEditTimerScreen(item)}
-                isEdit={true}
                 isBgPrimary={false}
-                isHistory={false}
+                isHistory={true}
               />
             ))
           ) : (
@@ -193,4 +192,4 @@ const SettingsTimerScreen = () => {
   );
 };
 
-export default SettingsTimerScreen;
+export default SettingsTimerHisScreen;

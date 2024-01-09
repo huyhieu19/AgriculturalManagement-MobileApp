@@ -23,6 +23,7 @@ import { IModule } from "../../../../types/module.type";
 import { IDeviceOnModule } from "../../../../types/device.type";
 import { getListModules } from "../../../../network/apis";
 import { AppFontSize } from "../../../../global/styles/AppFontSize";
+import ModulesItem from "../module_item";
 
 type ScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -106,6 +107,14 @@ const ModuleDevicesScreen = () => {
           Danh sách thiết bị trên module
         </Text>
       </View>
+
+      <ModulesItem
+        modules={route.params}
+        isBgPrimary={true}
+        isEdit={false}
+        isBorderRadius={false}
+      />
+
       {isLoading ? (
         <View
           style={{

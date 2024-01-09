@@ -35,15 +35,15 @@ const FarmDetailsScreen = () => {
   const isForcused = useIsFocused();
 
   const [farmState, setFarmState] = useState<IFramDetails>(farmProps);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [zoneList, setZoneList] = useState<IZoneParams[]>([]);
   const [farm, setFarm] = useState<IFramDetails>(route.params);
 
   const fetchListZone = React.useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await getListZone({ farmId: Number(farmProps?.id!) });
-      setZoneList(res.data.Data as IZoneParams[]);
+      const res = await getListZone({ farmId: Number(farmProps?.id) });
+      setZoneList(res.data.Data);
     } catch (e) {
       Alert.alert("Lỗi", `Lỗi lấy dữ liệu khu trong nông trại`, [
         { text: "OK" },
@@ -57,7 +57,9 @@ const FarmDetailsScreen = () => {
 
   React.useEffect(() => {
     if (isForcused) {
-      fetchListZone().then(() => {});
+      fetchListZone();
+    } else {
+      setIsLoading(true);
     }
   }, [isForcused]);
 

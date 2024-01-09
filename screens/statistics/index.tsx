@@ -355,22 +355,34 @@ const StatisticsScreen = () => {
           </View>
         </Modal>
         <ScrollView>
-          <Text>Bezier Line Chart</Text>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignContent: "center",
+            }}
+          >
+            <Text
+              style={{ textAlign: "center", fontSize: 18, fontWeight: "500" }}
+            >
+              Nhiệt độ
+            </Text>
+          </View>
           <ScrollView horizontal>
             <LineChart
               data={data}
               width={Dimensions.get("window").width * 2} // from react-native
               height={220}
-              yAxisLabel="$"
-              yAxisSuffix="k"
+              yAxisLabel=""
+              yAxisSuffix="*C"
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: "#e26a00",
-                backgroundGradientFrom: "#fb8c00",
-                backgroundGradientTo: "#ffa726",
+                backgroundGradientFrom: "#65B741",
+                backgroundGradientTo: "#BED754",
                 decimalPlaces: 2, // optional, defaults to 2dp
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `#191919`,
                 style: {
                   borderRadius: 16,
                 },
@@ -387,22 +399,36 @@ const StatisticsScreen = () => {
               }}
             />
           </ScrollView>
-          <Text>Bezier Line Chart</Text>
+          <View style={styles.horizontalLine} />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignContent: "center",
+            }}
+          >
+            <Text
+              style={{ textAlign: "center", fontSize: 18, fontWeight: "500" }}
+            >
+              Độ ẩm
+            </Text>
+          </View>
           <ScrollView horizontal>
             <LineChart
               data={data}
               width={Dimensions.get("window").width * 2} // from react-native
               height={220}
-              yAxisLabel="$"
-              yAxisSuffix="k"
+              yAxisLabel=""
+              yAxisSuffix="%"
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: "#e26a00",
-                backgroundGradientFrom: "#fb8c00",
-                backgroundGradientTo: "#ffa726",
+                backgroundColor: "#C1F2B0",
+                backgroundGradientFrom: "#5FBDFF",
+                backgroundGradientTo: "#96EFFF",
                 decimalPlaces: 2, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                color: (opacity = 1) => `rgba(69, 41, 57, ${opacity})`,
+                labelColor: (opacity = 1) => `#191919`,
                 style: {
                   borderRadius: 16,
                 },
@@ -428,6 +454,11 @@ const StatisticsScreen = () => {
 export default StatisticsScreen;
 
 const styles = StyleSheet.create({
+  horizontalLine: {
+    height: 1, // Đặt chiều cao của đường kẻ ngang
+    backgroundColor: "black", // Đặt màu sắc của đường kẻ ngang
+    marginVertical: 10, // Đặt khoảng cách giữa đường kẻ và các phần tử khác (nếu cần)
+  },
   container: {
     flex: 1,
     alignItems: "center",

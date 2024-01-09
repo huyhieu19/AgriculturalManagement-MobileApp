@@ -17,11 +17,11 @@ import { AppStyles } from "../../../../global";
 
 export const CreateFarmScreen = () => {
   const navigation = useNavigation<any>();
-  const [name, setName] = useState("Nông trại");
-  const [area, setArea] = useState(0);
-  const [description, setDescription] = useState("Thông tin chi tiết");
-  const [address, setAddress] = useState("Ha Noi");
-  const [note, setNote] = useState("Ghi chú");
+  const [name, setName] = useState<string>("");
+  const [area, setArea] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [note, setNote] = useState<string>("");
 
   const GoBack = () => {
     navigation.navigate("ListFarmScreen");
@@ -32,16 +32,18 @@ export const CreateFarmScreen = () => {
     try {
       const res = await createFarm({
         name: name,
-        area: area,
+        area: Number(area),
         description: description,
         address: address,
         note: note,
       });
       if (res.data.Data.isSuccess) {
-        Alert.alert("Thành công", "Thành công thêm farm mới", [{ text: "OK" }]);
+        Alert.alert("Thành công", "Thành công thêm farm mới", [
+          { text: "OK", onPress: () => GoBack() },
+        ]);
       } else {
         Alert.alert("Lỗi thêm mới", `Thêm mới farm không thành công`, [
-          { text: "OK" },
+          { text: "OK", onPress: () => GoBack() },
         ]);
       }
     } catch (error) {
@@ -86,6 +88,8 @@ export const CreateFarmScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setName(e)}
             value={name}
+            placeholder="Nhập tên nông trại"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>
@@ -95,6 +99,8 @@ export const CreateFarmScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setDescription(e)}
             value={description}
+            placeholder="Nhập thông tin chi tiết"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>
@@ -102,8 +108,10 @@ export const CreateFarmScreen = () => {
           <TextInput
             multiline={true}
             style={styles.dropdown}
-            onChangeText={(e) => setArea(Number(e))}
+            onChangeText={(e) => setArea(e)}
             value={String(area)}
+            placeholder="Nhập diện tích (đơn vị mét vuông)"
+            inputMode="decimal"
           />
         </View>
         <View style={styles.container}>
@@ -113,6 +121,8 @@ export const CreateFarmScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setAddress(e)}
             value={address}
+            placeholder="Nhập địa chỉ nông trại"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>
@@ -122,6 +132,8 @@ export const CreateFarmScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setNote(e)}
             value={note}
+            placeholder="Nhập ghi chú cho nông trại"
+            inputMode="text"
           />
         </View>
       </View>

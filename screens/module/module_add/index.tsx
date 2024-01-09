@@ -101,6 +101,9 @@ const ModuleAddScreen = () => {
           multiline={true}
           style={styles.dropdown}
           onChangeText={(e) => setModuleId(e)}
+          value={moduleId}
+          placeholder="Nhập mã module (36 ký tự)"
+          inputMode="text"
         />
       </View>
       <View style={styles.container}>
@@ -109,6 +112,9 @@ const ModuleAddScreen = () => {
           multiline={true}
           style={styles.dropdown}
           onChangeText={(e) => setNameRef(e)}
+          value={nameRef}
+          placeholder="Nhập tên mudule"
+          inputMode="text"
         />
       </View>
       {isLoading ? (

@@ -19,14 +19,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen: React.FC = () => {
   const { width: screenWidth } = useWindowDimensions();
-  const [email, setEmail] = React.useState<string>("Admin@gmail.com");
+  const [email, setEmail] = React.useState<string>("test@gmail.com");
   const [password, setPassword] = React.useState<string>("12345678");
   const [isPasswordHidden, setIsPasswordHidden] = React.useState<boolean>(true);
   const [isBusy, setIsBusy] = React.useState<boolean>(false);
   const [loginError, setLoginError] = React.useState<string>("");
 
   const { signIn } = useAuth();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const showPasswordIconName = React.useMemo(() => {
     return isPasswordHidden ? "eye" : "eye-off";
@@ -137,6 +137,14 @@ const LoginScreen: React.FC = () => {
               </Text>
             )}
           </View>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("RegisterScreen");
+            console.log("register");
+          }}
+        >
+          <Text>Chưa có tài khoản bấm vào đây.</Text>
         </Pressable>
       </View>
     </SafeAreaView>

@@ -86,6 +86,18 @@ const DeviceAddScreen = () => {
     }
   };
 
+  const ReturnDeviceType = (DType: string | undefined) => {
+    if (DType != undefined) {
+      if (DType.toLowerCase() === "r") {
+        return "Thiết bị đo";
+      } else if (DType.toLowerCase() === "w") {
+        return "Thiết bị điều khiển";
+      }
+    } else {
+      return "";
+    }
+  };
+
   const handleAddNew = async () => {
     if (deviceId.length == 36) {
       try {
@@ -93,20 +105,18 @@ const DeviceAddScreen = () => {
         const res = await AddDeviceToZone(deviceId, routeParams.id);
         if (res.data.Data) {
           Alert.alert("Thành công", `Thêm mới thiết bị thành công`, [
-            { text: "OK", onPress: () => console.log("OK Pressed") },
+            { text: "OK", onPress: () => navigation.goBack() },
           ]);
         } else {
           Alert.alert("Lỗi thêm mới", `Thêm mới thiết bị không thành công`, [
-            { text: "OK", onPress: () => console.log("OK Pressed") },
+            { text: "OK", onPress: () => navigation.goBack() },
           ]);
         }
       } catch (e) {
         console.log(e);
         Alert.alert("Lỗi thêm mới", `Thêm mới thiết bị không thành công`, [
-          { text: "OK", onPress: () => console.log("OK Pressed") },
+          { text: "OK", onPress: () => navigation.goBack() },
         ]);
-      } finally {
-        navigation.goBack();
       }
     } else {
       Alert.alert("Lỗi thêm mới", `Mã số cần đủ 36 ký tự`, [
@@ -147,7 +157,7 @@ const DeviceAddScreen = () => {
             fontWeight: "500",
           }}
         >
-          Thêm thiết bị vào Zone
+          Thêm thiết bị vào khu
         </Text>
       </View>
 
@@ -192,7 +202,7 @@ const DeviceAddScreen = () => {
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
-          data={devices!}
+          data={devices}
           search
           maxHeight={300}
           labelField="gate"
@@ -218,13 +228,23 @@ const DeviceAddScreen = () => {
         />
       </View>
       <View style={styles.Inputcontainer}>
-        <Text style={styles.label}>Note: </Text>
+        <Text style={styles.label}>Ghi chú: </Text>
         <TextInput
           multiline={true}
           style={[styles.dropdown]}
           onChangeText={(e) => setNameDeviceRef(e)}
           value={nameDeviceRef}
-          placeholder="Nhập tên thiết bị"
+          placeholder="Nhập ghi chú"
+          inputMode="text"
+        />
+      </View>
+      <View style={styles.container}>
+        <Text style={styles.label}>Tên thiết bị: </Text>
+        <TextInput
+          style={styles.dropdown1}
+          value={device?.name ?? "Thiết bị chưa được đặt tên"}
+          placeholder="Tên thiết bị"
+          editable={false}
         />
       </View>
       {moduleId != null || devices != null ? (
@@ -232,10 +252,8 @@ const DeviceAddScreen = () => {
           <Text style={styles.label}>Loại thiết bị:</Text>
           <TextInput
             style={styles.dropdown1}
-            value={
-              device?.deviceType == "R" ? "Thiết bị đo" : "Thiết bị điều khiển"
-            }
             placeholder="Loại thiết bị"
+            value={ReturnDeviceType(device?.deviceType)}
             editable={false}
           />
         </View>

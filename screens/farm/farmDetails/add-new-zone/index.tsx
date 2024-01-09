@@ -24,11 +24,11 @@ export const AddNewZoneScreen = () => {
   const route = useRoute<RouteProp<ParamList, "FarmDetailsScreen">>();
   const navigation = useNavigation<any>();
   const farm = route?.params ?? [];
-  const [zoneName, setZoneName] = useState("Khu");
-  const [function1, setFunction1] = useState("Trồng");
-  const [area, setArea] = useState(0);
-  const [description, setDescription] = useState("Đây là khu trong farm");
-  const [note, setNote] = useState("Ghi chú");
+  const [zoneName, setZoneName] = useState("");
+  const [function1, setFunction1] = useState("");
+  const [area, setArea] = useState<string>("");
+  const [description, setDescription] = useState("");
+  const [note, setNote] = useState("");
 
   const goBack = () => {
     navigation.goBack();
@@ -40,22 +40,24 @@ export const AddNewZoneScreen = () => {
       const res = await createZone({
         zoneName: zoneName,
         farmId: farm.id,
-        area: area,
+        area: Number(area),
         description: description,
         note: note,
         function: function1,
       });
       if (res.data.Data.isSuccess) {
-        Alert.alert("Thành công", "Thành công thêm khu mới", [{ text: "OK" }]);
-        goBack();
+        Alert.alert("Thành công", "Thành công thêm khu mới", [
+          { text: "OK", onPress: () => goBack() },
+        ]);
       } else {
         Alert.alert("Lỗi thêm mới", `Thêm mới khu không thành công`, [
-          { text: "OK" },
+          { text: "OK", onPress: () => goBack() },
         ]);
       }
     } catch (error) {
-      Alert.alert("Lỗi thêm mới", `${error}`, [{ text: "OK" }]);
-      goBack();
+      Alert.alert("Lỗi thêm mới", `${error}`, [
+        { text: "OK", onPress: () => goBack() },
+      ]);
     }
   };
 
@@ -103,6 +105,8 @@ export const AddNewZoneScreen = () => {
             style={styles.input}
             onChangeText={(e) => setZoneName(e)}
             value={zoneName}
+            placeholder="Nhập tên khu"
+            inputMode="text"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -113,6 +117,8 @@ export const AddNewZoneScreen = () => {
             style={styles.input}
             onChangeText={(e) => setDescription(e)}
             value={description}
+            placeholder="Nhập thông tin chi tiết"
+            inputMode="text"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -120,8 +126,10 @@ export const AddNewZoneScreen = () => {
           <TextInput
             multiline={true}
             style={styles.input}
-            onChangeText={(e) => setArea(Number(e))}
-            value={String(area)}
+            onChangeText={(e) => setArea(e)}
+            value={area}
+            placeholder="Nhập diện tích khu"
+            inputMode="decimal"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -131,6 +139,8 @@ export const AddNewZoneScreen = () => {
             style={styles.input}
             onChangeText={(e) => setFunction1(e)}
             value={function1}
+            placeholder="Nhập chức năng của khu"
+            inputMode="text"
           />
         </View>
         <View style={styles.Inputcontainer}>
@@ -141,6 +151,8 @@ export const AddNewZoneScreen = () => {
             style={styles.input}
             onChangeText={(e) => setNote(e)}
             value={note}
+            placeholder="Nhập ghi chú của khu"
+            inputMode="text"
           />
         </View>
         <View style={styles.buttonContainer}>

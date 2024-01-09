@@ -164,23 +164,32 @@ export const AddNewTimerScreen = () => {
   const handleAddNewTimer = async () => {
     // Perform API request to add new item
     try {
+      let isOk = true;
       const params: TimerCreateModel = {
         deviceDriverId: deviceId,
         note: note,
         openTimer: dateOn.toISOString(),
         shutDownTimer: dateOff.toISOString(),
       };
-      const res = await createTimer(params);
-      if (res.data.Data != null && res.data.Data) {
-        Alert.alert("Thành công", "Thành công thêm thời gian đóng mở", [
-          { text: "OK", onPress: goBack },
+      if (dateOn < new Date() || dateOff < new Date()) {
+        Alert.alert("Lỗi", "Vui lòng không nhập thời gian trong  quá khứ", [
+          { text: "OK" },
         ]);
-      } else {
-        Alert.alert(
-          "Lỗi thêm mới",
-          `Thêm thời gian đóng mở cho thiết bị không thành công`,
-          [{ text: "OK" }]
-        );
+        isOk = false;
+      }
+      if (isOk) {
+        const res = await createTimer(params);
+        if (res.data.Data != null && res.data.Data) {
+          Alert.alert("Thành công", "Thành công thêm thời gian đóng mở", [
+            { text: "OK", onPress: goBack },
+          ]);
+        } else {
+          Alert.alert(
+            "Lỗi thêm mới",
+            `Thêm thời gian đóng mở cho thiết bị không thành công`,
+            [{ text: "OK" }]
+          );
+        }
       }
     } catch (error) {
       Alert.alert("Lỗi thêm mới", `${error}`, [{ text: "OK" }]);

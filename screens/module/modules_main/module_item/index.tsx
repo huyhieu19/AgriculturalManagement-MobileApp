@@ -11,6 +11,7 @@ interface ModulesItemProps {
   onPress?: () => void;
   isBorderRadius?: boolean;
   isBgPrimary?: boolean;
+  isEdit?: boolean;
 }
 
 const ModulesItem = (props: ModulesItemProps) => {
@@ -30,11 +31,15 @@ const ModulesItem = (props: ModulesItemProps) => {
           paddingHorizontal: 20,
           backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
           paddingVertical: 16,
-          borderRadius: props?.isBorderRadius ? 0 : 15,
+          borderTopLeftRadius: props?.isBorderRadius ? 15 : 0,
+          borderTopRightRadius: props?.isBorderRadius ? 15 : 0,
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
           elevation: 1,
           marginBottom: 20,
+          height: !props.isEdit ? 120 : 200,
         }}
       >
         <Image
@@ -67,19 +72,25 @@ const ModulesItem = (props: ModulesItemProps) => {
             >
               {props.modules?.nameRef}
             </Text>
-            <TouchableOpacity
-              onPress={() => goToEditModduleScreen()}
-              style={{ right: 0 }}
-            >
-              <AntDesign name="edit" size={24} color="black" />
-            </TouchableOpacity>
+            {props.isEdit ? (
+              <TouchableOpacity
+                onPress={() => goToEditModduleScreen()}
+                style={{ right: 0 }}
+              >
+                <AntDesign name="edit" size={24} color="black" />
+              </TouchableOpacity>
+            ) : null}
           </View>
           <CardInfor property={"Loại"} value={props.modules.name} />
-          <CardInfor property={"Ghi chú"} value={props.modules.note} />
-          <CardInfor
-            property={"Ngày tạo"}
-            value={String(formatGetOnlyDate(props?.modules?.dateCreated!))}
-          />
+          {props.isEdit ? (
+            <CardInfor property={"Ghi chú"} value={props.modules.note} />
+          ) : null}
+          {props.isEdit ? (
+            <CardInfor
+              property={"Ngày tạo"}
+              value={String(formatGetOnlyDate(props?.modules?.dateCreated!))}
+            />
+          ) : null}
         </View>
       </View>
     </TouchableOpacity>
@@ -118,7 +129,7 @@ const CardInfor = (props: CardInforProps) => {
           fontSize: 15,
           fontWeight: "500",
           fontStyle: "normal",
-          maxWidth: "60%",
+          maxWidth: "70%",
         }}
       >
         {props.value}

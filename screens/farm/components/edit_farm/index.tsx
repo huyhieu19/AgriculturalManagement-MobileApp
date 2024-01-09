@@ -25,7 +25,9 @@ export const EditFarmScreen = () => {
   const navigation = useNavigation<any>();
   const [name, setName] = useState<string | undefined>(route.params.name);
   const [note, setNote] = useState<string | undefined>(route.params.note);
-  const [area, setArea] = useState<number | undefined>(route.params.area);
+  const [area, setArea] = useState<string | undefined>(
+    String(route.params.area)
+  );
   const [description, setDescription] = useState(route.params.description);
   const [address, setAddress] = useState<string | undefined>(
     route.params.address
@@ -40,7 +42,7 @@ export const EditFarmScreen = () => {
       const res = await editFarm({
         id: route.params.id,
         name: name,
-        area: area,
+        area: Number(area),
         description: description,
         note: note,
         address: address,
@@ -50,7 +52,9 @@ export const EditFarmScreen = () => {
           { text: "OK", onPress: () => goBack() },
         ]);
       } else {
-        Alert.alert("Lỗi", `Chỉnh sửa không thành công`, [{ text: "OK" }]);
+        Alert.alert("Lỗi", `Chỉnh sửa không thành công`, [
+          { text: "OK", onPress: () => goBack() },
+        ]);
       }
     } catch (error) {
       Alert.alert("Lỗi", `${error}`, [{ text: "OK", onPress: () => goBack() }]);
@@ -77,7 +81,9 @@ export const EditFarmScreen = () => {
           { text: "OK", onPress: () => goBack() },
         ]);
       } else {
-        Alert.alert("Lỗi", `Xóa nông trại không thành công`, [{ text: "OK" }]);
+        Alert.alert("Lỗi", `Xóa nông trại không thành công`, [
+          { text: "OK", onPress: () => goBack() },
+        ]);
       }
     } catch (error) {
       Alert.alert("Lỗi", `${error}`, [{ text: "OK", onPress: () => goBack() }]);
@@ -119,6 +125,8 @@ export const EditFarmScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setName(e)}
             value={name != undefined || name != null ? name.toString() : ""}
+            placeholder="Nhập tên nông trại"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>
@@ -133,6 +141,8 @@ export const EditFarmScreen = () => {
                 ? description.toString()
                 : ""
             }
+            placeholder="Nhập thông tin chi tiết"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>
@@ -140,8 +150,10 @@ export const EditFarmScreen = () => {
           <TextInput
             multiline={true}
             style={styles.dropdown}
-            onChangeText={(e) => setArea(Number(e))}
+            onChangeText={(e) => setArea(e)}
             value={area != undefined || area != null ? String(area) : ""}
+            placeholder="Nhập diện tích (đơn vị mét vuông)"
+            inputMode="decimal"
           />
         </View>
         <View style={styles.container}>
@@ -153,6 +165,8 @@ export const EditFarmScreen = () => {
             value={
               address != undefined || address != null ? address.toString() : ""
             }
+            placeholder="Nhập địa chỉ nông trại"
+            inputMode="text"
           />
         </View>
         <View style={styles.container}>
@@ -163,6 +177,8 @@ export const EditFarmScreen = () => {
             style={styles.dropdown}
             onChangeText={(e) => setNote(e)}
             value={note != undefined || note != null ? note.toString() : ""}
+            placeholder="Nhập ghi chú cho nông trại"
+            inputMode="text"
           />
         </View>
         <View style={styles.buttonContainer}>
