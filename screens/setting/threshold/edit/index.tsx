@@ -51,7 +51,6 @@ export default function UpdateThresholdModal(
       deviceDriverId: props.thres.deviceDriverId,
       id: props.thres.id,
       instrumentationId: props.thres.instrumentationId,
-      typeDevice: props.thres.typeDevice,
       onInUpperThreshold: props.thres.onInUpperThreshold,
       thresholdValueOff: Number(closeValue),
       thresholdValueOn: Number(openValue),
@@ -117,14 +116,14 @@ export default function UpdateThresholdModal(
       setIsLoading(false);
     }
   };
-  const GetTypeDevice = (typeDevice: string | null) => {
-    if (typeDevice === "ND") {
-      return "Nhiệt độ";
-    } else if (typeDevice === "DA") {
-      return "Độ ẩm";
-    }
-    return "Phát hiện mưa";
-  };
+  // const GetTypeDevice = (typeDevice: string | null) => {
+  //   if (typeDevice === "ND") {
+  //     return "Nhiệt độ";
+  //   } else if (typeDevice === "DA") {
+  //     return "Độ ẩm";
+  //   }
+  //   return "Phát hiện mưa";
+  // };
   React.useEffect(() => {
     if (isFocus) {
       GetInforDevice();
@@ -246,17 +245,6 @@ export default function UpdateThresholdModal(
                 }}
               >
                 {deviceDriverInfor?.zoneName}
-              </Text>
-            </View>
-            <View style={styles.Inputcontainer}>
-              <Text style={styles.Inputlabel}>Loại thiết bị: </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginTop: 10,
-                }}
-              >
-                {GetTypeDevice(props.thres.typeDevice)}
               </Text>
             </View>
             <View style={styles.horizontalLine} />

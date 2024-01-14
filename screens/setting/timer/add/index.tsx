@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Switch,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -25,7 +26,7 @@ import { AppStyles } from "../../../../global";
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { calender } from "../../../../assets";
+import { calender, calendercancel } from "../../../../assets";
 import { formatGetOnlyDateDisplay } from "../../../../utils";
 import { Dropdown } from "react-native-element-dropdown";
 import { IZoneParams } from "../../../../types/zone.type";
@@ -47,8 +48,13 @@ export const AddNewTimerScreen = () => {
   const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
 
-  const [dateOn, setDateOn] = useState(new Date());
-  const [dateOff, setDateOff] = useState(new Date());
+  const [dateOn, setDateOn] = useState<Date | null>();
+  const [dateOff, setDateOff] = useState<Date | null>();
+
+  const [isDateOn, setIsDateOn] = useState(true);
+  const [isDateOff, setIsDateOff] = useState(true);
+  const toggleSwitchOn = () => setIsDateOn((previousState) => !previousState);
+  const toggleSwitchOff = () => setIsDateOff((previousState) => !previousState);
 
   const [showTimePickerOn, setShowTimePickerOn] = useState(false);
   const [showDatePickerOn, setShowDatePickerOn] = useState(false);
@@ -165,16 +171,42 @@ export const AddNewTimerScreen = () => {
     // Perform API request to add new item
     try {
       let isOk = true;
-      const params: TimerCreateModel = {
-        deviceDriverId: deviceId,
-        note: note,
-        openTimer: dateOn.toISOString(),
-        shutDownTimer: dateOff.toISOString(),
-      };
-      if (dateOn < new Date() || dateOff < new Date()) {
+      if (!isDateOff && !isDateOn) {
+        Alert.alert(
+          "Lỗi",
+          "Vui lòng nhập it nhất một trong hai thời gian đóng/mở",
+          [{ text: "OK" }]
+        );
+        isOk = false;
+      } else if (isDateOn && dateOff != null && dateOff < new Date()) {
         Alert.alert("Lỗi", "Vui lòng không nhập thời gian trong  quá khứ", [
           { text: "OK" },
         ]);
+        isOk = false;
+      } else if (isDateOff && dateOn != null && dateOn < new Date()) {
+        Alert.alert("Lỗi", "Vui lòng không nhập thời gian trong  quá khứ", [
+          { text: "OK" },
+        ]);
+        isOk = false;
+      }
+      if (!isDateOff) {
+        setDateOff(null);
+      }
+      if (!isDateOn) {
+        setDateOn(null);
+      }
+      const params: TimerCreateModel = {
+        deviceDriverId: deviceId,
+        note: note,
+        openTimer: dateOn != null ? dateOn.toISOString() : null,
+        shutDownTimer: dateOff != null ? dateOff.toISOString() : null,
+      };
+      if (params.openTimer == null && params.shutDownTimer == null) {
+        Alert.alert(
+          "Lỗi",
+          "Vui lòng nhập it nhất một trong hai thời gian đóng/mở",
+          [{ text: "OK" }]
+        );
         isOk = false;
       }
       if (isOk) {
@@ -239,25 +271,42 @@ export const AddNewTimerScreen = () => {
           <View style={styles.Inputcontainer}>
             <Text style={styles.Inputlabel}>Thời gian mở:</Text>
             <TouchableOpacity
-              onPress={showTimepickerOn}
+              onPress={
+                isDateOn
+                  ? showTimepickerOn
+                  : () => {
+                      alert("Hãy mở cài đặt thời gian mở");
+                    }
+              }
               style={styles.button_showTime}
             >
               <Image
-                source={calender}
+                source={isDateOn ? calender : calendercancel}
                 style={{
                   width: 20,
                   height: 20,
                 }}
               />
             </TouchableOpacity>
+            <View style={{ marginLeft: 10, marginTop: 10 }}>
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={isDateOn ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitchOn}
+                value={isDateOn}
+              />
+            </View>
             <Text style={{ marginTop: 12, marginLeft: 15 }}>
-              {formatGetOnlyDateDisplay(dateOn)}
+              {isDateOn
+                ? formatGetOnlyDateDisplay(dateOn) ?? "Hãy chọn ngày"
+                : "Không cài đặt"}
             </Text>
 
             {showTimePickerOn ? (
               <RNDateTimePicker
                 testID="timePickerOn"
-                value={dateOn}
+                value={dateOn ?? new Date()}
                 mode="time"
                 is24Hour={true}
                 display="default"
@@ -268,7 +317,7 @@ export const AddNewTimerScreen = () => {
             {showDatePickerOn ? (
               <RNDateTimePicker
                 testID="datePickerOn"
-                value={dateOn}
+                value={dateOn ?? new Date()}
                 mode="date"
                 display="default"
                 onChange={onChangeDateOn}
@@ -278,25 +327,42 @@ export const AddNewTimerScreen = () => {
           <View style={styles.Inputcontainer}>
             <Text style={styles.Inputlabel}>Thời gian đóng:</Text>
             <TouchableOpacity
-              onPress={showTimepickerOff}
+              onPress={
+                isDateOff
+                  ? showTimepickerOff
+                  : () => {
+                      alert("Hãy mở cài đặt thời gian đóng");
+                    }
+              }
               style={styles.button_showTime}
             >
               <Image
-                source={calender}
+                source={isDateOff ? calender : calendercancel}
                 style={{
                   width: 20,
                   height: 20,
                 }}
               />
             </TouchableOpacity>
+            <View style={{ marginLeft: 10, marginTop: 10 }}>
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={isDateOff ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitchOff}
+                value={isDateOff}
+              />
+            </View>
             <Text style={{ marginTop: 12, marginLeft: 15 }}>
-              {formatGetOnlyDateDisplay(dateOff)}
+              {isDateOff
+                ? formatGetOnlyDateDisplay(dateOff) ?? "Hãy chọn ngày"
+                : "Không cài đặt"}
             </Text>
 
             {showTimePickerOff && (
               <RNDateTimePicker
                 testID="timePickerOff"
-                value={dateOff}
+                value={dateOff ?? new Date()}
                 mode="time"
                 is24Hour={true}
                 display="default"
@@ -307,7 +373,7 @@ export const AddNewTimerScreen = () => {
             {showDatePickerOff && (
               <RNDateTimePicker
                 testID="datePickerOff"
-                value={dateOff}
+                value={dateOff ?? new Date()}
                 mode="date"
                 display="default"
                 onChange={onChangeDateOff}

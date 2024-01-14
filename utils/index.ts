@@ -11,11 +11,15 @@ const formatGetOnlyDate = (date: any) => {
 };
 
 function formatGetOnlyDateDisplay(date: any) {
-  const dateString = date;
-  const dateObject = new Date(dateString);
+  if (date == null) {
+    return null;
+  } else {
+      const dateString = date;
+    const dateObject = new Date(dateString);
 
-  const formattedDate = dateObject.toLocaleString();
-  return formattedDate;
+    const formattedDate = dateObject.toLocaleString();
+    return formattedDate;
+  }
 }
 
 

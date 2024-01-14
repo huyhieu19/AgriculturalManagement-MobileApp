@@ -46,7 +46,6 @@ export const AddNewThresScreen = () => {
   const [deviceId, setDeviceId] = useState<string>("");
   const [isFocusIndex, setIsForcusIndex] = useState(false);
   const [indexDevice, setIndexDevice] = useState<string>("");
-  const [typeDevice, setTypeDevice] = useState<string>("");
 
   // using for choose device driver
   const [isFocusFarm1, setIsForcusFarm1] = useState(false);
@@ -58,7 +57,6 @@ export const AddNewThresScreen = () => {
   const [isFocusDevice1, setIsForcusDevice1] = useState(false);
   const [devices1, setDevices1] = useState<IDeviceOnZone[]>([]);
   const [deviceId1, setDeviceId1] = useState<string>("");
-  const [typeDevice1, setTypeDevice1] = useState<string>("");
 
   const [note, setNote] = useState<string>("");
   const [chosenType, setChosenType] = useState(true); //will store our current user options
@@ -67,11 +65,6 @@ export const AddNewThresScreen = () => {
     { label: "Kiểu 1", value: "true" },
     { label: "Kiểu 2", value: "false" },
   ]; //create our options for radio group
-
-  const indexDevices = [
-    { label: "Nhiệt độ", value: "ND" },
-    { label: "Độ ẩm", value: "DA" },
-  ];
 
   const FetchFarms = async () => {
     try {
@@ -157,7 +150,6 @@ export const AddNewThresScreen = () => {
         onInUpperThreshold: chosenType,
         thresholdValueOff: Number(closeValue),
         thresholdValueOn: Number(openValue),
-        typeDevice: indexDevice,
       };
       const res = await createThres(params);
       if (res.data.Data != null && res.data.Data) {
@@ -340,30 +332,6 @@ export const AddNewThresScreen = () => {
               onChange={(item) => {
                 setDeviceId(item.id);
                 setIsForcusDevice(false);
-              }}
-            />
-          </View>
-          <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>Loại chỉ số:</Text>
-            <Dropdown
-              style={[styles.input, isFocusIndex && { borderColor: "blue" }]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={indexDevices}
-              search
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder={!isFocusIndex ? "Select item" : "..."}
-              searchPlaceholder="Search..."
-              value={indexDevice}
-              onFocus={() => setIsForcusIndex(true)}
-              onBlur={() => setIsForcusIndex(false)}
-              onChange={(item) => {
-                setIndexDevice(item.value);
-                setIsForcusIndex(false);
               }}
             />
           </View>

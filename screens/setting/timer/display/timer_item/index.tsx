@@ -23,12 +23,16 @@ interface ListTimerItemProps {
   isHistory: boolean;
 }
 function formatGetOnlyDateDisplayLocalTime(date: any) {
-  const dateString = date;
-  const dateObject = new Date(dateString);
-  // Thêm 7 giờ vào đối tượng Date
-  const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
-  const formattedDate = newDate.toLocaleString();
-  return formattedDate;
+  if (date != null) {
+    const dateString = date;
+    const dateObject = new Date(dateString);
+    // Thêm 7 giờ vào đối tượng Date
+    const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+    const formattedDate = newDate.toLocaleString();
+    return formattedDate;
+  } else {
+    return null;
+  }
 }
 export const ListTimersItem = (props: ListTimerItemProps) => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -114,11 +118,17 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
           </View>
           <CardInfor
             property={"Mở"}
-            value={formatGetOnlyDateDisplayLocalTime(props.timer.openTimer)}
+            value={
+              formatGetOnlyDateDisplayLocalTime(props.timer.openTimer) ??
+              "Không cài đặt"
+            }
           />
           <CardInfor
             property={"Đóng"}
-            value={formatGetOnlyDateDisplayLocalTime(props.timer.shutDownTimer)}
+            value={
+              formatGetOnlyDateDisplayLocalTime(props.timer.shutDownTimer) ??
+              "Không cài đặt"
+            }
           />
           <CardInfor property={"Ghi chú"} value={props.timer.note ?? ""} />
           {props.isHistory ? (

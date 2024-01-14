@@ -20,14 +20,6 @@ export const ListThresItem = (props: ListThresItemProps) => {
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
   };
-  const GetTypeDevice = (typeDevice: string | null) => {
-    if (typeDevice === "ND") {
-      return "Nhiệt độ";
-    } else if (typeDevice === "DA") {
-      return "Độ ẩm";
-    }
-    return "Phát hiện mưa";
-  };
 
   return (
     <TouchableOpacity
@@ -84,10 +76,10 @@ export const ListThresItem = (props: ListThresItemProps) => {
             property={"Ngưỡng đóng"}
             value={props.thres?.thresholdValueOff}
           />
-          <CardInfor
+          {/* <CardInfor
             property={"Loại"}
             value={GetTypeDevice(props.thres?.typeDevice)}
-          />
+          /> */}
         </View>
       </View>
       <View
