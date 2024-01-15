@@ -155,7 +155,7 @@ export const AddNewThresScreen = () => {
       if (res.data.Data != null && res.data.Data) {
         Alert.alert(
           "Thành công",
-          "Thành công thêm liên kết đóng mở thiết bị theo giá trị ngưỡng",
+          "Thành công thêm liên kết thiết bị,đóng mở theo giá trị ngưỡng. Thiết bị được cài thành tự động!",
           [{ text: "OK", onPress: goBack }]
         );
       } else {

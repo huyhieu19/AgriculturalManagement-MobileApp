@@ -178,12 +178,12 @@ export const AddNewTimerScreen = () => {
           [{ text: "OK" }]
         );
         isOk = false;
-      } else if (isDateOn && dateOff != null && dateOff < new Date()) {
-        Alert.alert("Lỗi", "Vui lòng không nhập thời gian trong  quá khứ", [
-          { text: "OK" },
-        ]);
-        isOk = false;
-      } else if (isDateOff && dateOn != null && dateOn < new Date()) {
+      } else if (
+        isDateOn &&
+        isDateOff &&
+        dateOff != null &&
+        dateOff < new Date()
+      ) {
         Alert.alert("Lỗi", "Vui lòng không nhập thời gian trong  quá khứ", [
           { text: "OK" },
         ]);
@@ -212,9 +212,11 @@ export const AddNewTimerScreen = () => {
       if (isOk) {
         const res = await createTimer(params);
         if (res.data.Data != null && res.data.Data) {
-          Alert.alert("Thành công", "Thành công thêm thời gian đóng mở", [
-            { text: "OK", onPress: goBack },
-          ]);
+          Alert.alert(
+            "Thành công",
+            "Thành công thêm thời gian đóng mở. Thiết bị được cài thành tự động!",
+            [{ text: "OK", onPress: goBack }]
+          );
         } else {
           Alert.alert(
             "Lỗi thêm mới",

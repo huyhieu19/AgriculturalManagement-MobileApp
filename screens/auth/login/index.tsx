@@ -40,15 +40,18 @@ const LoginScreen: React.FC = () => {
         password: password,
       };
       const res = await login(loginPayload);
-      if (Helper.isSuccess(res)) {
+
+      if (res.data.Data.isSuccessed) {
         await AsyncStorage.setItem(
           "access-token",
-          res.data.Data.tokenModel.accessToken
+          res.data.Data.token!.accessToken
         );
         signIn({
-          user: res.data.Data.profile,
-          token: res.data.Data.tokenModel.accessToken,
+          user: res.data.Data.profile!,
+          token: res.data.Data.token!.accessToken,
         });
+      } else {
+        alert("Nhập sai email và mật khẩu.");
       }
     } catch (e) {
       setLoginError("Error occurs. Please retry");
@@ -143,8 +146,12 @@ const LoginScreen: React.FC = () => {
             navigation.navigate("RegisterScreen");
             console.log("register");
           }}
+          style={{ marginTop: 10 }}
         >
-          <Text>Chưa có tài khoản bấm vào đây.</Text>
+          <View style={{ display: "flex", flexDirection: "row" }}>
+            <Text>Chưa có tài khoản </Text>
+            <Text style={{ color: "red" }}>bấm vào đây</Text>
+          </View>
         </Pressable>
       </View>
     </SafeAreaView>
