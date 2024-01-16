@@ -1,10 +1,11 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, Image } from "react-native";
 import { ThresholdDisplayModel } from "../../../../network/models/setting_threshold/ThresholdModel";
 import { AppColors } from "../../../../global";
 import { AppFontSize } from "../../../../global/styles/AppFontSize";
 import { Modal } from "../../../Modal";
 import UpdateThresholdModal from "../edit";
+import { link, linkThres, linkcal, thresholdSetting } from "../../../../assets";
 
 interface ListThresItemProps {
   thres: ThresholdDisplayModel;
@@ -23,7 +24,9 @@ export const ListThresItem = (props: ListThresItemProps) => {
 
   return (
     <TouchableOpacity
-      style={{ flexDirection: "row" }}
+      style={{
+        flexDirection: "row",
+      }}
       onPress={() => {
         handleModal();
         console.log("chuyen sang man edit");
@@ -35,7 +38,10 @@ export const ListThresItem = (props: ListThresItemProps) => {
           flexDirection: "row",
           alignItems: "flex-start",
           paddingHorizontal: 5,
-          backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
+          backgroundColor: !props.thres.autoDevice
+            ? AppColors.slate300
+            : AppColors.bgSlate50,
+          // backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
           paddingVertical: 16,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
@@ -82,13 +88,27 @@ export const ListThresItem = (props: ListThresItemProps) => {
           /> */}
         </View>
       </View>
+      <View>
+        <Image
+          source={props.thres.autoDevice ? link : linkcal}
+          style={{
+            top: 40,
+            width: 30,
+            height: 30,
+            borderRadius: 5,
+          }}
+        />
+      </View>
       <View
         style={{
           flex: 1,
           flexDirection: "row",
           alignItems: "flex-start",
           paddingHorizontal: 5,
-          backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
+          backgroundColor: !props.thres.autoDevice
+            ? AppColors.slate300
+            : AppColors.bgSlate50,
+          // backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
           paddingVertical: 16,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
@@ -156,7 +176,7 @@ const CardInfor = (props: CardInforProps) => {
         flexDirection: "row",
         flex: 1,
         alignItems: "center",
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
       }}
     >
       <Text
@@ -178,6 +198,7 @@ const CardInfor = (props: CardInforProps) => {
           marginTop: 5,
           maxWidth: "70%",
           color: "black",
+          paddingLeft: "10%",
         }}
       >
         {props.value}
