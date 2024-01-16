@@ -23,12 +23,16 @@ interface ListTimerItemProps {
   isHistory: boolean;
 }
 function formatGetOnlyDateDisplayLocalTime(date: any) {
-  const dateString = date;
-  const dateObject = new Date(dateString);
-  // Thêm 7 giờ vào đối tượng Date
-  const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
-  const formattedDate = newDate.toLocaleString();
-  return formattedDate;
+  if (date != null) {
+    const dateString = date;
+    const dateObject = new Date(dateString);
+    // Thêm 7 giờ vào đối tượng Date
+    // const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+    const formattedDate = dateObject.toLocaleString();
+    return formattedDate;
+  } else {
+    return null;
+  }
 }
 export const ListTimersItem = (props: ListTimerItemProps) => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -51,6 +55,16 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
     } catch (ex) {
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const GetInforTurnOff = (isTurn: boolean, turn: string | null) => {
+    if (turn == null) {
+      return "Không cài đặt";
+    } else if (isTurn) {
+      return "Đã hoàn thành";
+    } else {
+      return "Chưa hoàn thành";
     }
   };
 
@@ -114,23 +128,50 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
           </View>
           <CardInfor
             property={"Mở"}
-            value={formatGetOnlyDateDisplayLocalTime(props.timer.openTimer)}
+            value={{
+              value:
+                formatGetOnlyDateDisplayLocalTime(props.timer.openTimer) ??
+                "Không cài đặt",
+            }}
           />
           <CardInfor
             property={"Đóng"}
-            value={formatGetOnlyDateDisplayLocalTime(props.timer.shutDownTimer)}
+            value={{
+              value:
+                formatGetOnlyDateDisplayLocalTime(props.timer.shutDownTimer) ??
+                "Không cài đặt",
+            }}
           />
-          <CardInfor property={"Ghi chú"} value={props.timer.note ?? ""} />
+          <CardInfor
+            property={"Ghi chú"}
+            value={{ value: props.timer.note ?? "" }}
+          />
           {props.isHistory ? (
             <CardInfor
-              property={"Hoàn thành đóng"}
-              value={String(props.timer.isSuccessOFF)}
+              property={"TT Đóng"}
+              value={{
+                value: GetInforTurnOff(
+                  props.timer.isSuccessOFF,
+                  props.timer.shutDownTimer
+                ),
+                color: props.timer.isSuccessOFF
+                  ? AppColors.primaryColor
+                  : AppColors.red,
+              }}
             />
           ) : null}
           {props.isHistory ? (
             <CardInfor
-              property={"Hoàn thành mở"}
-              value={String(props.timer.isSuccessON)}
+              property={"TT Mở"}
+              value={{
+                value: GetInforTurnOff(
+                  props.timer.isSuccessON,
+                  props.timer.openTimer
+                ),
+                color: props.timer.isSuccessON
+                  ? AppColors.primaryColor
+                  : AppColors.red,
+              }}
             />
           ) : null}
         </View>
@@ -195,13 +236,16 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
               </View>
               <CardInfor
                 property={"Tên thiết bị"}
-                value={deviceInfor?.deviceName}
+                value={{ value: deviceInfor?.deviceName }}
               />
               <CardInfor
                 property={"Tên Nông trại"}
-                value={deviceInfor?.farmName}
+                value={{ value: deviceInfor?.farmName }}
               />
-              <CardInfor property={"Tên khu"} value={deviceInfor?.zoneName} />
+              <CardInfor
+                property={"Tên khu"}
+                value={{ value: deviceInfor?.zoneName }}
+              />
             </View>
           </View>
         )}
@@ -210,9 +254,14 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
   );
 };
 
+interface ValueCardProps {
+  value: string | number | null | undefined;
+  color?: string | undefined | null;
+}
+
 interface CardInforProps {
   property: string;
-  value: string | number | null | undefined;
+  value: ValueCardProps;
 }
 
 const CardInfor = (props: CardInforProps) => {
@@ -239,16 +288,15 @@ const CardInfor = (props: CardInforProps) => {
       </Text>
       <Text
         style={{
-          //color: "black",
+          color: props.value.color ?? "black",
           fontSize: AppFontSize.sizeLabel,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
           width: "65%",
-          color: "black",
         }}
       >
-        {props.value}
+        {props.value.value}
       </Text>
     </View>
   );

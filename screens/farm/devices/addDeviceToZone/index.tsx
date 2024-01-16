@@ -63,7 +63,7 @@ const DeviceAddScreen = () => {
 
   React.useEffect(() => {
     if (isFocused) {
-      fetchListModule().then(() => {});
+      fetchListModule();
       setDevice(null);
     }
   }, [isFocused]);
@@ -117,6 +117,8 @@ const DeviceAddScreen = () => {
         Alert.alert("Lỗi thêm mới", `Thêm mới thiết bị không thành công`, [
           { text: "OK", onPress: () => navigation.goBack() },
         ]);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       Alert.alert("Lỗi thêm mới", `Mã số cần đủ 36 ký tự`, [
@@ -195,7 +197,7 @@ const DeviceAddScreen = () => {
         />
       </View>
       <View style={styles.container}>
-        <Text style={styles.label}>Chân cắm: </Text>
+        <Text style={styles.label}>Tên thiết bị: </Text>
         <Dropdown
           style={[styles.dropdown, isFocusDevice && { borderColor: "blue" }]}
           placeholderStyle={styles.placeholderStyle}
@@ -205,7 +207,7 @@ const DeviceAddScreen = () => {
           data={devices}
           search
           maxHeight={300}
-          labelField="gate"
+          labelField="name"
           valueField="id"
           placeholder={!isFocusDevice ? "Select item" : "..."}
           searchPlaceholder="Search..."
@@ -236,15 +238,6 @@ const DeviceAddScreen = () => {
           value={nameDeviceRef}
           placeholder="Nhập ghi chú"
           inputMode="text"
-        />
-      </View>
-      <View style={styles.container}>
-        <Text style={styles.label}>Tên thiết bị: </Text>
-        <TextInput
-          style={styles.dropdown1}
-          value={device?.name ?? "Thiết bị chưa được đặt tên"}
-          placeholder="Tên thiết bị"
-          editable={false}
         />
       </View>
       {moduleId != null || devices != null ? (

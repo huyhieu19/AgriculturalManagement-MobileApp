@@ -14,7 +14,10 @@ import { deviceIot } from "../../../../../assets";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../../../AppNavigator";
-import { CardInforProps } from "../../../../../network/models/card_display/CardModel";
+import {
+  CardInforProps,
+  ValueCardProps,
+} from "../../../../../network/models/card_display/CardModel";
 import { Modal } from "../../../../Modal";
 import { AppFontSize } from "../../../../../global/styles/AppFontSize";
 import { DeviceInformationDisplayModel } from "../../../../../network/models/device_display/deviceInfor";
@@ -80,6 +83,40 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
     }
   };
 
+  const GetDeviceName = (name: string | null | undefined) => {
+    let result: ValueCardProps = {
+      value: "Chưa đặt tên thiết bị",
+      color: AppColors.red,
+    };
+    if (name != null || name != undefined) {
+      result.value = name;
+      result.color = null;
+    }
+    return result;
+  };
+  const GetFarmName = (name: string | null) => {
+    let result: ValueCardProps = {
+      value: "Chưa thêm vào nông trại nào",
+      color: AppColors.red,
+    };
+    if (name != null || name != undefined) {
+      result.value = name;
+      result.color = null;
+    }
+    return result;
+  };
+  const GetZoneName = (name: string | null) => {
+    let result: ValueCardProps = {
+      value: "Chưa thêm vào khu nào",
+      color: AppColors.red,
+    };
+    if (name != null || name != undefined) {
+      result.value = name;
+      result.color = null;
+    }
+    return result;
+  };
+
   return (
     <TouchableOpacity onPress={GetInforDevice}>
       <View
@@ -133,27 +170,47 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
           </View>
           <CardInfor
             property={"Gate"}
-            value={props.device?.gate?.toString()!}
+            value={{ value: props.device?.gate?.toString()! }}
           />
           <CardInfor
             property={"Hoat động"}
-            value={props.device?.isAction ? "Mở" : "Đóng"}
+            value={{
+              value: props.device?.isAction ? "Mở" : "Đóng",
+              color: props.device?.isAction
+                ? AppColors.primaryColor
+                : AppColors.red,
+            }}
           />
           <CardInfor
             property={"Tự động"}
-            value={props?.device.isAuto ? "Tự động" : "Thủ công"}
+            value={{
+              value: props?.device.isAuto ? "Tự động" : "Thủ công",
+              color: props.device?.isAuto
+                ? AppColors.primaryColor
+                : AppColors.back,
+            }}
           />
           <CardInfor
             property={"Sử dụng"}
-            value={props?.device.isUsed ? "Có" : "Không"}
+            value={{
+              value: props?.device.isUsed ? "Có" : "Không",
+              color: props.device?.isUsed
+                ? AppColors.primaryColor
+                : AppColors.red,
+            }}
           />
           <CardInfor
             property={"Loại"}
-            value={
-              props?.device.deviceType == "R"
-                ? "Thiết bị đo"
-                : "Thiết bị điều khiển"
-            }
+            value={{
+              value:
+                props?.device.deviceType == "R"
+                  ? "Thiết bị đo"
+                  : "Thiết bị điều khiển",
+              color:
+                props?.device.deviceType == "R"
+                  ? AppColors.slate600
+                  : AppColors.primaryColor,
+            }}
           />
         </View>
       </View>
@@ -217,17 +274,15 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
               </View>
               <CardInfor
                 property={"Tên thiết bị"}
-                value={deviceInfor?.deviceName ?? "Thiết bị chưa được đặt tên"}
+                value={GetDeviceName(deviceInfor?.deviceName)}
               />
               <CardInfor
                 property={"Tên Nông trại"}
-                value={
-                  deviceInfor?.farmName ?? "Bạn chưa thêm vào nông trại nào"
-                }
+                value={GetFarmName(deviceInfor?.farmName)}
               />
               <CardInfor
                 property={"Tên khu"}
-                value={deviceInfor?.zoneName ?? "Bạn chưa thêm vào khu nào"}
+                value={GetZoneName(deviceInfor?.zoneName)}
               />
             </View>
           </View>
@@ -260,14 +315,14 @@ const CardInfor = (props: CardInforProps) => {
       </Text>
       <Text
         style={{
-          color: "black",
           fontSize: 16,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
+          color: props.value.color ?? "black",
         }}
       >
-        {props.value}
+        {props.value.value}
       </Text>
     </View>
   );

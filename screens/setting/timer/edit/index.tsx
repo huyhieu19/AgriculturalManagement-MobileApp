@@ -10,6 +10,7 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  Switch,
 } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,7 +21,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { AppColors, AppStyles } from "../../../../global";
-import { calender } from "../../../../assets";
+import { calender, calendercancel } from "../../../../assets";
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -41,9 +42,13 @@ type ParamList = {
 
 // chuyến sang giờ +7 Viet Nam
 function formatGetOnlyDateDisplayLocalTime(date: any) {
-  const dateString = date;
-  const dateObject = new Date(dateString);
-  return new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+  if (date == null) {
+    return null;
+  } else {
+    const dateString = date;
+    const dateObject = new Date(dateString);
+    return new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+  }
 }
 
 export const EditTimerScreen = () => {
@@ -54,15 +59,16 @@ export const EditTimerScreen = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const isFocused = useIsFocused();
 
-  const [dateOn, setDateOn] = useState(
-    formatGetOnlyDateDisplayLocalTime(timer_item.openTimer!)
+  const [dateOn, setDateOn] = useState<Date | null>(
+    formatGetOnlyDateDisplayLocalTime(timer_item.openTimer)
   );
-  const [dateOff, setDateOff] = useState(
-    formatGetOnlyDateDisplayLocalTime(timer_item.shutDownTimer!)
+  const [dateOff, setDateOff] = useState<Date | null>(
+    formatGetOnlyDateDisplayLocalTime(timer_item.shutDownTimer)
   );
-
-  console.log("Ngày mở: " + dateOn);
-  console.log("Ngày/giờ đóng: " + dateOff);
+  const [isDateOn, setIsDateOn] = useState(true);
+  const [isDateOff, setIsDateOff] = useState(true);
+  const toggleSwitchOn = () => setIsDateOn((previousState) => !previousState);
+  const toggleSwitchOff = () => setIsDateOff((previousState) => !previousState);
 
   const [showTimePickerOn, setShowTimePickerOn] = useState(false);
   const [showDatePickerOn, setShowDatePickerOn] = useState(false);
@@ -86,8 +92,6 @@ export const EditTimerScreen = () => {
     }
     console.log("chon time xong");
   };
-
-  console.log("showTime", showTimePickerOn);
 
   const onChangeDateOn = (event: DateTimePickerEvent, selectedDate?: Date) => {
     setShowDatePickerOn(false);
@@ -145,21 +149,52 @@ export const EditTimerScreen = () => {
   const handleEditTimer = async () => {
     setIsLoading(true);
     try {
+      let isOk = true;
+      if (!isDateOff && !isDateOn) {
+        Alert.alert(
+          "Lỗi",
+          "Vui lòng nhập it nhất một trong hai thời gian đóng/mở",
+          [{ text: "OK" }]
+        );
+        isOk = false;
+      } else if (isDateOn && dateOff != null && dateOff < new Date()) {
+        Alert.alert("Lỗi", "Vui lòng không nhập thời gian trong  quá khứ", [
+          { text: "OK" },
+        ]);
+        isOk = false;
+      } else if (isDateOff && dateOn != null && dateOn < new Date()) {
+        Alert.alert("Lỗi", "Vui lòng không nhập thời gian trong  quá khứ", [
+          { text: "OK" },
+        ]);
+        isOk = false;
+      }
       const params: TimerUpdateModel = {
         deviceDriverId: timer_item.deviceId,
         id: timer_item.id,
-        openTimer: dateOn.toISOString(),
-        shutDownTimer: dateOff.toISOString(),
+        openTimer: dateOn != null && isDateOn ? dateOn.toISOString() : null,
+        shutDownTimer:
+          dateOff != null && isDateOff ? dateOff.toISOString() : null,
         note: note,
       };
 
-      const res = await updateTimer(params);
-      if (res.data.Data != null && res.data.Data) {
+      if (params.openTimer == null && params.shutDownTimer == null) {
         Alert.alert(
-          "Thành công",
-          `Thành công chỉnh sửa hẹn giờ thiết bị ${timer_item.deviceName}`,
-          [{ text: "OK", onPress: () => navigation.goBack() }]
+          "Lỗi",
+          "Vui lòng nhập it nhất một trong hai thời gian đóng/mở",
+          [{ text: "OK" }]
         );
+        isOk = false;
+      }
+
+      if (isOk) {
+        const res = await updateTimer(params);
+        if (res.data.Data != null && res.data.Data) {
+          Alert.alert(
+            "Thành công",
+            `Thành công chỉnh sửa hẹn giờ thiết bị ${timer_item.deviceName}`,
+            [{ text: "OK", onPress: () => navigation.goBack() }]
+          );
+        }
       }
     } catch (error) {
       Alert.alert("Lõi", `${error}`, [
@@ -257,21 +292,32 @@ export const EditTimerScreen = () => {
                   style={styles.button_showTime}
                 >
                   <Image
-                    source={calender}
+                    source={isDateOn ? calender : calendercancel}
                     style={{
                       width: 20,
                       height: 20,
                     }}
                   />
                 </TouchableOpacity>
+                <View style={{ marginLeft: 10, marginTop: 10 }}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={isDateOn ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitchOn}
+                    value={isDateOn}
+                  />
+                </View>
                 <Text style={{ marginTop: 12, marginLeft: 15 }}>
-                  {formatGetOnlyDateDisplay(dateOn)}
+                  {isDateOn
+                    ? formatGetOnlyDateDisplay(dateOn) ?? "Hãy chọn ngày"
+                    : "Không cài đặt"}
                 </Text>
 
                 {showTimePickerOn ? (
                   <RNDateTimePicker
                     testID="timePickerOn"
-                    value={dateOn}
+                    value={dateOn ?? new Date()}
                     mode="time"
                     is24Hour={true}
                     display="default"
@@ -282,7 +328,7 @@ export const EditTimerScreen = () => {
                 {showDatePickerOn ? (
                   <RNDateTimePicker
                     testID="datePickerOn"
-                    value={dateOn}
+                    value={dateOn ?? new Date()}
                     mode="date"
                     display="default"
                     onChange={onChangeDateOn}
@@ -296,21 +342,32 @@ export const EditTimerScreen = () => {
                   style={styles.button_showTime}
                 >
                   <Image
-                    source={calender}
+                    source={isDateOff ? calender : calendercancel}
                     style={{
                       width: 20,
                       height: 20,
                     }}
                   />
                 </TouchableOpacity>
+                <View style={{ marginLeft: 10, marginTop: 10 }}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={isDateOff ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitchOff}
+                    value={isDateOff}
+                  />
+                </View>
                 <Text style={{ marginTop: 12, marginLeft: 15 }}>
-                  {formatGetOnlyDateDisplay(dateOff)}
+                  {isDateOff
+                    ? formatGetOnlyDateDisplay(dateOff) ?? "Hãy chọn ngày"
+                    : "Không cài đặt"}
                 </Text>
 
                 {showTimePickerOff && (
                   <RNDateTimePicker
                     testID="timePickerOff"
-                    value={dateOff}
+                    value={dateOff ?? new Date()}
                     mode="time"
                     is24Hour={true}
                     display="default"
@@ -321,7 +378,7 @@ export const EditTimerScreen = () => {
                 {showDatePickerOff && (
                   <RNDateTimePicker
                     testID="datePickerOff"
-                    value={dateOff}
+                    value={dateOff ?? new Date()}
                     mode="date"
                     display="default"
                     onChange={onChangeDateOff}

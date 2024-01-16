@@ -15,6 +15,10 @@ import onDevcie from "./on-button.png"
 import timerSetting from './timer_setting.png'
 import thresholdSetting from './threshold_setting.png'
 import calender from './calendar.png'
+import calendercancel from './cancel-event.png'
+import linkThres from './link.png'
+import link from './hyperlink.png'
+import linkcal from './cancelLink.png'
 
 export {
 	homeLeftIcon,
@@ -33,5 +37,9 @@ export {
 	onDevcie,
 	timerSetting,
 	thresholdSetting,
-	calender
+	calender,
+	calendercancel,
+	linkThres,
+	linkcal,
+	link
 };

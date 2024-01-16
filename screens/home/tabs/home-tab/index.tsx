@@ -70,28 +70,30 @@ function HomeTab() {
         navigation.navigate("SettingsScreen");
       },
     },
+    // {
+    //   title: "Thống kê",
+    //   icon: (
+    //     <MaterialCommunityIcons
+    //       name="google-analytics"
+    //       size={48}
+    //       color={AppColors.primaryColor}
+    //     />
+    //   ),
+    //   backgroundColor: "rgba(22,163,74,0.1)",
+    //   onPress: () => {
+    //     navigation.navigate("StatisticsScreen");
+    //   },
+    // },
     {
-      title: "Thống kê",
+      title: "Lịch sử",
       icon: (
-        <MaterialCommunityIcons
-          name="google-analytics"
-          size={48}
-          color={AppColors.primaryColor}
-        />
+        <FontAwesome name="history" size={48} color={AppColors.primaryColor} />
       ),
       backgroundColor: "rgba(22,163,74,0.1)",
       onPress: () => {
-        navigation.navigate("StatisticsScreen");
+        navigation.navigate("LogDeviceControlScreen");
       },
     },
-    // {
-    //   title: "Lịch sử",
-    //   icon: (
-    //     <FontAwesome name="history" size={48} color={AppColors.primaryColor} />
-    //   ),
-    //   backgroundColor: "rgba(22,163,74,0.1)",
-    //   onPress: () => {},
-    // },
     // {
     //   title: "Nhiệm vụ",
     //   icon: (

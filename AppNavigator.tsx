@@ -37,6 +37,7 @@ import { AddNewThresScreen } from "./screens/setting/threshold/add";
 import RegisterScreen from "./screens/auth/register";
 import { UserRegisterationModel } from "./network/models/RegisterModel";
 import TimerScreen from "./screens/setting/timer";
+import LogDeviceControlScreen from "./screens/history";
 
 export type RootStackParamList = {
   // home
@@ -74,6 +75,9 @@ export type RootStackParamList = {
   AddNewThresScreen: undefined;
   // Thống kê
   StatisticsScreen: undefined;
+
+  // Lich su
+  LogDeviceControlScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -196,6 +200,13 @@ const AppNavigator: React.FC = () => {
             <Stack.Screen
               name={"StatisticsScreen"}
               component={StatisticsScreen}
+            />
+            {/* ---------------- */}
+
+            {/* History */}
+            <Stack.Screen
+              name={"LogDeviceControlScreen"}
+              component={LogDeviceControlScreen}
             />
             {/* ---------------- */}
           </>
