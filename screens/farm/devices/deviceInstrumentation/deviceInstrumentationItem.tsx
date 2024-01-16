@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React from "react";
 import { IDeviceOnModule } from "../../../../types/device.type";
 import { AppColors } from "../../../../global";
-import { CardInforProps } from "../../../../network/models/card_display/CardModel";
 
 type DevicesProps = {
   device: IDeviceOnModule;
@@ -100,18 +99,6 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
             value={props.device?.gate?.toString()!}
           />
           <CardInfor
-            property={"Hoat động"}
-            value={props.device?.isAction ? "Mở" : "Đóng"}
-          />
-          <CardInfor
-            property={"Tự động"}
-            value={props?.device.isAuto ? "Tự động" : "Thủ công"}
-          />
-          <CardInfor
-            property={"Sử dụng"}
-            value={props?.device.isUsed ? "Có" : "Không"}
-          />
-          <CardInfor
             property={"Loại"}
             value={
               props?.device.deviceType == "R"
@@ -124,6 +111,10 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
     </TouchableOpacity>
   );
 };
+interface CardInforProps {
+  property: string;
+  value: string | number | null;
+}
 
 const CardInfor = (props: CardInforProps) => {
   return (

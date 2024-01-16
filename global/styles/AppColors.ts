@@ -9,4 +9,5 @@ export const AppColors = {
     cardTop: "#C7E8C7",
     modalTop: "#A6FF96",
     back: "#FF9B50",
+    red: "#FF004D"
 }

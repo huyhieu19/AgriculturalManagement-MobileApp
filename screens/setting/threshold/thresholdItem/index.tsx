@@ -131,6 +131,10 @@ export const ListThresItem = (props: ListThresItemProps) => {
             value={props.thres?.deviceDriverAction ? "On" : "Off"}
           />
           <CardInfor
+            property={"Tự động"}
+            value={props.thres?.autoDevice ? "Mở" : "Thủ công"}
+          />
+          <CardInfor
             property={"Kiểu đóng mở"}
             value={props.thres?.onInUpperThreshold ? "1" : "2"}
           />

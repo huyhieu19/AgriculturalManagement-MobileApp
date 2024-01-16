@@ -9,7 +9,7 @@ export interface ThresholdDisplayModel {
     thresholdValueOn: number | null;
     thresholdValueOff: number | null;
     isDelete: boolean;
-    autoDevice: boolean;
+    autoDevice: boolean | null;
 }
 export interface ThresholdUpdateModel {
     id: number;

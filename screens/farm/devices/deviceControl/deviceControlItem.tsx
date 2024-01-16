@@ -14,6 +14,7 @@ import {
   AsyncOnOffDeviceControl,
   OnOffDeviceControl,
 } from "../../../../network/apis/controlDevice.api";
+import { OnOffDeviceQueryModel } from "../../../../network/models/device_control/deviceControl.model";
 
 type DevicesProps = {
   device: IDeviceOnModule;
@@ -24,19 +25,32 @@ const DevicesControlItem = (props: DevicesProps) => {
   const [isOn, setIsOn] = useState<boolean>(props.device.isAction);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-  // React.useEffect(() => {
-  //   setIsOn(props.device.isAction);
-  // });
+  const SetIsOn = (ison: boolean) => {
+    if (ison) {
+      return { value: "Mở", color: AppColors.primaryColor };
+    } else {
+      return { value: "Đóng", color: AppColors.red };
+    }
+  };
+  const SetIsAuto = (isauto: boolean) => {
+    if (isauto) {
+      return { value: "Tự động", color: AppColors.primaryColor };
+    } else {
+      return { value: "Thủ công", color: AppColors.back };
+    }
+  };
 
   const onOffDevice = async () => {
     setIsLoading(true);
-    const res = await OnOffDeviceControl({
+    const param: OnOffDeviceQueryModel = {
       moduleId: props.device.moduleId,
       deviceId: props.device.id,
       requestOn: !isOn,
+      deviceName: props.device.name,
       deviceNameNumber: "",
       deviceType: 1,
-    });
+    };
+    const res = await OnOffDeviceControl(param);
     console.log("isOn" + isOn);
     if (res.data.Data) {
       setIsLoading(false);
@@ -109,24 +123,12 @@ const DevicesControlItem = (props: DevicesProps) => {
           </Text>
           <CardInfor
             property={"Gate"}
-            value={props.device?.gate?.toString()!}
+            value={{ value: props.device?.gate?.toString()! }}
           />
-          <CardInfor property={"Hoat động"} value={isOn ? "Mở" : "Đóng"} />
+          <CardInfor property={"Hoat động"} value={SetIsOn(isOn)} />
           <CardInfor
             property={"Tự động"}
-            value={props?.device.isAuto ? "Tự động" : "Thủ công"}
-          />
-          <CardInfor
-            property={"Sử dụng"}
-            value={props?.device.isUsed ? "Có" : "Không"}
-          />
-          <CardInfor
-            property={"Loại"}
-            value={
-              props?.device.deviceType == "R"
-                ? "Thiết bị đo"
-                : "Thiết bị điều khiển"
-            }
+            value={SetIsAuto(props.device?.isAuto)}
           />
         </View>
       </View>
@@ -134,11 +136,15 @@ const DevicesControlItem = (props: DevicesProps) => {
   );
 };
 
-interface CardInforProps {
-  property: string;
-  value: string | number | null;
+interface ValueCardProps {
+  value: string | number | null | undefined;
+  color?: string | undefined | null;
 }
 
+interface CardInforProps {
+  property: string;
+  value: ValueCardProps;
+}
 const CardInfor = (props: CardInforProps) => {
   return (
     <View
@@ -162,14 +168,14 @@ const CardInfor = (props: CardInforProps) => {
       </Text>
       <Text
         style={{
-          color: "black",
           fontSize: 16,
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
+          color: props.value.color ?? "black",
         }}
       >
-        {props.value}
+        {props.value.value}
       </Text>
     </View>
   );
