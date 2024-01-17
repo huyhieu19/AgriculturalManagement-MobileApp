@@ -7,5 +7,4 @@ export const AppStyles = StyleSheet.create({
         backgroundColor: AppColors.bgSlate50,
         marginTop: Platform.OS === "android" ? 30 : 0 
     }
-    
 })

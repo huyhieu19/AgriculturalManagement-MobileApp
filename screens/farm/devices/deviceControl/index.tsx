@@ -95,14 +95,14 @@ const DeviceControlScreen = () => {
     <SafeAreaView style={AppStyles.appContainer}>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: 20,
-          paddingTop: 10,
-          height: 60,
-          backgroundColor: AppColors.primaryColor,
           justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          paddingVertical: 12,
+          borderBottomWidth: 0.5,
+          paddingHorizontal: 20,
+          backgroundColor: AppColors.primaryColor,
+          position: "relative",
         }}
       >
         <Pressable

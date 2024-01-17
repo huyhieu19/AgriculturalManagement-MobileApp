@@ -38,37 +38,36 @@ const ModuleDevicesScreen = () => {
   const route = useRoute<RouteProp<ModulesItemProps, "modules">>();
   const navigation = useNavigation<ScreenNavigationProp>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-
-  ///const [moduleId, setModuleId] = useState<string>(route.params.id);
+  const [moduleId, setModuleId] = useState<string>(route.params.id);
   const [deviceSt, setDeviceSt] = React.useState<IDeviceOnModule[]>(
     route.params?.devices!
   );
 
-  //// const isFocused = useIsFocused();
+  const isFocused = useIsFocused();
 
-  // const FindModule = (modules: IModule[], id: string) => {
-  //   const moduleFinded = modules.find((p) => p.id === id);
-  //   setModuleId(moduleFinded?.id!);
-  //   setDeviceSt(moduleFinded?.devices!);
-  // };
+  const FindModule = (modules: IModule[], id: string) => {
+    const moduleFinded = modules.find((p) => p.id === id);
+    setModuleId(moduleFinded?.id!);
+    setDeviceSt(moduleFinded?.devices!);
+  };
 
-  // const fetchListModule = React.useCallback(async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const res = await getListModules();
-  //     FindModule(res.data.Data as unknown as IModule[], moduleId);
-  //   } catch (e) {
-  //     console.log(e);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, []);
+  const fetchListModule = React.useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await getListModules();
+      FindModule(res.data.Data as unknown as IModule[], moduleId);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-  //// React.useEffect(() => {
-  //   if (isFocused) {
-  //     fetchListModule().then(() => {});
-  //   }
-  // }, [isFocused]);
+  React.useEffect(() => {
+    if (isFocused) {
+      fetchListModule().then(() => {});
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={AppStyles.appContainer}>
@@ -131,7 +130,7 @@ const ModuleDevicesScreen = () => {
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
-              //onRefresh={fetchListDevicesOnModule}
+              onRefresh={fetchListModule}
             />
           }
           contentContainerStyle={{

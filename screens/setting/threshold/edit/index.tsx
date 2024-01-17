@@ -139,13 +139,14 @@ export default function UpdateThresholdModal(
       >
         <View
           style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: 20,
-            backgroundColor: AppColors.modalTop,
-            paddingVertical: 12,
             justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            paddingVertical: 12,
+            borderBottomWidth: 0.5,
+            paddingHorizontal: 20,
+            backgroundColor: AppColors.primaryColor,
+            position: "relative",
           }}
         >
           <Pressable

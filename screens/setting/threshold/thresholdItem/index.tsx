@@ -5,7 +5,7 @@ import { AppColors } from "../../../../global";
 import { AppFontSize } from "../../../../global/styles/AppFontSize";
 import { Modal } from "../../../Modal";
 import UpdateThresholdModal from "../edit";
-import { link, linkThres, linkcal, thresholdSetting } from "../../../../assets";
+import { link, linkcal } from "../../../../assets";
 
 interface ListThresItemProps {
   thres: ThresholdDisplayModel;
@@ -39,7 +39,7 @@ export const ListThresItem = (props: ListThresItemProps) => {
           alignItems: "flex-start",
           paddingHorizontal: 5,
           backgroundColor: !props.thres.autoDevice
-            ? AppColors.slate300
+            ? AppColors.threshold_cancel
             : AppColors.bgSlate50,
           // backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
           paddingVertical: 16,
@@ -76,11 +76,11 @@ export const ListThresItem = (props: ListThresItemProps) => {
           </View>
           <CardInfor
             property={"Ngưỡng mở"}
-            value={props.thres?.thresholdValueOn}
+            value={{ value: props.thres?.thresholdValueOn }}
           />
           <CardInfor
             property={"Ngưỡng đóng"}
-            value={props.thres?.thresholdValueOff}
+            value={{ value: props.thres?.thresholdValueOff }}
           />
           {/* <CardInfor
             property={"Loại"}
@@ -106,7 +106,7 @@ export const ListThresItem = (props: ListThresItemProps) => {
           alignItems: "flex-start",
           paddingHorizontal: 5,
           backgroundColor: !props.thres.autoDevice
-            ? AppColors.slate300
+            ? AppColors.threshold_cancel
             : AppColors.bgSlate50,
           // backgroundColor: props?.isBgPrimary ? "#C7E8C7" : AppColors.bgWhite,
           paddingVertical: 16,
@@ -148,15 +148,23 @@ export const ListThresItem = (props: ListThresItemProps) => {
           </View>
           <CardInfor
             property={"Trạng thái"}
-            value={props.thres?.deviceDriverAction ? "On" : "Off"}
+            value={
+              props.thres?.deviceDriverAction
+                ? { value: "Mở", color: AppColors.primaryColor }
+                : { value: "Đóng", color: AppColors.red }
+            }
           />
           <CardInfor
             property={"Tự động"}
-            value={props.thres?.autoDevice ? "Mở" : "Thủ công"}
+            value={
+              props.thres?.autoDevice
+                ? { value: "Tự động", color: AppColors.primaryColor }
+                : { value: "Thủ công", color: AppColors.red }
+            }
           />
           <CardInfor
             property={"Kiểu đóng mở"}
-            value={props.thres?.onInUpperThreshold ? "1" : "2"}
+            value={{ value: props.thres?.onInUpperThreshold ? "1" : "2" }}
           />
         </View>
       </View>
@@ -164,9 +172,14 @@ export const ListThresItem = (props: ListThresItemProps) => {
   );
 };
 
+interface ValueCardProps {
+  value: string | number | null | undefined;
+  color?: string | null;
+}
+
 interface CardInforProps {
   property: string;
-  value: string | number | null | undefined;
+  value: ValueCardProps;
 }
 
 const CardInfor = (props: CardInforProps) => {
@@ -197,11 +210,11 @@ const CardInfor = (props: CardInforProps) => {
           fontStyle: "normal",
           marginTop: 5,
           maxWidth: "70%",
-          color: "black",
+          color: props.value.color ?? "black",
           paddingLeft: "10%",
         }}
       >
-        {props.value}
+        {props.value.value}
       </Text>
     </View>
   );

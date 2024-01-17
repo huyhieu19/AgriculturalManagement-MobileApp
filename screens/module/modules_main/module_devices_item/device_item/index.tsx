@@ -53,6 +53,7 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
   };
+  const isDeviceDriver = props.device.deviceType == "W";
   const GetInforDevice = async () => {
     handleModal();
     setIsLoading(true);
@@ -125,7 +126,9 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
           alignItems: "center",
           // marginHorizontal: 20,
           paddingHorizontal: 20,
-          backgroundColor: AppColors.bgWhite,
+          backgroundColor: props.device.isUsed
+            ? AppColors.bgWhite
+            : AppColors.bgSlate50,
           paddingVertical: 16,
           borderRadius: 15,
           borderWidth: 0.5,
@@ -164,41 +167,51 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
             >
               {props.device?.name}
             </Text>
-            <TouchableOpacity onPress={goToEditDevice} style={{ right: 0 }}>
-              <AntDesign name="edit" size={24} color="black" />
-            </TouchableOpacity>
+            {isDeviceDriver ? (
+              <TouchableOpacity onPress={goToEditDevice} style={{ right: 0 }}>
+                <AntDesign name="edit" size={24} color="black" />
+              </TouchableOpacity>
+            ) : null}
           </View>
+          {props?.device.isUsed ? (
+            <Text
+              style={{
+                color: props.device?.isUsed
+                  ? AppColors.primaryColor
+                  : AppColors.red,
+                fontSize: 18,
+                paddingBottom: 5,
+              }}
+            >
+              Đang sử dụng
+            </Text>
+          ) : null}
           <CardInfor
             property={"Gate"}
             value={{ value: props.device?.gate?.toString()! }}
           />
-          <CardInfor
-            property={"Hoat động"}
-            value={{
-              value: props.device?.isAction ? "Mở" : "Đóng",
-              color: props.device?.isAction
-                ? AppColors.primaryColor
-                : AppColors.red,
-            }}
-          />
-          <CardInfor
-            property={"Tự động"}
-            value={{
-              value: props?.device.isAuto ? "Tự động" : "Thủ công",
-              color: props.device?.isAuto
-                ? AppColors.primaryColor
-                : AppColors.back,
-            }}
-          />
-          <CardInfor
-            property={"Sử dụng"}
-            value={{
-              value: props?.device.isUsed ? "Có" : "Không",
-              color: props.device?.isUsed
-                ? AppColors.primaryColor
-                : AppColors.red,
-            }}
-          />
+          {isDeviceDriver ? (
+            <CardInfor
+              property={"Hoat động"}
+              value={{
+                value: props.device?.isAction ? "Mở" : "Đóng",
+                color: props.device?.isAction
+                  ? AppColors.primaryColor
+                  : AppColors.red,
+              }}
+            />
+          ) : null}
+          {isDeviceDriver ? (
+            <CardInfor
+              property={"Tự động"}
+              value={{
+                value: props?.device.isAuto ? "Tự động" : "Thủ công",
+                color: props.device?.isAuto
+                  ? AppColors.primaryColor
+                  : AppColors.back,
+              }}
+            />
+          ) : null}
           <CardInfor
             property={"Loại"}
             value={{
@@ -206,10 +219,6 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
                 props?.device.deviceType == "R"
                   ? "Thiết bị đo"
                   : "Thiết bị điều khiển",
-              color:
-                props?.device.deviceType == "R"
-                  ? AppColors.slate600
-                  : AppColors.primaryColor,
             }}
           />
         </View>

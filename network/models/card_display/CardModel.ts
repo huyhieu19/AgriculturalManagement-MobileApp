@@ -1,5 +1,5 @@
 export interface CardInforProps {
-  property: string;
+  property?: string;
   value: ValueCardProps;
 }
 export interface ValueCardProps {

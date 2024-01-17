@@ -256,7 +256,7 @@ export const ListTimersItem = (props: ListTimerItemProps) => {
 
 interface ValueCardProps {
   value: string | number | null | undefined;
-  color?: string | undefined | null;
+  color?: string | null;
 }
 
 interface CardInforProps {
