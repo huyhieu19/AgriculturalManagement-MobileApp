@@ -1,5 +1,5 @@
 import { axiosInstance } from "../index";
-import { BaseResponse, CreateFarm, Farm, LoginResponse } from "../models";
+import { BaseResponse, CreateFarm, DeviceDriverByFarmDisplayModel, Farm, LoginResponse } from "../models";
 import { IZoneParams } from "../../types/zone.type";
 import { CreateZone, DeleteZoneResModel, EditZoneResModel } from "../models/Zone";
 import { IModule } from "../../types/module.type";
@@ -30,6 +30,10 @@ export function editFarm(param: any) {
 
 export function deleteFarm(param: any) {
 	return axiosInstance.delete<BaseResponse<CreateFarm>>(`/Farms/farm?id=${param}`);
+}
+
+export function deviceDriverByFarmZone(param: any) {
+	return axiosInstance.post<BaseResponse<DeviceDriverByFarmDisplayModel>>(`/Farms/DeviceDriverByFarmZone?deviceType=${param}`);
 }
 
 //zone

@@ -78,7 +78,6 @@ const AllDevicesOnZoneScreen = () => {
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -93,7 +92,6 @@ const AllDevicesOnZoneScreen = () => {
           style={{
             position: "absolute",
             right: 20,
-            paddingTop: 10,
           }}
           onPress={() => {
             goToAddDeviceScreen();

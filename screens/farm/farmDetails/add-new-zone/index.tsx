@@ -79,7 +79,6 @@ export const AddNewZoneScreen = () => {
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
           }}
           onPress={goBack}
         >

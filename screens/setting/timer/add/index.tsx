@@ -9,19 +9,13 @@ import {
   Button,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Switch,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
-import {
-  getControlOnZone,
-  getListFarm,
-  getListZone,
-} from "../../../../network/apis";
-import { IFramDetails } from "../../../../types/farm.type";
+import { deviceDriverByFarmZone } from "../../../../network/apis";
 import { AppStyles } from "../../../../global";
 import RNDateTimePicker, {
   DateTimePickerEvent,
@@ -29,23 +23,25 @@ import RNDateTimePicker, {
 import { calender, calendercancel } from "../../../../assets";
 import { formatGetOnlyDateDisplay } from "../../../../utils";
 import { Dropdown } from "react-native-element-dropdown";
-import { IZoneParams } from "../../../../types/zone.type";
-import { IDeviceOnZone } from "../../../../types/device.type";
 import { TimerCreateModel } from "../../../../network/models/setting_timer/TimerModel";
 import { createTimer } from "../../../../network/apis/settings.api";
+import {
+  KeyValueForDevice,
+  KeyValueForFarm,
+  KeyValueForZone,
+} from "../../../../network/models";
 
 export const AddNewTimerScreen = () => {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
 
   const [isFocusFarm, setIsForcusFarm] = useState(false);
-  const [farms, setFarms] = useState<IFramDetails[]>([]);
-  const [farmId, setFarmId] = useState<number>(0);
+  const [farms, setFarms] = useState<KeyValueForFarm[]>([]);
+  const [farmName, setFarmName] = useState<string>("");
   const [isFocusZone, setIsFocusZone] = useState(false);
-  const [zones, setZones] = useState<IZoneParams[]>([]);
-  const [zoneId, setZoneId] = useState<number>(0);
+  const [zones, setZones] = useState<KeyValueForZone[]>([]);
   const [isFocusDevice, setIsForcusDevice] = useState(false);
-  const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
+  const [devices, setDevices] = useState<KeyValueForDevice[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
 
   const [dateOn, setDateOn] = useState<Date | null>();
@@ -63,39 +59,40 @@ export const AddNewTimerScreen = () => {
 
   const [note, setNote] = useState<string>("");
 
-  const FetchFarms = async () => {
+  const FetchDeviceDriverByFarmZone = async () => {
     try {
-      const res = await getListFarm();
-      setFarms(res.data.Data);
-      console.log("Fetch Farm" + farms);
+      const res = await deviceDriverByFarmZone(1);
+      setFarms(res.data.Data.farms);
+      setZones(res.data.Data.zone);
+      setDevices(res.data.Data.device);
     } catch (e) {
       console.log(e);
     }
   };
-  const FetchZones = async () => {
+
+  const FetchZones = (farmId1: number) => {
     try {
       console.log("fetch zone");
-      const res = await getListZone({ farmId });
-      const zonesRes = res.data.Data;
-      if (zonesRes.length == 0) {
-        setZones([]);
+      const result = zones.filter(({ farmId }) => farmId == farmId1);
+      if (result.length > 0) {
+        setZones(result);
       } else {
-        setZones(zonesRes);
+        setZones([]);
+        setDevices([]);
       }
-      setDevices([]);
     } catch (e) {
       console.log(e);
     }
   };
-  const FetchDevices = async () => {
+
+  const FetchDevices = (zoneId1: number) => {
     try {
       console.log("fetch devices");
-      const res = await getControlOnZone(zoneId);
-      const devicesRes = res.data.Data;
-      if (devicesRes.length == 0) {
-        setDevices([]);
+      const result = devices.filter(({ zoneId }) => zoneId == zoneId1);
+      if (result.length > 0) {
+        setDevices(result);
       } else {
-        setDevices(devicesRes);
+        setDevices([]);
       }
     } catch (e) {
       console.log(e);
@@ -195,6 +192,10 @@ export const AddNewTimerScreen = () => {
       if (!isDateOn) {
         setDateOn(null);
       }
+      if (deviceId == "") {
+        Alert.alert("Lỗi", "Vui lòng chọn thiết bị", [{ text: "OK" }]);
+        isOk = false;
+      }
       const params: TimerCreateModel = {
         deviceDriverId: deviceId,
         note: note,
@@ -231,6 +232,7 @@ export const AddNewTimerScreen = () => {
   };
   React.useEffect(() => {
     if (isFocused) {
+      FetchDeviceDriverByFarmZone();
       setShowDatePickerOff(false);
       setShowTimePickerOff(false);
       setShowDatePickerOn(false);
@@ -409,15 +411,15 @@ export const AddNewTimerScreen = () => {
               //value={farmId.toString()}
               onFocus={() => {
                 setIsForcusFarm(true);
-                FetchFarms();
               }}
               onBlur={() => setIsForcusFarm(false)}
               onChange={(item) => {
-                setFarmId(item.id);
+                FetchZones(item.id);
                 setIsForcusFarm(false);
               }}
             />
           </View>
+
           <View style={styles.Inputcontainer}>
             <Text style={styles.Inputlabel}>Khu:</Text>
             <Dropdown
@@ -429,18 +431,18 @@ export const AddNewTimerScreen = () => {
               data={zones}
               search
               maxHeight={300}
-              labelField="zoneName"
+              labelField="name"
               valueField="id"
               placeholder={!isFocusZone ? "Select item" : "..."}
               searchPlaceholder="Search..."
-              value={farmId.toString()}
+              //value={farmId.toString()}
               onFocus={() => {
                 setIsFocusZone(true);
-                FetchZones();
               }}
               onBlur={() => setIsFocusZone(false)}
               onChange={(item) => {
-                setZoneId(item.id);
+                FetchDevices(item.id);
+
                 setIsFocusZone(false);
               }}
             />
@@ -463,7 +465,6 @@ export const AddNewTimerScreen = () => {
               value={deviceId}
               onFocus={() => {
                 setIsForcusDevice(true);
-                FetchDevices();
               }}
               onBlur={() => setIsForcusDevice(false)}
               onChange={(item) => {

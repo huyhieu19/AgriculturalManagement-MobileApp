@@ -78,15 +78,21 @@ export const ListZoneItem = (props: ListZonetemProps) => {
               </TouchableOpacity>
             ) : null}
           </View>
-          <CardInfor property={"Diện tích"} value={props.zone.area} />
-          <CardInfor property={"Chức năng"} value={props.zone.function} />
+          <CardInfor
+            property={"Diện tích"}
+            value={{ value: props.zone.area }}
+          />
+          <CardInfor
+            property={"Chức năng"}
+            value={{ value: props.zone.function }}
+          />
           <CardInfor
             property={"SL thiết bị đo"}
-            value={props.zone.countInstrumentation}
+            value={{ value: props.zone.countInstrumentation }}
           />
           <CardInfor
             property={"SL thiết bị điều khiển"}
-            value={props.zone.countDeviceDriver}
+            value={{ value: props.zone.countDeviceDriver }}
           />
         </View>
       </View>
@@ -124,7 +130,7 @@ const CardInfor = (props: CardInforProps) => {
           marginBottom: 5,
         }}
       >
-        {props.value}
+        {props.value.value}
       </Text>
     </View>
   );

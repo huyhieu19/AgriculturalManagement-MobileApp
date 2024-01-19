@@ -89,7 +89,6 @@ const FarmDetailsScreen = () => {
           style={{
             position: "absolute",
             left: 20,
-            top: 20,
           }}
           onPress={() => {
             navigation.goBack();
@@ -104,7 +103,6 @@ const FarmDetailsScreen = () => {
           style={{
             position: "absolute",
             right: 20,
-            top: 20,
           }}
           onPress={() => {
             hangeNavigateScreenCreateZone(farmState);

@@ -76,7 +76,6 @@ const ListFarmScreen: React.FC = () => {
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
           }}
           onPress={() => {
             navigation.goBack();
@@ -97,7 +96,6 @@ const ListFarmScreen: React.FC = () => {
           style={{
             position: "absolute",
             right: 20,
-            paddingTop: 10,
           }}
           onPress={() => {
             hangeNavigateScreenCreateFarm();
