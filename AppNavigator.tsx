@@ -24,7 +24,6 @@ import { EditDeviceScreen } from "./screens/module/modules_main/edit_device_item
 import { IZoneParams } from "./types/zone.type";
 import DeviceAddScreen from "./screens/farm/devices/addDeviceToZone";
 import SettingsScreen from "./screens/setting";
-import StatisticsScreen from "./screens/statistics";
 import SettingsTimerScreen from "./screens/setting/timer/display";
 import { EditFarmScreen } from "./screens/farm/components/edit_farm";
 import { EditZoneScreen } from "./screens/farm/farmDetails/edit_zone";
@@ -197,10 +196,10 @@ const AppNavigator: React.FC = () => {
             {/* ---------------- */}
 
             {/* Statistic */}
-            <Stack.Screen
+            {/* <Stack.Screen
               name={"StatisticsScreen"}
               component={StatisticsScreen}
-            />
+            /> */}
             {/* ---------------- */}
 
             {/* History */}

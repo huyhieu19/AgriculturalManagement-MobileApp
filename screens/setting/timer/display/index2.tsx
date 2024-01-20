@@ -66,6 +66,7 @@ const SettingsTimerHisScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            width: 60,
           }}
           onPress={() => {
             navigation.goBack();
@@ -86,6 +87,7 @@ const SettingsTimerHisScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            width: 40,
           }}
           onPress={() => {
             navigation.navigate("AddNewTimerScreen");

@@ -74,22 +74,24 @@ const DeviceControlScreen = () => {
   };
   React.useEffect(() => {
     if (isFocused) {
-      getDevices().then(() => {});
+      getDevices();
     }
   }, [isFocused]);
 
-  // React.useEffect(() => {
-  //   // Hàm sẽ được gọi lại mỗi 1000 miliseconds (1 giây)
-  //   const intervalId = setInterval(async () => {
-  //     // Gọi hàm của bạn ở đây
-  //     await getDevices();
-  //   }, 5000);
+  React.useEffect(() => {
+    if (isFocused) {
+      // Hàm sẽ được gọi lại mỗi 1000 miliseconds (1 giây)
+      const intervalId = setInterval(async () => {
+        // Gọi hàm của bạn ở đây
+        await getDevices();
+      }, 5000);
 
-  //   // Cleanup function khi component unmount
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [devices]); // Dependency array trống đảm bảo useEffect chỉ chạy một lần khi component được mount
+      // Cleanup function khi component unmount
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [devices]); // Dependency array trống đảm bảo useEffect chỉ chạy một lần khi component được mount
 
   return (
     <SafeAreaView style={AppStyles.appContainer}>
@@ -109,6 +111,7 @@ const DeviceControlScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            width: 60,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -123,6 +126,7 @@ const DeviceControlScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            width: 40,
           }}
           onPress={() => {
             navigation.navigate("DeviceAddScreen", zoneState);

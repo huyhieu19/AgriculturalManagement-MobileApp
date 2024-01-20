@@ -25,6 +25,8 @@ export interface IZoneUpdateModel {
 	farmId: number;
 }
 
+
+
 export { IZoneParams };
 	
 	

@@ -60,6 +60,7 @@ const SettingsThresScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            width: 60,
           }}
           onPress={() => {
             navigation.goBack();
@@ -80,6 +81,7 @@ const SettingsThresScreen = () => {
           style={{
             position: "absolute",
             right: 20,
+            width: 40,
           }}
           onPress={() => {
             navigation.navigate("AddNewThresScreen");

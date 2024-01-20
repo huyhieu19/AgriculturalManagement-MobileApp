@@ -2,7 +2,7 @@ type IDeviceOnModule = {
     id: string;
     moduleId: string;
     name: string;
-    nameRef: string;
+    nameRef: FunctionDeviceType;
     description: string;
     zoneId: number;
     dateCreated?: string,
@@ -12,15 +12,14 @@ type IDeviceOnModule = {
     unit: string;
     gate: string;
     deviceType: string;
-    value1?: string;
-    value2?: string;
+    value?: string;
 }
 
 type IDeviceOnZone = {
     id: string;
     moduleId: string;
     name: string;
-    nameRef: string;
+    nameRef: FunctionDeviceType;
     description: string;
     zoneId: number;
     dateCreated?: string,
@@ -30,8 +29,15 @@ type IDeviceOnZone = {
     unit: string;
     gate: string;
     deviceType: string;
-    value1?: string;
-    value2?: string;
+    value?: string;
+}
+
+export enum FunctionDeviceType {
+	None = 0,
+	AirTemperature = 1,
+	AirHumidity = 2,
+	SoilMoisture = 3,
+	RainDetection = 4
 }
 
 export { IDeviceOnModule, IDeviceOnZone };

@@ -108,7 +108,7 @@ export const EditFarmScreen = () => {
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
+            width: 60,
           }}
           onPress={goBack}
         >

@@ -82,9 +82,18 @@ export const ListFarmItem = (props: ListFarmItemProps) => {
               </TouchableOpacity>
             ) : null}
           </View>
-          <CardInfor property={"Diện tích (m2)"} value={props.farm.area} />
-          <CardInfor property={"Số lượng khu"} value={props.farm.countZone} />
-          <CardInfor property={"Địa chỉ"} value={props.farm.address} />
+          <CardInfor
+            property={"Diện tích (m2)"}
+            value={{ value: props.farm.area }}
+          />
+          <CardInfor
+            property={"Số lượng khu"}
+            value={{ value: props.farm.countZone }}
+          />
+          <CardInfor
+            property={"Địa chỉ"}
+            value={{ value: props.farm.address }}
+          />
         </View>
       </View>
     </TouchableOpacity>
@@ -98,7 +107,7 @@ const CardInfor = (props: CardInforProps) => {
         flexDirection: "row",
         flex: 1,
         alignItems: "center",
-        justifyContent: "space-between",
+        //justifyContent: "space-between",
       }}
     >
       <Text
@@ -119,9 +128,10 @@ const CardInfor = (props: CardInforProps) => {
           fontWeight: "500",
           fontStyle: "normal",
           marginBottom: 5,
+          marginLeft: 20,
         }}
       >
-        {props.value}
+        {props.value.value}
       </Text>
     </View>
   );
