@@ -44,14 +44,11 @@ const DeviceInstrumentationScreen = () => {
     try {
       const res = await getInstrumentationOnZone(zone.id);
       setDevices(res.data.Data);
-      // Mảng kết quả
-      const arrayOfValues: string[] = [];
-
-      // Duyệt qua mảng các đối tượng và lấy ra mảng của phần tử 'value'
-      res.data.Data.forEach((obj) => {
-        arrayOfValues.push(obj.id);
-      });
-      setModuleIds(arrayOfValues);
+      // Mảng kết quả module Id
+      const uniqueModuleIds = [
+        ...new Set(devices.map((device) => device.moduleId)),
+      ];
+      setModuleIds(uniqueModuleIds);
 
       console.log("Data device" + res.data.Data);
     } catch (e) {
@@ -63,111 +60,88 @@ const DeviceInstrumentationScreen = () => {
     }
   };
 
-  // useEffect(() => {
-  //   // Hàm này sẽ chạy mỗi khi giá trị của moduleIds thay đổi
-  //   console.log("deviceId count: " + moduleIds.length);
-  // }, [moduleIds]);
-
   const mqttService = new MqttService();
   console.log("Status connection mqtt: " + mqttService.client.isConnected());
+
   useEffect(() => {
     if (isFocused) {
-      getDevicesInstrumentation().then(() => {
-        if (!mqttService.client.isConnected()) {
-          // Nếu chưa kết nối, thực hiện kết nối
-          mqttService.connect(() => {
-            console.log("Connected to MQTT broker");
-            // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
+      getDevicesInstrumentation().then(() => {});
+      if (!mqttService.client.isConnected()) {
+        // Nếu chưa kết nối, thực hiện kết nối
+        mqttService.connect(() => {
+          console.log("Connected to MQTT broker");
+          console.log("moduleIds lengh" + moduleIds.length);
+          // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
+          moduleIds.forEach((item) => {
             mqttService.subscribeTopic(
-              "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/#"
+              "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
             );
-            mqttService.client.onMessageArrived = onMessageArrived;
+            console.log(
+              "sub " + "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+            );
           });
-          // Thiết lập hàm xử lý khi nhận được message
-        } else {
-          console.log("Already connected");
-          // Nếu client đã kết nối trước đó, thực hiện thêm việc subscribe topic mới
-          //mqttService.subscribeTopic("3c531531-d5f5-4fe3-9954-5afd76ff2151/#");
-          //mqttService.client.onMessageArrived = onMessageArrived;
+          mqttService.client.onMessageArrived = onMessageArrived;
+        });
+        // Thiết lập hàm xử lý khi nhận được message
+      } else {
+        console.log("Already connected");
+        // Nếu client đã kết nối trước đó, thực hiện thêm việc subscribe topic mới
+        moduleIds.forEach((item) => {
+          mqttService.subscribeTopic(
+            "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+          );
+          console.log(
+            "sub " + "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+          );
+        });
+        //mqttService.client.onMessageArrived = onMessageArrived;
+      }
+      return () => {
+        if (mqttService.client.isConnected()) {
+          mqttService.client.disconnect();
         }
-        return () => {
-          if (mqttService.client.isConnected()) {
-            mqttService.client.disconnect();
-          }
-        };
-      });
+      };
       // Kiểm tra xem client đã kết nối chưa
     }
-  }, [isFocused]);
+  }, [isFocused, devices.length, moduleIds.length]);
+
+  console.log("devices count: " + devices.length);
 
   const onMessageArrived = (message: any) => {
     // Tách topic thành mảng các phần tử
     const topicParts = message.topic.split("/");
 
     // Lấy id từ phần tử thứ 2 của mảng
-    const deviceIdFromTopic = topicParts[2];
+    const ModuleIdFromTopic: string = topicParts[2];
 
     console.log("devices count: " + devices.length);
-    console.log("deviceIdFromTopic: " + deviceIdFromTopic);
+    console.log("ModuleIdFromTopic: " + ModuleIdFromTopic);
 
     const jsonData = JSON.parse(message.payloadString.toString());
-    const Id = "6ea49bef-b141-4567-b43a-ce4fbf1ad348";
-    const values1 = jsonData[Id];
-    console.log(values1);
-
-    devices.forEach((element) => {
-      const Id = element.id;
-      const values1 = jsonData[Id];
-
-      console.log("ID :" + values1);
-
-      setDevices((prev) => {
-        return prev?.map((item) => {
-          console.log(item.name);
-          console.log(item.nameRef);
-          if (item?.id === values1) {
-            return {
-              ...item,
-              value: values1,
-            };
-          }
-          return item;
+    moduleIds.forEach((e) => {
+      if (ModuleIdFromTopic.toLowerCase() === e.toLowerCase()) {
+        devices.forEach((element) => {
+          const Id = element.id.toLowerCase();
+          const values1 = jsonData[Id];
+          console.log("ID :" + Id);
+          setDevices((prev) => {
+            return prev?.map((item) => {
+              console.log(item.name);
+              console.log(item.nameRef);
+              console.log(item.value);
+              if (item?.id.toLowerCase() === Id) {
+                return {
+                  ...item,
+                  value: values1,
+                };
+              }
+              return item;
+            });
+          });
         });
-      });
+      }
     });
-    const values2 = jsonData.AirHumidity;
-    const values3 = jsonData.SoilMoisture;
-    const values4 = jsonData.RainDetection;
-    // Xử lý logic B ở đây
-    // Cập nhật state với mảng devices đã được cập nhật
-    // setDevices((prev) => {
-    //   return prev?.map((item) => {
-    //     console.log(item.name);
-    //     console.log(item.nameRef);
-    //     if (item?.nameRef === FunctionDeviceType.AirTemperature) {
-    //       return {
-    //         ...item,
-    //         value: values1,
-    //       };
-    //     } else if (item?.nameRef === FunctionDeviceType.AirHumidity) {
-    //       return {
-    //         ...item,
-    //         value: values2,
-    //       };
-    //     } else if (item?.nameRef === FunctionDeviceType.SoilMoisture) {
-    //       return {
-    //         ...item,
-    //         value: values3,
-    //       };
-    //     } else if (item?.nameRef === FunctionDeviceType.RainDetection) {
-    //       return {
-    //         ...item,
-    //         value: values4,
-    //       };
-    //     }
-    //     return item;
-    //   });
-    // });
+
     console.log("Received topic:", message.topic);
     console.log("Received payload:", message.payloadString);
   };
