@@ -27,8 +27,8 @@ function formatGetOnlyDateDisplayLocalTime(date: any) {
     const dateString = date;
     const dateObject = new Date(dateString);
     // Thêm 7 giờ vào đối tượng Date
-    // const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
-    const formattedDate = dateObject.toLocaleString();
+    const newDate = new Date(dateObject.getTime() + 7 * 60 * 60 * 1000);
+    const formattedDate = newDate.toLocaleString();
     return formattedDate;
   } else {
     return null;

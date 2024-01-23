@@ -10,28 +10,6 @@ type DevicesProps = {
 };
 const DevicesInstrumentationItem = (props: DevicesProps) => {
   const GetValue = (value: string, unit: string | null) => {
-    //let unit = "";
-    // switch (type) {
-    //   case FunctionDeviceType.AirHumidity:
-    //     unit = "%";
-    //     break;
-    //   case FunctionDeviceType.AirTemperature:
-    //     unit = "*C";
-    //     break;
-    //   case FunctionDeviceType.SoilMoisture:
-    //     unit = "%";
-    //     break;
-    //   case FunctionDeviceType.RainDetection:
-    //     if (value == "1") {
-    //       value = "Không mưa";
-    //     } else {
-    //       value = "Có mưa";
-    //     }
-    //     unit = "";
-    //     break;
-    //   default:
-    //     unit = "";
-    // }
     return (
       <View
         style={{

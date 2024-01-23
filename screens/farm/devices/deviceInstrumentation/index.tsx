@@ -61,7 +61,7 @@ const DeviceInstrumentationScreen = () => {
   };
 
   const mqttService = new MqttService();
-  console.log("Status connection mqtt: " + mqttService.client.isConnected());
+  //console.log("Status connection mqtt: " + mqttService.client.isConnected());
 
   useEffect(() => {
     if (isFocused) {

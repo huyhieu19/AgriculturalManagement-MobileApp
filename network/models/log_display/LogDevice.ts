@@ -1,6 +1,6 @@
 
 export interface LogDeviceStatusEntity {
-    id: string | null;
+    id: string,
     valueDate: string | null;
     deviceName: string | null;
     requestOn: boolean | null;
@@ -8,6 +8,7 @@ export interface LogDeviceStatusEntity {
     typeOnOff: number | null;
     timerId: number | null;
     thresholdId: number | null;
+    valueSensor: string|null;
 }
 export interface BaseQueryModel {
     pageNumber: number;
@@ -22,6 +23,7 @@ export enum TypeOnOff {
 export interface LogDeviceDataQueryModel extends BaseQueryModel {
     valueDate: string | null;
     typeOnOff: TypeOnOff | null;
+    thresholdId: number | null;
 }
 
 

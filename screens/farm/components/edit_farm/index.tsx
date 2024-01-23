@@ -16,7 +16,7 @@ import { deleteFarm, editFarm } from "../../../../network/apis";
 import { IFramDetails } from "../../../../types/farm.type";
 import { AppStyles } from "../../../../global";
 
-type ParamList = {
+export type ParamList = {
   FarmDetailsScreen: IFramDetails;
 };
 
@@ -28,6 +28,7 @@ export const EditFarmScreen = () => {
   const [area, setArea] = useState<string | undefined>(
     String(route.params.area)
   );
+
   const [description, setDescription] = useState(route.params.description);
   const [address, setAddress] = useState<string | undefined>(
     route.params.address

@@ -51,7 +51,7 @@ const LoginScreen: React.FC = () => {
           token: res.data.Data.token!.accessToken,
         });
       } else {
-        alert("Nhập sai email và mật khẩu.");
+        alert("Nhập sai email hoặc mật khẩu.");
       }
     } catch (e) {
       setLoginError("Error occurs. Please retry");

@@ -20,7 +20,7 @@ type ParamList = {
   Zone: IZoneParams;
 };
 
-export const EditZoneScreen = () => {
+export const EditZoneScreen: React.FC = () => {
   const routeZone = useRoute<RouteProp<ParamList, "Zone">>();
   const navigation = useNavigation<any>();
 

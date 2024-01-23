@@ -10,7 +10,7 @@ import LoginScreen from "./screens/auth/login";
 import HomeScreen from "./screens/home";
 import ListFarmScreen from "./screens/farm/list-farm";
 import FarmDetailsScreen from "./screens/farm/farmDetails";
-import { IFramDetails } from "./types/farm.type";
+import { IFramDetails, ThresholdId } from "./types/farm.type";
 import { CreateFarmScreen } from "./screens/farm/components/add-new-farm";
 import { AddNewZoneScreen } from "./screens/farm/farmDetails/add-new-zone";
 import ModulesScreen from "./screens/module/modules_main";
@@ -37,6 +37,8 @@ import RegisterScreen from "./screens/auth/register";
 import { UserRegisterationModel } from "./network/models/RegisterModel";
 import TimerScreen from "./screens/setting/timer";
 import LogDeviceControlScreen from "./screens/history";
+import LogDeviceThresholdScreen from "./screens/setting/threshold/LoggingThreshold";
+import { ThresholdDisplayModel } from "./network/models/setting_threshold/ThresholdModel";
 
 export type RootStackParamList = {
   // home
@@ -77,6 +79,7 @@ export type RootStackParamList = {
 
   // Lich su
   LogDeviceControlScreen: undefined;
+  LogDeviceThresholdScreen: ThresholdDisplayModel;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -206,6 +209,10 @@ const AppNavigator: React.FC = () => {
             <Stack.Screen
               name={"LogDeviceControlScreen"}
               component={LogDeviceControlScreen}
+            />
+            <Stack.Screen
+              name={"LogDeviceThresholdScreen"}
+              component={LogDeviceThresholdScreen}
             />
             {/* ---------------- */}
           </>

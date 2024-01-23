@@ -22,7 +22,8 @@ import {
 } from "../../../../network/apis/settings.api";
 import { DeviceInfo } from "../../../../network/apis/device.api";
 import { DeviceInformationDisplayModel } from "../../../../network/models/device_display/deviceInfor";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { navigationRef } from "../../../../AppNavigator";
 interface ListThresItemProps {
   thres: ThresholdDisplayModel;
   onPressHandelModel: () => void;
@@ -46,6 +47,8 @@ export default function UpdateThresholdModal(
     useState<DeviceInformationDisplayModel>();
 
   const isFocus = useIsFocused();
+  const navigation = useNavigation<any>();
+
   const UpdateThreshold = async () => {
     const params: ThresholdUpdateModel = {
       deviceDriverId: props.thres.deviceDriverId,
@@ -95,6 +98,11 @@ export default function UpdateThresholdModal(
       ]);
     }
   };
+
+  const GotoLoggingDevice = (thresholdId: number) => {
+    navigation.navigate("LogDeviceThresholdScreen", props.thres);
+  };
+
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
   };
@@ -300,6 +308,7 @@ export default function UpdateThresholdModal(
             <View style={styles.horizontalLine} />
           </View>
         )}
+
         <View style={styles.buttonContainer}>
           <View style={styles.fixToText}>
             <Button
@@ -309,6 +318,7 @@ export default function UpdateThresholdModal(
                 UpdateThreshold();
               }}
             />
+
             <Button
               title="Xóa cài đặt"
               color="red"
@@ -316,6 +326,14 @@ export default function UpdateThresholdModal(
             />
           </View>
         </View>
+        <Button
+          title="Lịch sử đóng mở"
+          color={AppColors.slate600}
+          onPress={() => {
+            props.onPressHandelModel();
+            GotoLoggingDevice(props.thres.id);
+          }}
+        />
       </View>
     </ScrollView>
   );
@@ -377,6 +395,7 @@ const styles = StyleSheet.create({
     alignItems: "center", // Align items vertically in the center
     marginTop: 20,
     paddingBottom: 20,
+    marginBottom: 20,
   },
   Inputcontainer: {
     flexDirection: "row",

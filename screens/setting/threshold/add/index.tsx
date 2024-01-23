@@ -48,8 +48,8 @@ export const AddNewThresScreen = () => {
   const [isFocusDevice, setIsForcusDevice] = useState(false);
   const [devices, setDevices] = useState<KeyValueForDevice[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
-  const [isFocusIndex, setIsForcusIndex] = useState(false);
-  const [indexDevice, setIndexDevice] = useState<string>("");
+  // const [isFocusIndex, setIsForcusIndex] = useState(false);
+  // const [indexDevice, setIndexDevice] = useState<string>("");
 
   // using for choose device driver
   const [isFocusFarm1, setIsForcusFarm1] = useState(false);
@@ -63,7 +63,7 @@ export const AddNewThresScreen = () => {
     FunctionDeviceType.AirTemperature
   );
 
-  const [note, setNote] = useState<string>("");
+  // const [note, setNote] = useState<string>("");
   const [chosenType, setChosenType] = useState(true); //will store our current user options
 
   const options = [
@@ -147,8 +147,8 @@ export const AddNewThresScreen = () => {
     // Perform API request to add new item
     try {
       const params: ThresholdCreateModel = {
-        deviceDriverId: deviceId1,
-        instrumentationId: deviceId,
+        deviceDriverId: deviceId,
+        instrumentationId: deviceId1,
         onInUpperThreshold: chosenType,
         thresholdValueOff: Number(closeValue),
         thresholdValueOn: Number(openValue),

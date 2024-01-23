@@ -14,27 +14,42 @@ import {
   Switch,
 } from "react-native";
 import React, { useState } from "react";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { LogOnOffDeviceControl } from "../../network/apis/logDevice.api";
 import {
-  LogDeviceDataQueryModel,
-  LogDeviceStatusEntity,
-  TypeOnOff,
-} from "../../network/models/log_display/LogDevice";
-import { AppColors, AppStyles } from "../../global";
-import LogDevicesControlItem from "./historyItem";
+  useNavigation,
+  useIsFocused,
+  useRoute,
+  RouteProp,
+} from "@react-navigation/native";
+
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { AntDesign, Ionicons, FontAwesome } from "@expo/vector-icons";
-import { Modal } from "../Modal";
-import { calender, calendercancel } from "../../assets";
-import { formatGetOnlyDate } from "../../utils";
-import { Dropdown } from "react-native-element-dropdown";
 
-const LogDeviceControlScreen = () => {
+import { Dropdown } from "react-native-element-dropdown";
+import {
+  LogDeviceDataQueryModel,
+  LogDeviceStatusEntity,
+  TypeOnOff,
+} from "../../../../network/models/log_display/LogDevice";
+import { LogOnOffDeviceControl } from "../../../../network/apis/logDevice.api";
+import { AppColors, AppStyles } from "../../../../global";
+import LogDevicesControlItem from "../../../history/historyItem";
+import { Modal } from "../../../Modal";
+import { calender, calendercancel } from "../../../../assets";
+import { formatGetOnlyDate } from "../../../../utils";
+import { ThresholdId } from "../../../../types/farm.type";
+import LogDevicesThresholdItem from "./itemLogThreshold";
+import { ThresholdDisplayModel } from "../../../../network/models/setting_threshold/ThresholdModel";
+
+type ParamList = {
+  thresholdModel: ThresholdDisplayModel;
+};
+
+const LogDeviceThresholdScreen: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const navigation = useNavigation<any>();
+  const route = useRoute<RouteProp<ParamList, "thresholdModel">>();
   const [pageNumber, SetPageNumber] = useState<number>(1);
   const [pageSize, SetPageSize] = useState<number>(100);
   const [valueDate, setValueDate] = useState<Date>(new Date());
@@ -47,6 +62,7 @@ const LogDeviceControlScreen = () => {
   const isFocused = useIsFocused();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [threshold, setThreshold] = useState(route.params.id);
 
   const handleModal = () => {
     setIsModalVisible(() => !isModalVisible);
@@ -73,7 +89,7 @@ const LogDeviceControlScreen = () => {
         pageSize: pageSize,
         typeOnOff: typeOnOff,
         valueDate: valueDate.toISOString(),
-        thresholdId: null,
+        thresholdId: threshold,
       };
       const res = await LogOnOffDeviceControl(params);
       if (res.data.Success) {
@@ -137,7 +153,51 @@ const LogDeviceControlScreen = () => {
           <Ionicons name="options" size={24} color="white" />
         </Pressable>
       </View>
-
+      <View
+        style={{
+          flexDirection: "column",
+          paddingHorizontal: 20,
+          backgroundColor: AppColors.cardTop,
+          paddingVertical: 16,
+          borderRadius: 0,
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          borderWidth: 0.5,
+          borderColor: AppColors.slate200,
+          marginBottom: 2,
+          maxHeight: 100,
+          minHeight: 50,
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "700",
+              marginBottom: 8,
+            }}
+          >
+            {route.params.deviceInstrumentationName +
+              " --> " +
+              route.params.deviceDriverName}
+          </Text>
+        </View>
+        <CardInfor
+          value={{ value: route.params.thresholdValueOff }}
+          property={"Ngưỡng đóng"}
+        />
+        <CardInfor
+          value={{ value: route.params.thresholdValueOn }}
+          property={"Ngưỡng mở"}
+        />
+      </View>
       {isLoading ? (
         <View
           style={{
@@ -164,7 +224,7 @@ const LogDeviceControlScreen = () => {
         >
           {logDevice != null && logDevice?.length > 0 ? (
             logDevice.map((item) => (
-              <LogDevicesControlItem key={item?.id} logsDevice={item} />
+              <LogDevicesThresholdItem key={item?.id} logsDevice={item} />
             ))
           ) : (
             <Text>Không có lịch sử thiết bị, hãy chọn ngày khác</Text>
@@ -249,10 +309,7 @@ const LogDeviceControlScreen = () => {
                     onPress={() => {
                       if (isDateOn) {
                         handleModal();
-                        // Delay LogOnOffDevice() by 3000 milliseconds (3 seconds)
-                        setTimeout(() => {
-                          LogOnOffDevice();
-                        }, 3000);
+                        LogOnOffDevice();
                       }
                     }}
                   />
@@ -271,7 +328,53 @@ const LogDeviceControlScreen = () => {
   );
 };
 
-export default LogDeviceControlScreen;
+interface ValueCardProps {
+  value: string | number | null | undefined;
+  color?: string | undefined | null;
+}
+
+interface CardInforProps {
+  property: string;
+  value: ValueCardProps;
+}
+
+const CardInfor = (props: CardInforProps) => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        flex: 1,
+        alignItems: "center",
+        gap: 10,
+      }}
+    >
+      <Text
+        style={{
+          color: AppColors.slate600,
+          fontSize: 16,
+          fontWeight: "400",
+          marginBottom: 5,
+          fontStyle: "italic",
+        }}
+      >
+        {props.property}:{" "}
+      </Text>
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: "500",
+          fontStyle: "normal",
+          marginBottom: 5,
+          color: props.value.color ?? "black",
+        }}
+      >
+        {props.value.value}
+      </Text>
+    </View>
+  );
+};
+
+export default LogDeviceThresholdScreen;
 const styles = StyleSheet.create({
   horizontalLine: {
     height: 1, // Đặt chiều cao của đường kẻ ngang
