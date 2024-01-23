@@ -1,3 +1,5 @@
+import { FunctionDeviceType } from "../Farm";
+
 export interface ThresholdDisplayModel {
     id: number;
     deviceDriverId: string;
@@ -8,6 +10,7 @@ export interface ThresholdDisplayModel {
     deviceDriverName: string | null;
     thresholdValueOn: number | null;
     thresholdValueOff: number | null;
+    nameRefSensor: FunctionDeviceType | null;
     isDelete: boolean;
     autoDevice: boolean | null;
 }

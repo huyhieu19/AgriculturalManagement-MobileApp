@@ -6,6 +6,7 @@ import { AppFontSize } from "../../../../global/styles/AppFontSize";
 import { Modal } from "../../../Modal";
 import UpdateThresholdModal from "../edit";
 import { link, linkcal } from "../../../../assets";
+import { FunctionDeviceType } from "../../../../network/models";
 
 interface ListThresItemProps {
   thres: ThresholdDisplayModel;
@@ -74,18 +75,18 @@ export const ListThresItem = (props: ListThresItemProps) => {
               {props.thres?.deviceInstrumentationName ?? ""}
             </Text>
           </View>
-          <CardInfor
-            property={"Ngưỡng mở"}
-            value={{ value: props.thres?.thresholdValueOn }}
-          />
-          <CardInfor
-            property={"Ngưỡng đóng"}
-            value={{ value: props.thres?.thresholdValueOff }}
-          />
-          {/* <CardInfor
-            property={"Loại"}
-            value={GetTypeDevice(props.thres?.typeDevice)}
-          /> */}
+          {props.thres.nameRefSensor != FunctionDeviceType.RainDetection ? (
+            <View>
+              <CardInfor
+                property={"Ngưỡng mở"}
+                value={{ value: props.thres?.thresholdValueOn }}
+              />
+              <CardInfor
+                property={"Ngưỡng đóng"}
+                value={{ value: props.thres?.thresholdValueOff }}
+              />
+            </View>
+          ) : null}
         </View>
       </View>
       <View>

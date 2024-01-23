@@ -41,6 +41,7 @@ import { formatGetOnlyDate } from "../../../../utils";
 import { ThresholdId } from "../../../../types/farm.type";
 import LogDevicesThresholdItem from "./itemLogThreshold";
 import { ThresholdDisplayModel } from "../../../../network/models/setting_threshold/ThresholdModel";
+import { FunctionDeviceType } from "../../../../network/models";
 
 type ParamList = {
   thresholdModel: ThresholdDisplayModel;
@@ -111,8 +112,9 @@ const LogDeviceThresholdScreen: React.FC = () => {
     }
   }, [isFocused]);
 
+  console.log(route.params.nameRefSensor);
   return (
-    <SafeAreaView style={AppStyles.appContainer}>
+    <View style={AppStyles.appContainer}>
       <View
         style={{
           justifyContent: "center",
@@ -158,15 +160,15 @@ const LogDeviceThresholdScreen: React.FC = () => {
           flexDirection: "column",
           paddingHorizontal: 20,
           backgroundColor: AppColors.cardTop,
-          paddingVertical: 16,
           borderRadius: 0,
           borderBottomLeftRadius: 15,
           borderBottomRightRadius: 15,
           borderWidth: 0.5,
           borderColor: AppColors.slate200,
-          marginBottom: 2,
-          maxHeight: 100,
-          minHeight: 50,
+          minHeight:
+            route.params.nameRefSensor != FunctionDeviceType.RainDetection
+              ? 120
+              : 50,
         }}
       >
         <View
@@ -189,14 +191,18 @@ const LogDeviceThresholdScreen: React.FC = () => {
               route.params.deviceDriverName}
           </Text>
         </View>
-        <CardInfor
-          value={{ value: route.params.thresholdValueOff }}
-          property={"Ngưỡng đóng"}
-        />
-        <CardInfor
-          value={{ value: route.params.thresholdValueOn }}
-          property={"Ngưỡng mở"}
-        />
+        {route.params.nameRefSensor != FunctionDeviceType.RainDetection ? (
+          <CardInfor
+            value={{ value: route.params.thresholdValueOff }}
+            property={"Ngưỡng đóng"}
+          />
+        ) : null}
+        {route.params.nameRefSensor != FunctionDeviceType.RainDetection ? (
+          <CardInfor
+            value={{ value: route.params.thresholdValueOn }}
+            property={"Ngưỡng mở"}
+          />
+        ) : null}
       </View>
       {isLoading ? (
         <View
@@ -324,7 +330,7 @@ const LogDeviceThresholdScreen: React.FC = () => {
           </View>
         </Modal>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

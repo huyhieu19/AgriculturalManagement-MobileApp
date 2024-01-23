@@ -47,17 +47,16 @@ export const AddNewThresScreen = () => {
   const [zones, setZones] = useState<KeyValueForZone[]>([]);
   const [isFocusDevice, setIsForcusDevice] = useState(false);
   const [devices, setDevices] = useState<KeyValueForDevice[]>([]);
+  const [drivers, setDriver] = useState<KeyValueForDevice[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
-  // const [isFocusIndex, setIsForcusIndex] = useState(false);
-  // const [indexDevice, setIndexDevice] = useState<string>("");
 
   // using for choose device driver
   const [isFocusFarm1, setIsForcusFarm1] = useState(false);
-  const [farms1, setFarms1] = useState<KeyValueForFarm[]>([]);
   const [isFocusZone1, setIsFocusZone1] = useState(false);
   const [zones1, setZones1] = useState<KeyValueForZone[]>([]);
   const [isFocusDevice1, setIsForcusDevice1] = useState(false);
   const [devices1, setDevices1] = useState<KeyValueForDevice[]>([]);
+  const [sensor, setSensor] = useState<KeyValueForDevice[]>([]);
   const [deviceId1, setDeviceId1] = useState<string>("");
   const [deviceType, setDeviceType] = useState<FunctionDeviceType>(
     FunctionDeviceType.AirTemperature
@@ -76,39 +75,33 @@ export const AddNewThresScreen = () => {
       const res1 = await deviceDriverByFarmZone(1);
       const res = await deviceDriverByFarmZone(2);
       setFarms(res1.data.Data.farms);
+
       setZones(res1.data.Data.zone);
       setDevices(res1.data.Data.device);
-      setFarms1(res.data.Data.farms);
+      setDriver(res1.data.Data.device);
       setZones1(res.data.Data.zone);
       setDevices1(res.data.Data.device);
+      setSensor(res.data.Data.device);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const FetchZones = (farmId1: number) => {
-    try {
-      console.log("fetch zone");
-      const result = zones.filter(({ farmId }) => farmId == farmId1);
-      if (result.length > 0) {
-        setZones(result);
-      } else {
-        setZones([]);
-        setDevices([]);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
   const FetchZones1 = (farmId1: number) => {
     try {
       console.log("fetch zone");
-      const result = zones1.filter(({ farmId }) => farmId == farmId1);
+      setZones1(zones);
+      console.log("lengh zone: " + zones.length);
+      console.log("lengh zone1: " + zones1.length);
+
+      const result = zones.filter(({ farmId }) => farmId == farmId1);
+      console.log("result lengh: " + result.length);
       if (result.length > 0) {
         setZones1(result);
       } else {
         setZones1([]);
         setDevices1([]);
+        setDevices([]);
       }
     } catch (e) {
       console.log(e);
@@ -117,8 +110,7 @@ export const AddNewThresScreen = () => {
 
   const FetchDevicesDriver = async (zoneId1: number) => {
     try {
-      console.log("fetch devices");
-      const result = devices.filter(({ zoneId }) => zoneId == zoneId1);
+      const result = drivers.filter(({ zoneId }) => zoneId == zoneId1);
       if (result.length > 0) {
         setDevices(result);
       }
@@ -129,8 +121,7 @@ export const AddNewThresScreen = () => {
 
   const FetchDevicesInstrumentation = async (zoneId1: number) => {
     try {
-      console.log("fetch devices");
-      const result = devices1.filter(({ zoneId }) => zoneId == zoneId1);
+      const result = sensor.filter(({ zoneId }) => zoneId == zoneId1);
       if (result.length > 0) {
         setDevices1(result);
       }
@@ -240,7 +231,7 @@ export const AddNewThresScreen = () => {
               }}
               onBlur={() => setIsForcusFarm(false)}
               onChange={(item) => {
-                FetchZones(item.id);
+                FetchZones1(item.id);
                 setIsForcusFarm(false);
               }}
             />
@@ -253,7 +244,7 @@ export const AddNewThresScreen = () => {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
-              data={zones}
+              data={zones1}
               search
               maxHeight={300}
               labelField="name"
@@ -310,12 +301,12 @@ export const AddNewThresScreen = () => {
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Nông trại:</Text>
           <Dropdown
-            style={[styles.input, isFocusFarm && { borderColor: "blue" }]}
+            style={[styles.input, isFocusFarm1 && { borderColor: "blue" }]}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
-            data={farms1}
+            data={farms}
             search
             maxHeight={300}
             labelField="name"
@@ -346,7 +337,7 @@ export const AddNewThresScreen = () => {
             maxHeight={300}
             labelField="name"
             valueField="id"
-            placeholder={!isFocusZone ? "Select item" : "..."}
+            placeholder={!isFocusZone1 ? "Select item" : "..."}
             searchPlaceholder="Search..."
             //value={farmId.toString()}
             onFocus={() => {

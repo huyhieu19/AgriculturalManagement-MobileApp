@@ -24,6 +24,8 @@ import { DeviceInfo } from "../../../../network/apis/device.api";
 import { DeviceInformationDisplayModel } from "../../../../network/models/device_display/deviceInfor";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { navigationRef } from "../../../../AppNavigator";
+import { FunctionDeviceType } from "../../../../network/models";
+import RadioForm from "react-native-simple-radio-button";
 interface ListThresItemProps {
   thres: ThresholdDisplayModel;
   onPressHandelModel: () => void;
@@ -33,6 +35,7 @@ interface ListThresItemProps {
 export default function UpdateThresholdModal(
   props: Readonly<ListThresItemProps>
 ) {
+  const navigation = useNavigation<any>();
   const [openValue, setOpenValue] = useState<string | null>(
     String(props.thres.thresholdValueOn)
   );
@@ -47,7 +50,13 @@ export default function UpdateThresholdModal(
     useState<DeviceInformationDisplayModel>();
 
   const isFocus = useIsFocused();
-  const navigation = useNavigation<any>();
+  // const [note, setNote] = useState<string>("");
+  const [chosenType, setChosenType] = useState(true); //will store our current user options
+
+  const options = [
+    { label: "Kiểu 1", value: "true" },
+    { label: "Kiểu 2", value: "false" },
+  ]; //create our options for radio group
 
   const UpdateThreshold = async () => {
     const params: ThresholdUpdateModel = {
@@ -168,32 +177,36 @@ export default function UpdateThresholdModal(
           >
             <FontAwesome name="close" size={24} color="black" />
           </Pressable>
-          <Text style={{ fontSize: 18, color: "black", fontWeight: "500" }}>
+          <Text style={{ fontSize: 18, color: "white", fontWeight: "500" }}>
             Chỉnh sửa giá trị ngưỡng
           </Text>
         </View>
-        <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Ngưỡng mở: </Text>
-          <TextInput
-            multiline={true}
-            style={[styles.input]}
-            onChangeText={(e) => setOpenValue(e)}
-            value={openValue!}
-            placeholder="Nhập ngưỡng mở"
-            inputMode="decimal"
-          />
-        </View>
-        <View style={styles.Inputcontainer}>
-          <Text style={styles.Inputlabel}>Ngưỡng đóng: </Text>
-          <TextInput
-            multiline={true}
-            style={[styles.input]}
-            onChangeText={(e) => setCloseValue(e)}
-            value={closeValue!}
-            placeholder="Nhập ngưỡng đóng"
-            inputMode="decimal"
-          />
-        </View>
+        {props.thres.nameRefSensor != FunctionDeviceType.RainDetection ? (
+          <View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Ngưỡng mở: </Text>
+              <TextInput
+                multiline={true}
+                style={[styles.input]}
+                onChangeText={(e) => setOpenValue(e)}
+                value={openValue!}
+                placeholder="Nhập ngưỡng mở"
+                inputMode="decimal"
+              />
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Ngưỡng đóng: </Text>
+              <TextInput
+                multiline={true}
+                style={[styles.input]}
+                onChangeText={(e) => setCloseValue(e)}
+                value={closeValue!}
+                placeholder="Nhập ngưỡng đóng"
+                inputMode="decimal"
+              />
+            </View>
+          </View>
+        ) : null}
 
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Kiểu đóng/mở: </Text>
@@ -208,6 +221,18 @@ export default function UpdateThresholdModal(
             {props.thres?.onInUpperThreshold ? "Kiểu 1" : "Kiểu 2"}
           </Text>
         </View>
+        {/* <View style={styles.Inputcontainer}>
+          <Text style={styles.Inputlabel}>Kiểu đóng/mở: </Text>
+          <View style={{ marginTop: 20 }}>
+            <RadioForm
+              radio_props={options}
+              initial={0} //initial value of this group
+              onPress={(value: any) => {
+                setChosenType(value === "true");
+              }} //if the user changes options, set the new value
+            />
+          </View>
+        </View> */}
         {isLoading ? (
           <View
             style={{
@@ -279,7 +304,7 @@ export default function UpdateThresholdModal(
                 }}
               >
                 {props.thres.deviceDriverAction
-                  ? "Hoạt dộng"
+                  ? "Hoạt động"
                   : "Không hoạt động"}
               </Text>
             </View>
@@ -326,14 +351,39 @@ export default function UpdateThresholdModal(
             />
           </View>
         </View>
-        <Button
-          title="Lịch sử đóng mở"
-          color={AppColors.slate600}
-          onPress={() => {
-            props.onPressHandelModel();
-            GotoLoggingDevice(props.thres.id);
+
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            height: 35,
+            marginBottom: 10,
           }}
-        />
+        >
+          <Pressable
+            onPress={() => {
+              props.onPressHandelModel();
+              GotoLoggingDevice(props.thres.id);
+            }}
+            style={{
+              backgroundColor: AppColors.back,
+              display: "flex",
+              justifyContent: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                color: AppColors.bgWhite,
+                fontWeight: "500",
+              }}
+            >
+              Lịch sử đóng mở
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </ScrollView>
   );
