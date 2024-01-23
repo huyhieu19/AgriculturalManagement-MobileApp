@@ -74,42 +74,44 @@ const DeviceControlScreen = () => {
   };
   React.useEffect(() => {
     if (isFocused) {
-      getDevices().then(() => {});
+      getDevices();
     }
   }, [isFocused]);
 
-  // React.useEffect(() => {
-  //   // Hàm sẽ được gọi lại mỗi 1000 miliseconds (1 giây)
-  //   const intervalId = setInterval(async () => {
-  //     // Gọi hàm của bạn ở đây
-  //     await getDevices();
-  //   }, 5000);
+  React.useEffect(() => {
+    if (isFocused) {
+      // Hàm sẽ được gọi lại mỗi 1000 miliseconds (1 giây)
+      const intervalId = setInterval(async () => {
+        // Gọi hàm của bạn ở đây
+        await getDevices();
+      }, 5000);
 
-  //   // Cleanup function khi component unmount
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [devices]); // Dependency array trống đảm bảo useEffect chỉ chạy một lần khi component được mount
+      // Cleanup function khi component unmount
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [devices]); // Dependency array trống đảm bảo useEffect chỉ chạy một lần khi component được mount
 
   return (
     <SafeAreaView style={AppStyles.appContainer}>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: 20,
-          paddingTop: 10,
-          height: 60,
-          backgroundColor: AppColors.primaryColor,
           justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          paddingVertical: 12,
+          borderBottomWidth: 0.5,
+          paddingHorizontal: 20,
+          backgroundColor: AppColors.primaryColor,
+          position: "relative",
         }}
       >
         <Pressable
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
+            width: 60,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -124,7 +126,7 @@ const DeviceControlScreen = () => {
           style={{
             position: "absolute",
             right: 20,
-            paddingTop: 10,
+            width: 40,
           }}
           onPress={() => {
             navigation.navigate("DeviceAddScreen", zoneState);

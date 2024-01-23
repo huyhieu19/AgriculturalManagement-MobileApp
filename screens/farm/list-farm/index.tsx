@@ -65,10 +65,9 @@ const ListFarmScreen: React.FC = () => {
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          height: 60,
+          paddingVertical: 12,
           borderBottomWidth: 0.5,
           paddingHorizontal: 20,
-          paddingTop: 10,
           backgroundColor: AppColors.primaryColor,
           position: "relative",
         }}
@@ -77,7 +76,7 @@ const ListFarmScreen: React.FC = () => {
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
+            width: 60,
           }}
           onPress={() => {
             navigation.goBack();
@@ -98,7 +97,7 @@ const ListFarmScreen: React.FC = () => {
           style={{
             position: "absolute",
             right: 20,
-            paddingTop: 10,
+            width: 40,
           }}
           onPress={() => {
             hangeNavigateScreenCreateFarm();

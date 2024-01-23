@@ -7,8 +7,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
-import { LogDeviceStatusEntity } from "../../../network/models/log_display/LogDevice";
-import { AppColors } from "../../../global";
+import { LogDeviceStatusEntity } from "../../../../network/models/log_display/LogDevice";
+import { AppColors } from "../../../../global";
 
 type LogDevicesProps = {
   logsDevice: LogDeviceStatusEntity;
@@ -26,7 +26,7 @@ function formatGetOnlyDateDisplayLocalTime(date: any) {
     return null;
   }
 }
-const LogDevicesControlItem = (props: LogDevicesProps) => {
+const LogDevicesThresholdItem = (props: LogDevicesProps) => {
   const GetTypeLog = (type: number) => {
     let result: ValueCardProps = {
       value: "Thủ Công",
@@ -56,15 +56,6 @@ const LogDevicesControlItem = (props: LogDevicesProps) => {
       return result2;
     }
   };
-  const GetBackground = (type: number) => {
-    if (type === 1) {
-      return AppColors.modalTop;
-    } else if (type === 2) {
-      return AppColors.cardTop;
-    }
-    return AppColors.bgWhite;
-  };
-
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View
@@ -72,7 +63,7 @@ const LogDevicesControlItem = (props: LogDevicesProps) => {
           flexDirection: "row",
           alignItems: "center",
           paddingHorizontal: 20,
-          backgroundColor: GetBackground(props.logsDevice.typeOnOff ?? 0),
+          backgroundColor: AppColors.bgWhite,
           borderRadius: 15,
           borderWidth: 0.5,
           paddingVertical: 10,
@@ -94,8 +85,21 @@ const LogDevicesControlItem = (props: LogDevicesProps) => {
               marginBottom: 8,
             }}
           >
-            {props.logsDevice?.deviceName}
+            Dữ liệu đo: {props.logsDevice?.valueSensor ?? ""}
           </Text>
+          {/* <CardInfor
+            property={"Dữ liệu cảm biến"}
+            value={{ value: props.logsDevice?.valueSensor ?? "" }}
+          /> */}
+
+          <CardInfor
+            property={"Trạng thái chuyển"}
+            value={GetRequest(props.logsDevice?.requestOn!)}
+          />
+          <CardInfor
+            property={"Kiểu đóng mở"}
+            value={{ value: props.logsDevice?.typeOnOff ?? "" }}
+          />
           <CardInfor
             property={"Thời gian"}
             value={{
@@ -104,16 +108,12 @@ const LogDevicesControlItem = (props: LogDevicesProps) => {
               ),
             }}
           />
-          <CardInfor
-            property={"Trạng thái chuyển"}
-            value={GetRequest(props.logsDevice?.requestOn!)}
-          />
 
-          <CardInfor
+          {/* <CardInfor
             property={"Loại hành vi"}
             value={GetTypeLog(props.logsDevice?.typeOnOff!)}
-          />
-          <CardInfor
+          /> */}
+          {/* <CardInfor
             property={"Thành công"}
             value={{
               value: props.logsDevice.isSuccess
@@ -123,7 +123,7 @@ const LogDevicesControlItem = (props: LogDevicesProps) => {
                 ? AppColors.primaryColor
                 : AppColors.red,
             }}
-          />
+          /> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -176,4 +176,4 @@ const CardInfor = (props: CardInforProps) => {
   );
 };
 
-export default LogDevicesControlItem;
+export default LogDevicesThresholdItem;

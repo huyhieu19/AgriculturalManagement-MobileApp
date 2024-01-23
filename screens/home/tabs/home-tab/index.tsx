@@ -113,14 +113,12 @@ function HomeTab() {
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
           paddingVertical: 10,
-          justifyContent: "space-between",
+          justifyContent: "center",
         }}
       >
-        <Image source={homeLeftIcon} style={{ width: 30 }} />
         <Text style={{ fontSize: 18, color: "white", fontWeight: "500" }}>
           Agricultural Management
         </Text>
-        <Ionicons name="notifications-outline" size={24} color="white" />
       </View>
       <ScrollView
         contentContainerStyle={{

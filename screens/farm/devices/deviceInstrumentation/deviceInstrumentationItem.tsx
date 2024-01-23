@@ -2,12 +2,30 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React from "react";
 import { IDeviceOnModule } from "../../../../types/device.type";
 import { AppColors } from "../../../../global";
+import { FunctionDeviceType } from "../../../../network/models";
 
 type DevicesProps = {
   device: IDeviceOnModule;
   onPress?: () => void;
 };
 const DevicesInstrumentationItem = (props: DevicesProps) => {
+  const GetValue = (value: string, unit: string | null) => {
+    return (
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <Text style={{ fontSize: 25, color: "green", fontWeight: "500" }}>
+          {value}{" "}
+        </Text>
+        <Text style={{ fontSize: 25 }}>{unit}</Text>
+      </View>
+    );
+  };
+
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View
@@ -24,7 +42,7 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
           marginBottom: 20,
         }}
       >
-        {props.device.value1 == null && props.device.value2 == null ? (
+        {props.device.value == null ? (
           <View
             style={{
               justifyContent: "center",
@@ -37,7 +55,7 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
           </View>
         ) : (
           <View>
-            {props.device.nameRef == "ND_DA" ? (
+            {/* {props.device.nameRef == FunctionDeviceType.AirHumidity ? (
               <View
                 style={{
                   justifyContent: "center",
@@ -51,24 +69,22 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
                 <Text style={{ fontSize: 20, color: "green" }}>
                   {props.device.value1} *C
                 </Text>
-                <Text style={{ fontSize: 20, color: "red" }}>
-                  {props.device.value2} %
-                </Text>
               </View>
-            ) : (
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 110,
-                  height: 110,
-                  borderRadius: 50, // Đặt giá trị borderRadius để biến thành vòng tròn
-                  borderWidth: 0.5,
-                }}
-              >
-                <Text style={{ fontSize: 20 }}>{props.device.value1}</Text>
-              </View>
-            )}
+            ) : ( */}
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: 110,
+                height: 110,
+                borderRadius: 50, // Đặt giá trị borderRadius để biến thành vòng tròn
+                borderWidth: 0.5,
+                backgroundColor: AppColors.bgSlate50,
+              }}
+            >
+              {GetValue(props.device.value, props.device.unit)}
+            </View>
+            {/* )} */}
           </View>
         )}
         <View

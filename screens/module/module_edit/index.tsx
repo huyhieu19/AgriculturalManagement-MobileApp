@@ -100,6 +100,7 @@ export const EditModuleScreen = () => {
           style={{
             position: "absolute",
             left: 20,
+            width: 60,
           }}
           onPress={goBack}
         >

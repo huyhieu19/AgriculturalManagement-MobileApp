@@ -255,9 +255,9 @@ export const EditTimerScreen = () => {
               justifyContent: "center",
               alignItems: "center",
               width: "100%",
+              paddingVertical: 12,
               borderBottomWidth: 0.5,
               paddingHorizontal: 20,
-              height: 50,
               backgroundColor: AppColors.primaryColor,
               position: "relative",
             }}
@@ -266,6 +266,7 @@ export const EditTimerScreen = () => {
               style={{
                 position: "absolute",
                 left: 20,
+                width: 60,
               }}
               onPress={() => {
                 navigation.goBack();

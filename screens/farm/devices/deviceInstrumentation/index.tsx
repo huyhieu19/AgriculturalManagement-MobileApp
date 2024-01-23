@@ -19,7 +19,10 @@ import {
 import { IZoneParams } from "../../../../types/zone.type";
 import { AntDesign } from "@expo/vector-icons";
 import { ListZoneItem } from "../../farmDetails/farmDetailsItem";
-import { IDeviceOnZone } from "../../../../types/device.type";
+import {
+  FunctionDeviceType,
+  IDeviceOnZone,
+} from "../../../../types/device.type";
 import { getInstrumentationOnZone } from "../../../../network/apis";
 import DevicesInstrumentationItem from "./deviceInstrumentationItem";
 import MqttService from "../../../../Mqtt/mqttService";
@@ -35,12 +38,18 @@ const DeviceInstrumentationScreen = () => {
   const navigation = useNavigation<any>();
   const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [zoneState, SetZoneState] = useState<IZoneParams>(zone);
+  const [moduleIds, setModuleIds] = useState<string[]>([]);
 
-  const getDevicesInstrumentation = React.useCallback(async () => {
+  const getDevicesInstrumentation = async () => {
     try {
       const res = await getInstrumentationOnZone(zone.id);
       setDevices(res.data.Data);
+      // Mảng kết quả module Id
+      const uniqueModuleIds = [
+        ...new Set(devices.map((device) => device.moduleId)),
+      ];
+      setModuleIds(uniqueModuleIds);
+
       console.log("Data device" + res.data.Data);
     } catch (e) {
       Alert.alert("Lỗi", `Lỗi lấy dữ liệu nông trại`, [{ text: "OK" }]);
@@ -49,29 +58,42 @@ const DeviceInstrumentationScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [zone]);
+  };
 
   const mqttService = new MqttService();
-  console.log("Status connection mqtt: " + mqttService.client.isConnected());
+  //console.log("Status connection mqtt: " + mqttService.client.isConnected());
+
   useEffect(() => {
     if (isFocused) {
-      getDevicesInstrumentation();
-      // Kiểm tra xem client đã kết nối chưa
+      getDevicesInstrumentation().then(() => {});
       if (!mqttService.client.isConnected()) {
         // Nếu chưa kết nối, thực hiện kết nối
         mqttService.connect(() => {
           console.log("Connected to MQTT broker");
+          console.log("moduleIds lengh" + moduleIds.length);
           // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
-          mqttService.subscribeTopic(
-            "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/#"
-          );
+          moduleIds.forEach((item) => {
+            mqttService.subscribeTopic(
+              "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+            );
+            console.log(
+              "sub " + "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+            );
+          });
           mqttService.client.onMessageArrived = onMessageArrived;
         });
         // Thiết lập hàm xử lý khi nhận được message
       } else {
         console.log("Already connected");
         // Nếu client đã kết nối trước đó, thực hiện thêm việc subscribe topic mới
-        //mqttService.subscribeTopic("3c531531-d5f5-4fe3-9954-5afd76ff2151/#");
+        moduleIds.forEach((item) => {
+          mqttService.subscribeTopic(
+            "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+          );
+          console.log(
+            "sub " + "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+          );
+        });
         //mqttService.client.onMessageArrived = onMessageArrived;
       }
       return () => {
@@ -79,42 +101,47 @@ const DeviceInstrumentationScreen = () => {
           mqttService.client.disconnect();
         }
       };
+      // Kiểm tra xem client đã kết nối chưa
     }
-  }, [isFocused]);
+  }, [isFocused, devices.length, moduleIds.length]);
+
+  console.log("devices count: " + devices.length);
 
   const onMessageArrived = (message: any) => {
     // Tách topic thành mảng các phần tử
     const topicParts = message.topic.split("/");
 
     // Lấy id từ phần tử thứ 2 của mảng
-    const deviceIdFromTopic = topicParts[2];
-    const type = topicParts[3];
+    const ModuleIdFromTopic: string = topicParts[2];
 
-    console.log("devices: " + devices);
-    console.log("deviceIdFromTopic: " + deviceIdFromTopic);
-    console.log("topicParts[3]: " + type);
+    console.log("devices count: " + devices.length);
+    console.log("ModuleIdFromTopic: " + ModuleIdFromTopic);
+
     const jsonData = JSON.parse(message.payloadString.toString());
-    const values1 = jsonData.ND;
-    const values2 = jsonData.DA;
-    // Cập nhật state với mảng devices đã được cập nhật
-    setDevices((prev) => {
-      return prev?.map((item) => {
-        if (item?.id.toUpperCase() === deviceIdFromTopic) {
-          if (type === "ND_DA") {
-            return {
-              ...item,
-              value1: values1,
-              value2: values2,
-            };
-          }
-          return {
-            ...item,
-            value1: message.payloadString,
-          };
-        }
-        return item;
-      });
+    moduleIds.forEach((e) => {
+      if (ModuleIdFromTopic.toLowerCase() === e.toLowerCase()) {
+        devices.forEach((element) => {
+          const Id = element.id.toLowerCase();
+          const values1 = jsonData[Id];
+          console.log("ID :" + Id);
+          setDevices((prev) => {
+            return prev?.map((item) => {
+              console.log(item.name);
+              console.log(item.nameRef);
+              console.log(item.value);
+              if (item?.id.toLowerCase() === Id) {
+                return {
+                  ...item,
+                  value: values1,
+                };
+              }
+              return item;
+            });
+          });
+        });
+      }
     });
+
     console.log("Received topic:", message.topic);
     console.log("Received payload:", message.payloadString);
   };
@@ -123,21 +150,21 @@ const DeviceInstrumentationScreen = () => {
     <SafeAreaView style={AppStyles.appContainer}>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
+          justifyContent: "center",
           alignItems: "center",
+          width: "100%",
+          paddingVertical: 12,
+          borderBottomWidth: 0.5,
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          height: 60,
-          paddingTop: 10,
-          justifyContent: "center",
+          position: "relative",
         }}
       >
         <Pressable
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
+            width: 60,
           }}
           onPress={() => {
             navigation.navigate("FarmDetailsScreen");
@@ -152,10 +179,10 @@ const DeviceInstrumentationScreen = () => {
           style={{
             position: "absolute",
             right: 20,
-            paddingTop: 10,
+            width: 40,
           }}
           onPress={() => {
-            navigation.navigate("DeviceAddScreen", zoneState);
+            navigation.navigate("DeviceAddScreen", zone);
           }}
         >
           <AntDesign name="pluscircleo" size={24} color="white" />

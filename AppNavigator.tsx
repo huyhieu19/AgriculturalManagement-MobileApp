@@ -10,7 +10,7 @@ import LoginScreen from "./screens/auth/login";
 import HomeScreen from "./screens/home";
 import ListFarmScreen from "./screens/farm/list-farm";
 import FarmDetailsScreen from "./screens/farm/farmDetails";
-import { IFramDetails } from "./types/farm.type";
+import { IFramDetails, ThresholdId } from "./types/farm.type";
 import { CreateFarmScreen } from "./screens/farm/components/add-new-farm";
 import { AddNewZoneScreen } from "./screens/farm/farmDetails/add-new-zone";
 import ModulesScreen from "./screens/module/modules_main";
@@ -24,7 +24,6 @@ import { EditDeviceScreen } from "./screens/module/modules_main/edit_device_item
 import { IZoneParams } from "./types/zone.type";
 import DeviceAddScreen from "./screens/farm/devices/addDeviceToZone";
 import SettingsScreen from "./screens/setting";
-import StatisticsScreen from "./screens/statistics";
 import SettingsTimerScreen from "./screens/setting/timer/display";
 import { EditFarmScreen } from "./screens/farm/components/edit_farm";
 import { EditZoneScreen } from "./screens/farm/farmDetails/edit_zone";
@@ -38,6 +37,8 @@ import RegisterScreen from "./screens/auth/register";
 import { UserRegisterationModel } from "./network/models/RegisterModel";
 import TimerScreen from "./screens/setting/timer";
 import LogDeviceControlScreen from "./screens/history";
+import LogDeviceThresholdScreen from "./screens/setting/threshold/LoggingThreshold";
+import { ThresholdDisplayModel } from "./network/models/setting_threshold/ThresholdModel";
 
 export type RootStackParamList = {
   // home
@@ -78,6 +79,7 @@ export type RootStackParamList = {
 
   // Lich su
   LogDeviceControlScreen: undefined;
+  LogDeviceThresholdScreen: ThresholdDisplayModel;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -197,16 +199,20 @@ const AppNavigator: React.FC = () => {
             {/* ---------------- */}
 
             {/* Statistic */}
-            <Stack.Screen
+            {/* <Stack.Screen
               name={"StatisticsScreen"}
               component={StatisticsScreen}
-            />
+            /> */}
             {/* ---------------- */}
 
             {/* History */}
             <Stack.Screen
               name={"LogDeviceControlScreen"}
               component={LogDeviceControlScreen}
+            />
+            <Stack.Screen
+              name={"LogDeviceThresholdScreen"}
+              component={LogDeviceThresholdScreen}
             />
             {/* ---------------- */}
           </>

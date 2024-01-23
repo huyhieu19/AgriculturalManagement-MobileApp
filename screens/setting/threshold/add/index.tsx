@@ -13,12 +13,12 @@ import React, { useState } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { AppColors } from "../../../../global/styles/AppColors";
 import {
+  deviceDriverByFarmZone,
   getControlOnZone,
   getInstrumentationOnZone,
   getListFarm,
   getListZone,
 } from "../../../../network/apis";
-import { IFramDetails } from "../../../../types/farm.type";
 import { AppStyles } from "../../../../global";
 import { Dropdown } from "react-native-element-dropdown";
 import { IZoneParams } from "../../../../types/zone.type";
@@ -26,6 +26,12 @@ import { IDeviceOnZone } from "../../../../types/device.type";
 import { createThres } from "../../../../network/apis/settings.api";
 import RadioForm from "react-native-simple-radio-button";
 import { ThresholdCreateModel } from "../../../../network/models/setting_threshold/ThresholdModel";
+import {
+  FunctionDeviceType,
+  KeyValueForDevice,
+  KeyValueForFarm,
+  KeyValueForZone,
+} from "../../../../network/models";
 
 export const AddNewThresScreen = () => {
   const navigation = useNavigation<any>();
@@ -36,29 +42,27 @@ export const AddNewThresScreen = () => {
 
   // Using for choose device instrumentation
   const [isFocusFarm, setIsForcusFarm] = useState(false);
-  const [farms, setFarms] = useState<IFramDetails[]>([]);
-  const [farmId, setFarmId] = useState<number>(0);
+  const [farms, setFarms] = useState<KeyValueForFarm[]>([]);
   const [isFocusZone, setIsFocusZone] = useState(false);
-  const [zones, setZones] = useState<IZoneParams[]>([]);
-  const [zoneId, setZoneId] = useState<number>(0);
+  const [zones, setZones] = useState<KeyValueForZone[]>([]);
   const [isFocusDevice, setIsForcusDevice] = useState(false);
-  const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
+  const [devices, setDevices] = useState<KeyValueForDevice[]>([]);
+  const [drivers, setDriver] = useState<KeyValueForDevice[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
-  const [isFocusIndex, setIsForcusIndex] = useState(false);
-  const [indexDevice, setIndexDevice] = useState<string>("");
 
   // using for choose device driver
   const [isFocusFarm1, setIsForcusFarm1] = useState(false);
-  const [farms1, setFarms1] = useState<IFramDetails[]>([]);
-  const [farmId1, setFarmId1] = useState<number>(0);
   const [isFocusZone1, setIsFocusZone1] = useState(false);
-  const [zones1, setZones1] = useState<IZoneParams[]>([]);
-  const [zoneId1, setZoneId1] = useState<number>(0);
+  const [zones1, setZones1] = useState<KeyValueForZone[]>([]);
   const [isFocusDevice1, setIsForcusDevice1] = useState(false);
-  const [devices1, setDevices1] = useState<IDeviceOnZone[]>([]);
+  const [devices1, setDevices1] = useState<KeyValueForDevice[]>([]);
+  const [sensor, setSensor] = useState<KeyValueForDevice[]>([]);
   const [deviceId1, setDeviceId1] = useState<string>("");
+  const [deviceType, setDeviceType] = useState<FunctionDeviceType>(
+    FunctionDeviceType.AirTemperature
+  );
 
-  const [note, setNote] = useState<string>("");
+  // const [note, setNote] = useState<string>("");
   const [chosenType, setChosenType] = useState(true); //will store our current user options
 
   const options = [
@@ -66,77 +70,66 @@ export const AddNewThresScreen = () => {
     { label: "Kiểu 2", value: "false" },
   ]; //create our options for radio group
 
-  const FetchFarms = async () => {
+  const FetchDeviceDriverByFarmZone = async () => {
     try {
-      const res = await getListFarm();
-      if (res.data.Success) {
-        setFarms(res.data.Data);
-      }
-      console.log("Fetch Farm" + farms);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const FetchFarms1 = async () => {
-    try {
-      const res = await getListFarm();
-      if (res.data.Success) {
-        setFarms1(res.data.Data);
-      }
-      console.log("Fetch Farm" + farms);
+      const res1 = await deviceDriverByFarmZone(1);
+      const res = await deviceDriverByFarmZone(2);
+      setFarms(res1.data.Data.farms);
+
+      setZones(res1.data.Data.zone);
+      setDevices(res1.data.Data.device);
+      setDriver(res1.data.Data.device);
+      setZones1(res.data.Data.zone);
+      setDevices1(res.data.Data.device);
+      setSensor(res.data.Data.device);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const FetchZones = async () => {
+  const FetchZones1 = (farmId1: number) => {
     try {
       console.log("fetch zone");
-      const res = await getListZone({ farmId });
-      if (res.data.Success) {
-        setZones(res.data.Data);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const FetchZones1 = async () => {
-    try {
-      console.log("fetch zone");
-      const res = await getListZone({ farmId });
-      if (res.data.Success) {
-        setZones1(res.data.Data);
+      setZones1(zones);
+      console.log("lengh zone: " + zones.length);
+      console.log("lengh zone1: " + zones1.length);
+
+      const result = zones.filter(({ farmId }) => farmId == farmId1);
+      console.log("result lengh: " + result.length);
+      if (result.length > 0) {
+        setZones1(result);
+      } else {
+        setZones1([]);
+        setDevices1([]);
+        setDevices([]);
       }
     } catch (e) {
       console.log(e);
     }
   };
 
-  const FetchDevicesDriver = async () => {
+  const FetchDevicesDriver = async (zoneId1: number) => {
     try {
-      console.log("fetch devices driver");
-      const res = await getControlOnZone(zoneId);
-      const devicesRes = res.data.Data;
-      if (res.data.Success) {
-        setDevices1(devicesRes);
+      const result = drivers.filter(({ zoneId }) => zoneId == zoneId1);
+      if (result.length > 0) {
+        setDevices(result);
       }
     } catch (e) {
       console.log(e);
     }
   };
 
-  const FetchDevicesInstrumentation = async () => {
+  const FetchDevicesInstrumentation = async (zoneId1: number) => {
     try {
-      console.log("fetch devices instrumentation");
-      const res = await getInstrumentationOnZone(zoneId);
-      const devicesRes = res.data.Data;
-      if (res.data.Success) {
-        setDevices(devicesRes);
+      const result = sensor.filter(({ zoneId }) => zoneId == zoneId1);
+      if (result.length > 0) {
+        setDevices1(result);
       }
     } catch (e) {
       console.log(e);
     }
   };
+
   const goBack = () => {
     navigation.goBack();
   };
@@ -145,8 +138,8 @@ export const AddNewThresScreen = () => {
     // Perform API request to add new item
     try {
       const params: ThresholdCreateModel = {
-        deviceDriverId: deviceId1,
-        instrumentationId: deviceId,
+        deviceDriverId: deviceId,
+        instrumentationId: deviceId1,
         onInUpperThreshold: chosenType,
         thresholdValueOff: Number(closeValue),
         thresholdValueOn: Number(openValue),
@@ -173,9 +166,7 @@ export const AddNewThresScreen = () => {
   };
   React.useEffect(() => {
     if (isFocused) {
-      setFarms([]);
-      setZones([]);
-      setDevices([]);
+      FetchDeviceDriverByFarmZone();
     }
     console.log("effect");
     console.log(isFocused);
@@ -185,21 +176,21 @@ export const AddNewThresScreen = () => {
     <ScrollView style={AppStyles.appContainer}>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
+          justifyContent: "center",
           alignItems: "center",
+          width: "100%",
+          paddingVertical: 12,
+          borderBottomWidth: 0.5,
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingTop: 7,
-          height: 58,
-          justifyContent: "center",
+          position: "relative",
         }}
       >
         <Pressable
           style={{
             position: "absolute",
             left: 20,
-            top: 20,
+            width: 60,
           }}
           onPress={goBack}
         >
@@ -211,47 +202,12 @@ export const AddNewThresScreen = () => {
       </View>
       <View>
         <View>
-          <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>Ngưỡng mở: </Text>
-            <TextInput
-              multiline={true}
-              style={[styles.input]}
-              onChangeText={(e) => setOpenValue(e)}
-              value={openValue}
-              placeholder="Nhập ngưỡng mở"
-              inputMode="decimal"
-            />
-          </View>
-          <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>Ngưỡng đóng: </Text>
-            <TextInput
-              multiline={true}
-              style={[styles.input]}
-              onChangeText={(e) => setCloseValue(e)}
-              value={closeValue}
-              placeholder="Nhập ngưỡng đóng"
-              inputMode="decimal"
-            />
-          </View>
-          <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>Kiểu đóng/mở: </Text>
-            <View style={{ marginTop: 20 }}>
-              <RadioForm
-                radio_props={options}
-                initial={0} //initial value of this group
-                onPress={(value: any) => {
-                  setChosenType(value === "true");
-                }} //if the user changes options, set the new value
-              />
-            </View>
-          </View>
-
-          {/* Chọn thiết bị đo */}
+          {/* Chọn thiết bị điều khiển */}
           <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
             <Text style={{ fontWeight: "500", fontSize: 18 }}>
-              Chọn Thiết bị đo
+              Chọn Thiết bị điều khiển
             </Text>
           </View>
           <View style={styles.Inputcontainer}>
@@ -269,14 +225,13 @@ export const AddNewThresScreen = () => {
               valueField="id"
               placeholder={!isFocusFarm ? "Select item" : "..."}
               searchPlaceholder="Search..."
-              value={farmId.toString()}
+              //value={farmId.toString()}
               onFocus={() => {
                 setIsForcusFarm(true);
-                FetchFarms();
               }}
               onBlur={() => setIsForcusFarm(false)}
               onChange={(item) => {
-                setFarmId(item.id);
+                FetchZones1(item.id);
                 setIsForcusFarm(false);
               }}
             />
@@ -289,27 +244,26 @@ export const AddNewThresScreen = () => {
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               iconStyle={styles.iconStyle}
-              data={zones}
+              data={zones1}
               search
               maxHeight={300}
-              labelField="zoneName"
+              labelField="name"
               valueField="id"
               placeholder={!isFocusZone ? "Select item" : "..."}
               searchPlaceholder="Search..."
-              value={farmId.toString()}
+              //value={farmId.toString()}
               onFocus={() => {
                 setIsFocusZone(true);
-                FetchZones();
               }}
               onBlur={() => setIsFocusZone(false)}
               onChange={(item) => {
-                setZoneId(item.id);
+                FetchDevicesDriver(item.id);
                 setIsFocusZone(false);
               }}
             />
           </View>
           <View style={styles.Inputcontainer}>
-            <Text style={styles.Inputlabel}>Thiết bị đo:</Text>
+            <Text style={[styles.Inputlabel]}>Thiết bị đo </Text>
             <Dropdown
               style={[styles.input, isFocusDevice && { borderColor: "blue" }]}
               placeholderStyle={styles.placeholderStyle}
@@ -326,7 +280,6 @@ export const AddNewThresScreen = () => {
               value={deviceId}
               onFocus={() => {
                 setIsForcusDevice(true);
-                FetchDevicesInstrumentation();
               }}
               onBlur={() => setIsForcusDevice(false)}
               onChange={(item) => {
@@ -337,23 +290,23 @@ export const AddNewThresScreen = () => {
           </View>
         </View>
 
-        {/* Chọn thiết bị điều khiển */}
+        {/* Chọn thiết bị đo */}
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
           <Text style={{ fontWeight: "500", fontSize: 18 }}>
-            Chọn Thiết bị điều khiển
+            Chọn Thiết bị đo
           </Text>
         </View>
         <View style={styles.Inputcontainer}>
           <Text style={styles.Inputlabel}>Nông trại:</Text>
           <Dropdown
-            style={[styles.input, isFocusFarm && { borderColor: "blue" }]}
+            style={[styles.input, isFocusFarm1 && { borderColor: "blue" }]}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
-            data={farms1}
+            data={farms}
             search
             maxHeight={300}
             labelField="name"
@@ -363,11 +316,10 @@ export const AddNewThresScreen = () => {
             //value={farmId.toString()}
             onFocus={() => {
               setIsForcusFarm1(true);
-              FetchFarms1();
             }}
             onBlur={() => setIsForcusFarm1(false)}
             onChange={(item) => {
-              setFarmId(item.id);
+              FetchZones1(item.id);
               setIsForcusFarm(false);
             }}
           />
@@ -383,18 +335,17 @@ export const AddNewThresScreen = () => {
             data={zones1}
             search
             maxHeight={300}
-            labelField="zoneName"
+            labelField="name"
             valueField="id"
-            placeholder={!isFocusZone ? "Select item" : "..."}
+            placeholder={!isFocusZone1 ? "Select item" : "..."}
             searchPlaceholder="Search..."
-            value={farmId.toString()}
+            //value={farmId.toString()}
             onFocus={() => {
               setIsFocusZone1(true);
-              FetchZones1();
             }}
             onBlur={() => setIsFocusZone1(false)}
             onChange={(item) => {
-              setZoneId(item.id);
+              FetchDevicesInstrumentation(item.id);
               setIsFocusZone1(false);
             }}
           />
@@ -417,14 +368,50 @@ export const AddNewThresScreen = () => {
             value={deviceId1}
             onFocus={() => {
               setIsForcusDevice1(true);
-              FetchDevicesDriver();
             }}
             onBlur={() => setIsForcusDevice1(false)}
             onChange={(item) => {
               setDeviceId1(item.id);
+              setDeviceType(item.nameRef ?? FunctionDeviceType.AirTemperature);
               setIsForcusDevice1(false);
             }}
           />
+        </View>
+        {deviceType !== FunctionDeviceType.RainDetection ? (
+          <View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Ngưỡng mở: </Text>
+              <TextInput
+                style={[styles.input]}
+                onChangeText={(e) => setOpenValue(e)}
+                value={openValue}
+                placeholder="Nhập ngưỡng mở"
+                inputMode="decimal"
+              />
+            </View>
+            <View style={styles.Inputcontainer}>
+              <Text style={styles.Inputlabel}>Ngưỡng đóng: </Text>
+              <TextInput
+                style={[styles.input]}
+                onChangeText={(e) => setCloseValue(e)}
+                value={closeValue}
+                placeholder="Nhập ngưỡng đóng"
+                inputMode="decimal"
+              />
+            </View>
+          </View>
+        ) : null}
+        <View style={styles.Inputcontainer}>
+          <Text style={styles.Inputlabel}>Kiểu đóng/mở: </Text>
+          <View style={{ marginTop: 20 }}>
+            <RadioForm
+              radio_props={options}
+              initial={0} //initial value of this group
+              onPress={(value: any) => {
+                setChosenType(value === "true");
+              }} //if the user changes options, set the new value
+            />
+          </View>
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.fixToText}>
@@ -438,16 +425,29 @@ export const AddNewThresScreen = () => {
         </View>
         <View>
           <Text style={{ color: "red" }}>* Chú thích: </Text>
-          <Text>
-            Kiểu 1: Giá trị thiết bị đo lớn hơn ngưỡng mở thì mở thiết bị điều
-            khiển, Giá trị thiết bị đo nhỏ ngưỡng đóng thì đóng thiết bị điều
-            khiển
-          </Text>
-          <Text>
-            Kiểu 2: Giá trị thiết bị đo lớn hơn ngưỡng đóng thì đóng thiết bị
-            điều khiển, Giá trị thiết bị đo nhỏ ngưỡng mở thì mở thiết bị điều
-            khiển
-          </Text>
+          {deviceType === FunctionDeviceType.RainDetection ? (
+            <View>
+              <Text>
+                Kiểu 1: Phát hiện mưa thì thiết bị đóng, hết mưa thì thiết bị mở
+              </Text>
+              <Text>
+                Kiểu 2: Phát hiện mưa thì thiết bị mở, hết mưa thì thiết bị đóng
+              </Text>
+            </View>
+          ) : (
+            <View>
+              <Text>
+                Kiểu 1: Giá trị thiết bị đo lớn hơn ngưỡng mở thì mở thiết bị
+                điều khiển, Giá trị thiết bị đo nhỏ ngưỡng đóng thì đóng thiết
+                bị điều khiển
+              </Text>
+              <Text>
+                Kiểu 2: Giá trị thiết bị đo lớn hơn ngưỡng đóng thì đóng thiết
+                bị điều khiển, Giá trị thiết bị đo nhỏ ngưỡng mở thì mở thiết bị
+                điều khiển
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </ScrollView>
@@ -463,8 +463,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   input: {
-    width: "70%",
-    marginRight: 27,
+    width: "65%",
+    marginRight: 15,
     marginTop: 10,
     minHeight: 50,
     maxHeight: 200,

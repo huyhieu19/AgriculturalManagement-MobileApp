@@ -20,7 +20,7 @@ type ParamList = {
   Zone: IZoneParams;
 };
 
-export const EditZoneScreen = () => {
+export const EditZoneScreen: React.FC = () => {
   const routeZone = useRoute<RouteProp<ParamList, "Zone">>();
   const navigation = useNavigation<any>();
 
@@ -93,19 +93,21 @@ export const EditZoneScreen = () => {
     <ScrollView style={AppStyles.appContainer}>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
+          justifyContent: "center",
           alignItems: "center",
+          width: "100%",
+          paddingVertical: 12,
+          borderBottomWidth: 0.5,
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingVertical: 12,
-          justifyContent: "center",
+          position: "relative",
         }}
       >
         <Pressable
           style={{
             position: "absolute",
             left: 20,
+            width: 60,
           }}
           onPress={goBack}
         >

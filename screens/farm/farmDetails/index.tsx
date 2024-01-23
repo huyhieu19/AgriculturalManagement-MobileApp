@@ -75,21 +75,21 @@ const FarmDetailsScreen = () => {
     <SafeAreaView style={AppStyles.appContainer}>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
+          justifyContent: "center",
           alignItems: "center",
+          width: "100%",
+          paddingVertical: 12,
+          borderBottomWidth: 0.5,
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingTop: 10,
-          height: 55,
-          justifyContent: "center",
+          position: "relative",
         }}
       >
         <Pressable
           style={{
             position: "absolute",
             left: 20,
-            top: 20,
+            width: 60,
           }}
           onPress={() => {
             navigation.goBack();
@@ -104,7 +104,7 @@ const FarmDetailsScreen = () => {
           style={{
             position: "absolute",
             right: 20,
-            top: 20,
+            width: 40,
           }}
           onPress={() => {
             hangeNavigateScreenCreateZone(farmState);

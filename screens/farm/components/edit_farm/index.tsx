@@ -16,7 +16,7 @@ import { deleteFarm, editFarm } from "../../../../network/apis";
 import { IFramDetails } from "../../../../types/farm.type";
 import { AppStyles } from "../../../../global";
 
-type ParamList = {
+export type ParamList = {
   FarmDetailsScreen: IFramDetails;
 };
 
@@ -28,6 +28,7 @@ export const EditFarmScreen = () => {
   const [area, setArea] = useState<string | undefined>(
     String(route.params.area)
   );
+
   const [description, setDescription] = useState(route.params.description);
   const [address, setAddress] = useState<string | undefined>(
     route.params.address
@@ -94,21 +95,21 @@ export const EditFarmScreen = () => {
     <ScrollView style={AppStyles.appContainer}>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
+          justifyContent: "center",
           alignItems: "center",
+          width: "100%",
+          paddingVertical: 12,
+          borderBottomWidth: 0.5,
           paddingHorizontal: 20,
           backgroundColor: AppColors.primaryColor,
-          paddingTop: 10,
-          height: 60,
-          justifyContent: "center",
+          position: "relative",
         }}
       >
         <Pressable
           style={{
             position: "absolute",
             left: 20,
-            paddingTop: 10,
+            width: 60,
           }}
           onPress={goBack}
         >

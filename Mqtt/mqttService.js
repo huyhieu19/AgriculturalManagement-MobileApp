@@ -10,8 +10,10 @@ init({
 });
 
 const options = {
-  host: "broker.emqx.io",
-  port: 8083, // Thay đổi cổng thành 1883 cho giao thức TCP
+  //host: "broker.emqx.io", // port 8083
+  //host: "broker.hivemq.com", // port 8000
+  host: "broker.hivemq.com",
+  port: 8000, // Thay đổi cổng thành 1883 cho giao thức TCP
 };
 
 class MqttService {

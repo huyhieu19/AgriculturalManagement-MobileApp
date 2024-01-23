@@ -8,5 +8,11 @@ type IFramDetails = {
 	note?: string;
 	countZone?: number;
 };
+type ThresholdId = {
+	thresholdId: number;
+	  driverName: string | null;
+  sensorName: string | null;
+};
 
-export { IFramDetails };
+
+export { IFramDetails,ThresholdId };
