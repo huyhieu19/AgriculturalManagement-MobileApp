@@ -1,15 +1,26 @@
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React from "react";
-import { IDeviceOnModule } from "../../../../types/device.type";
+import { IDeviceOnModule, IDeviceOnZone } from "../../../../types/device.type";
 import { AppColors } from "../../../../global";
 import { FunctionDeviceType } from "../../../../network/models";
 
 type DevicesProps = {
-  device: IDeviceOnModule;
+  device: IDeviceOnZone;
   onPress?: () => void;
 };
 const DevicesInstrumentationItem = (props: DevicesProps) => {
-  const GetValue = (value: string, unit: string | null) => {
+  const GetValue = (
+    value?: string,
+    unit?: string | null,
+    nameRef?: number | null
+  ) => {
+    if (nameRef === 4) {
+      if (value === "1") {
+        value = "Mưa";
+      } else {
+        value = "Nắng";
+      }
+    }
     return (
       <View
         style={{
@@ -24,6 +35,17 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
         <Text style={{ fontSize: 25 }}>{unit}</Text>
       </View>
     );
+  };
+
+  const GetTime = (dateTime?: string) => {
+    if (dateTime != null && dateTime != undefined) {
+      return dateTime.substr(11, 8);
+      // const event = new Date(dateTime);
+
+      // return event.toLocaleTimeString();
+    } else {
+      return "Error";
+    }
   };
 
   return (
@@ -42,7 +64,7 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
           marginBottom: 20,
         }}
       >
-        {props.device.value == null ? (
+        {props.device.valueDevice == null ? (
           <View
             style={{
               justifyContent: "center",
@@ -82,7 +104,11 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
                 backgroundColor: AppColors.bgSlate50,
               }}
             >
-              {GetValue(props.device.value, props.device.unit)}
+              {GetValue(
+                props.device.valueDevice,
+                props.device.unit,
+                props.device.nameRef
+              )}
             </View>
             {/* )} */}
           </View>
@@ -115,12 +141,8 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
             value={props.device?.gate?.toString()!}
           />
           <CardInfor
-            property={"Loại"}
-            value={
-              props?.device.deviceType == "R"
-                ? "Thiết bị đo"
-                : "Thiết bị điều khiển"
-            }
+            property={"Thời gian"}
+            value={GetTime(props?.device.dateValue)}
           />
         </View>
       </View>
@@ -129,7 +151,7 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
 };
 interface CardInforProps {
   property: string;
-  value: string | number | null;
+  value?: string | number | null;
 }
 
 const CardInfor = (props: CardInforProps) => {

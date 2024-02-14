@@ -31,26 +31,33 @@ type ParamList = {
   ZoneList: IZoneParams;
 };
 
+export interface ValueDevices {
+  id: string;
+  value: string | undefined | null;
+}
+
 const DeviceInstrumentationScreen = () => {
   const route = useRoute<RouteProp<ParamList, "ZoneList">>();
   const zone = route?.params ?? [];
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const [devices, setDevices] = useState<IDeviceOnZone[]>([]);
+  // const [valueDevices, setValueDevices] = useState<ValueDevices[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [moduleIds, setModuleIds] = useState<string[]>([]);
+  // const [moduleIds, setModuleIds] = useState<string[]>([]);
 
   const getDevicesInstrumentation = async () => {
     try {
       const res = await getInstrumentationOnZone(zone.id);
-      setDevices(res.data.Data);
-      // Mảng kết quả module Id
-      const uniqueModuleIds = [
-        ...new Set(devices.map((device) => device.moduleId)),
-      ];
-      setModuleIds(uniqueModuleIds);
+      if (res.data.Success) {
+        setDevices(res.data.Data);
+      }
 
-      console.log("Data device" + res.data.Data);
+      // // Mảng kết quả module Id
+      // const uniqueModuleIds = [
+      //   ...new Set(devices.map((device) => device.moduleId)),
+      // ];
+      // setModuleIds(uniqueModuleIds);
     } catch (e) {
       Alert.alert("Lỗi", `Lỗi lấy dữ liệu nông trại`, [{ text: "OK" }]);
       navigation.navigate("HomeScreen");
@@ -59,10 +66,31 @@ const DeviceInstrumentationScreen = () => {
       setIsLoading(false);
     }
   };
+  React.useEffect(() => {
+    if (isFocused) {
+      getDevicesInstrumentation();
+    }
+  }, [isFocused]);
+
+  React.useEffect(() => {
+    if (isFocused) {
+      // Hàm sẽ được gọi lại mỗi 1000 miliseconds (1 giây)
+      const intervalId = setInterval(async () => {
+        // Gọi hàm của bạn ở đây
+        await getDevicesInstrumentation();
+      }, 5000);
+
+      // Cleanup function khi component unmount
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [devices]); // Dependency array trống đảm bảo useEffect chỉ chạy một lần khi component được mount
 
   const mqttService = new MqttService();
   //console.log("Status connection mqtt: " + mqttService.client.isConnected());
 
+  /*
   useEffect(() => {
     if (isFocused) {
       getDevicesInstrumentation().then(() => {});
@@ -74,10 +102,12 @@ const DeviceInstrumentationScreen = () => {
           // Sau khi kết nối, thực hiện subscribe topic cũ và topic mới
           moduleIds.forEach((item) => {
             mqttService.subscribeTopic(
-              "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+              "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item.toUpperCase()
             );
             console.log(
-              "sub " + "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+              "sub " +
+                "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" +
+                item.toUpperCase()
             );
           });
           mqttService.client.onMessageArrived = onMessageArrived;
@@ -88,14 +118,27 @@ const DeviceInstrumentationScreen = () => {
         // Nếu client đã kết nối trước đó, thực hiện thêm việc subscribe topic mới
         moduleIds.forEach((item) => {
           mqttService.subscribeTopic(
-            "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+            "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item.toUpperCase()
           );
           console.log(
-            "sub " + "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" + item
+            "sub " +
+              "3c531531-d5f5-4fe3-9954-5afd76ff2151/r/" +
+              item.toUpperCase()
           );
         });
         //mqttService.client.onMessageArrived = onMessageArrived;
       }
+
+      devices.forEach((element) => {
+        const instan: ValueDevices = {
+          id: element.id,
+          value: element.value,
+        };
+        if (!valueDevices.find((p) => p.id == instan.id)) {
+          valueDevices.push(instan);
+        }
+      });
+
       return () => {
         if (mqttService.client.isConnected()) {
           mqttService.client.disconnect();
@@ -104,6 +147,8 @@ const DeviceInstrumentationScreen = () => {
       // Kiểm tra xem client đã kết nối chưa
     }
   }, [isFocused, devices.length, moduleIds.length]);
+
+
 
   console.log("devices count: " + devices.length);
 
@@ -123,29 +168,55 @@ const DeviceInstrumentationScreen = () => {
         devices.forEach((element) => {
           const Id = element.id.toLowerCase();
           const values1 = jsonData[Id];
-          console.log("ID :" + Id);
-          setDevices((prev) => {
+
+          setValueDevices((prev) => {
             return prev?.map((item) => {
-              console.log(item.name);
-              console.log(item.nameRef);
-              console.log(item.value);
+              console.log("ID :" + Id);
+              // console.log("NAME" + item.name);
+              console.log("Id item:" + item?.id.toLowerCase());
+              console.log("Id" + Id);
+              console.log("Value: " + values1);
+
               if (item?.id.toLowerCase() === Id) {
+                console.log("refact:");
                 return {
                   ...item,
                   value: values1,
                 };
+              } else {
+                return item;
               }
-              return item;
             });
           });
+          // setDevices((prev) => {
+          //   return prev?.map((item) => {
+          //     console.log("ID :" + Id);
+          //     console.log("NAME" + item.name);
+          //     console.log("Id item:" + item?.id.toLowerCase());
+          //     console.log("Id" + Id);
+          //     console.log("Value: " + values1);
+
+          //     if (item?.id.toLowerCase() === Id) {
+          //       return {
+          //         ...item,
+          //         value: values1,
+          //       };
+          //     } else {
+          //       return item;
+          //     }
+          //   });
+          // });
         });
       }
     });
 
     console.log("Received topic:", message.topic);
     console.log("Received payload:", message.payloadString);
+
+    console.log({ valueDevices });
   };
 
+  */
   return (
     <SafeAreaView style={AppStyles.appContainer}>
       <View

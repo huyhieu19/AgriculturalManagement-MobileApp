@@ -66,11 +66,19 @@ export function getDevicesOnZone(zoneId: number) {
 		`/Zone/devices-on-zone?zoneId=${zoneId}`
 	);
 }
+
+// export function getInstrumentationOnZone(zoneId: number) {
+// 	return axiosInstance.post<BaseResponse<IDeviceOnZone[]>>(
+// 		`/Zone/device-instrumentation-used?zoneId=${zoneId}`
+// 	);
+// }
+
 export function getInstrumentationOnZone(zoneId: number) {
 	return axiosInstance.post<BaseResponse<IDeviceOnZone[]>>(
-		`/Zone/device-instrumentation-used?zoneId=${zoneId}`
+		`/DataDevice/valueDevice?zoneId=${zoneId}`
 	);
 }
+
 export function getControlOnZone(zoneId: number) {
 	return axiosInstance.post<BaseResponse<IDeviceOnZone[]>>(
 		`/Zone/device-control-used?zoneId=${zoneId}`
