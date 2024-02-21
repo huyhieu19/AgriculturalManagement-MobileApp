@@ -34,7 +34,7 @@ const LogDevicesControlItem = (props: LogDevicesProps) => {
     };
     if (type === 1) {
       result.value = "Thời gian";
-      result.color = AppColors.modalTop;
+      result.color = AppColors.back;
     } else if (type === 2) {
       result.value = "Giá trị ngưỡng";
       result.color = AppColors.back;

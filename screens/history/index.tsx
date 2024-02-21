@@ -249,10 +249,6 @@ const LogDeviceControlScreen = () => {
                     onPress={() => {
                       if (isDateOn) {
                         handleModal();
-                        // Delay LogOnOffDevice() by 3000 milliseconds (3 seconds)
-                        setTimeout(() => {
-                          LogOnOffDevice();
-                        }, 3000);
                       }
                     }}
                   />
