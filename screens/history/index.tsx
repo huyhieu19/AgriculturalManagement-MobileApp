@@ -132,6 +132,7 @@ const LogDeviceControlScreen = () => {
           }}
           onPress={() => {
             handleModal();
+            LogOnOffDevice();
           }}
         >
           <Ionicons name="options" size={24} color="white" />
@@ -249,6 +250,7 @@ const LogDeviceControlScreen = () => {
                     onPress={() => {
                       if (isDateOn) {
                         handleModal();
+                        LogOnOffDevice();
                       }
                     }}
                   />
