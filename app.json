@@ -4,8 +4,7 @@
     "slug": "AgriculturalManagement-MobileApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    //"userInterfaceStyle": "light",
+    "icon": "./assets/greenhouse1.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -19,16 +18,22 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/greenhouse1.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.huyhieunguyen797.AgriculturalManagementMobileApp"
     },
-     "androidStatusBar": {
+    "androidStatusBar": {
       "backgroundColor": "#ffffff"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "userInterfaceStyle": "automatic"
+    "userInterfaceStyle": "automatic",
+    "extra": {
+      "eas": {
+        "projectId": "e936fb37-f0cc-4135-9e68-c51ad2fa4b79"
+      }
+    }
   }
 }

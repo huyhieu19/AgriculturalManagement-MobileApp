@@ -167,11 +167,9 @@ const DevicesOnModulesItem = (props: DevicesProps) => {
             >
               {props.device?.name}
             </Text>
-            {isDeviceDriver ? (
-              <TouchableOpacity onPress={goToEditDevice} style={{ right: 0 }}>
-                <AntDesign name="edit" size={24} color="black" />
-              </TouchableOpacity>
-            ) : null}
+            <TouchableOpacity onPress={goToEditDevice} style={{ right: 0 }}>
+              <AntDesign name="edit" size={24} color="black" />
+            </TouchableOpacity>
           </View>
           {props?.device.isUsed ? (
             <Text

@@ -137,7 +137,7 @@ const DevicesInstrumentationItem = (props: DevicesProps) => {
             </Text>
           </View>
           <CardInfor
-            property={"Gate"}
+            property={"Cổng"}
             value={props.device?.gate?.toString()!}
           />
           <CardInfor
